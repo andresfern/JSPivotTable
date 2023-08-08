@@ -14,11 +14,6 @@
 		showAjax: 1, 
 		useCursors: 1, 
 		windowTypeOverride: 0, 
-
-
-		//imagePath: gx.util.resourceUrl(OAT.rP + 'QueryViewer/oatPivot/images/', true),
-
-		//stylePath: gx.util.resourceUrl(OAT.rP + 'QueryViewer/oatPivot/css/', true),
 		version: "19.03.2008",
 		httpError: 1, 
 		allowDefaultResize: 1,
