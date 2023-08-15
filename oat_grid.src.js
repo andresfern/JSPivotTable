@@ -345,7 +345,75 @@
 			topDiv.appendChild(exportImg);
 
 		}
+		
+		this.setPageDataForTable = function(resXML) {
+			switch(self.oat_component.lastCallToQueryViewer) {
+				case "getDataForTable":
+					if (self.oat_component.lastCallData.PageNumber == 0) { self.oat_component.lastCallData.PageNumber = 1, self.oat_component.lastCallData.RecalculateCantPages = false; }
+					OAT_JS.grid.redraw(self.oat_component.lastCallData.self, self.oat_component.lastCallData.UcId, resXML, self.oat_component.lastCallData.RecalculateCantPages, self.oat_component.lastCallData.DataFieldOrder != "", self.oat_component.lastCallData.PageNumber, self.oat_component.lastCallData.fromExternalRefresh)
+				break;
+				case "getAllDataRowsForExport":
+					var dataString = resXML;
+					var stringRecord = dataString.split("<Record>");
+					var data = [];
+					var UcId = self.oat_component.lastCallData.UcId
+					var fileName = self.oat_component.lastCallData.fileName
+					var _selfgrid = self.oat_component.lastCallData._selfgrid
+					var format = self.oat_component.lastCallData.format
+					for (var i = 1; i < stringRecord.length; i++) {
+						var recordData = [];
+						for (var j = 0; j < OAT_JS.grid.gridData[UcId].grid.columns.length; j++) {
+							recordData[j] = "#NuN#"
+							var dt = stringRecord[i].split("<" + OAT_JS.grid.gridData[UcId].grid.columns[j].getAttribute("dataField") + ">")
+							if (dt.length > 1) {
+								var at = dt[1].split("</" + OAT_JS.grid.gridData[UcId].grid.columns[j].getAttribute("dataField") + ">")
+								recordData[j] = at[0]
+							}
+						}
+						data.push(recordData)
 
+						if (format != "xlsx") {
+							if ((i > OAT_JS.grid.gridData[UcId].rowsPerPage) && !(OAT_JS.grid.gridData[UcId].rowsPerPage == "")) {
+								OAT.CreateGridRow(recordData, OAT_JS.grid.gridData[UcId], true)
+							}
+						}
+					}
+
+					switch (format) {
+						case "pdf": OAT.ExportToPdf(_selfgrid, fileName); break;
+						case "xml": OAT.ExportToXML(_selfgrid, fileName); break;
+						case "html": OAT_JS.grid.gridData[UcId].grid.ExportToHtml(_selfgrid, fileName); break;
+						case "xls": OAT.ExportToExcel(_selfgrid, fileName); break;
+						case "xlsx": OAT.ExportToExcel2010(_selfgrid, fileName, true, data, UcId); break;
+					}
+
+					OAT_JS.grid.gridData[UcId].grid.removeAllCollapseRows()
+				break;
+			}
+		}
+		
+		this.setAttributeForTable = function(resJSON){
+			var res = JSON.parse(resJSON);
+			switch(self.oat_component.lastCallToQueryViewer) {
+				case "getValuesForColumn":
+					OAT_JS.grid.changeValues(self.oat_component.lastCallData.UcId, self.oat_component.lastCallData.dataField, self.oat_component.lastCallData.columnNumber, res, self.oat_component.lastCallData.filterValue);
+				break;
+				case "readScrollValue":
+					OAT_JS.grid.appendNewValueData(self.oat_component.lastCallData.UcId, res);
+				
+				break;
+				case "readScrollValueFilter":
+					OAT_JS.grid.appendNewFilteredValueData(self.oat_component.lastCallData.UcId, res, self.oat_component.lastCallData.posColumnNumber, self.oat_component.lastCallData.filterText)
+				case "initValueRead":
+					OAT_JS.grid.initValueLoad(res, self.oat_component.lastCallData.UcId, self.oat_component.lastCallData.dataField)
+				break;
+				case "filterChange":
+					OAT_JS.grid.appendNewValueData(self.oat_component.lastCallData.UcId, res, true)
+					OAT_JS.grid.setFilterChangedWhenServerPagination(self.oat_component.lastCallData.UcId, self.oat_component.lastCallData.oatDimension)
+				break;
+			}	
+		}
+		
 		this.appendExportToXmlOption = function (content, someExport) {
 			var exportXMLButton;
 			var fileName = this.query;

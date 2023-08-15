@@ -9,7 +9,9 @@
 		}
 		return -1;
 	}
-
+	
+	
+	
 	renderJSPivot = function (pivotParams, QueryViewerCollection, queryself) {
 		if (pivotParams.RealType != "Table") {
 			pivotParams.ServerPaging = false;
@@ -21,21 +23,16 @@
 			}
 		}
 		if ((pivotParams.RememberLayout) && (pivotParams.ServerPaging) && (pivotParams.RealType != "PivotTable")) {
-			var state = OAT.getStateWhenServingPaging(pivotParams.UcId + '_' + pivotParams.ObjectName, pivotParams.ObjectName)
+			var state = OAT.getStateWhenServingPaging(pivotParams.UcId + '_' + pivotParams.ObjectName.replace(/\./g, ""), pivotParams.ObjectName.replace(/\./g, ""))
 			if (!state) {
 				renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
 			} else {
 				var pageValue = 1;
 				if (state.pageSize == "") { state.pageSize = undefined; pageValue = 0; }
-
-				QueryViewerCollection[pivotParams.UcId].getPageDataForTable((function (resXML) {
-					pivotParams.data = resXML;
-
-					pivotParams.previousDataFieldOrder = state.dataFieldOrder;
-					pivotParams.orderType = state.orderType;
-					renderJSPivotInter(pivotParams, QueryViewerCollection, state, queryself)
-				}).closure(this), [pageValue, state.pageSize, true, state.dataFieldOrder, state.orderType, state.filters, false]);
-
+				
+				pivotParams.previousDataFieldOrder = state.dataFieldOrder;
+				pivotParams.orderType = state.orderType;
+				renderJSPivotInter(pivotParams, QueryViewerCollection, state, queryself)
 			}
 		} else {
 			if (pivotParams.RealType != "Table") {
@@ -113,14 +110,14 @@
 					}
 				}
 
-				if (pivotParams.ServerPaging && (pivotParams.customFilterInfo != "" || dataFieldOrder != "")) {
+				/*if (pivotParams.ServerPaging && (pivotParams.customFilterInfo != "" || dataFieldOrder != "")) {
 					QueryViewerCollection[pivotParams.UcId].getPageDataForTable((function (resXML) {
 						pivotParams.data = resXML;
 						renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
 					}).closure(this), [1, pivotParams.PageSize, true, dataFieldOrder, orderType, pivotParams.customFilterInfo, false]);
-				} else {
+				} else {*/
 					renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
-				}
+				//}
 
 			}
 		}
@@ -617,15 +614,6 @@
 				}
 				this.data.push(recordData);
 
-				/*var pos_init = orderFilds.length;
-				for (var j = 0; j < orderFildsHidden.length; j++) {
-					fullRecordData[pos_init + j] = undefined
-					var dt = stringRecord[i].split("<" + orderFildsHidden[j] + ">")
-					if (dt.length > 1){
-						var at = dt[1].split("</" + orderFildsHidden[j] + ">")
-						fullRecordData[pos_init + j] = at[0]
-					}
-				}*/
 				var pos_init = filds.length;
 				for (var j = 0; j < this.HideDataFilds.length; j++) {
 					fullRecordData[pos_init + j] = undefined
@@ -915,14 +903,34 @@
 			if (rowsPerPage == "") { rowsPerPage = undefined; pageNumber = 0; }
 
 			if (!OAT_JS.grid.pageInCache(UcId, pageNumber)) {
-				qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTable((function (resXML) {
+				
+				OAT_JS.grid.lastCallToQueryViewer = "getDataForTable"
+				OAT_JS.grid.lastCallData = { "self": this, "UcId": OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, "RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, "PageNumber": pageNumber, "fromExternalRefresh": fromExternalRefresh}
+				this.requestPageDataForTable(pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection)
+				
+				/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTable((function (resXML) {
 					if (pageNumber == 0) { pageNumber = 1, recalculateCantPages = false; }
 					OAT_JS.grid.redraw(this, UcId, resXML, recalculateCantPages, DataFieldOrder != "", pageNumber, fromExternalRefresh)
-				}).closure(this), [pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged]);
+				}).closure(this), [pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged]);*/
 			} else {
 				OAT_JS.grid.redraw(this, UcId, OAT_JS.grid.pageInCache(UcId, pageNumber), false, false, pageNumber, true)
 			}
 		}
+		
+		
+		this.requestPageDataForTable = function(PageNumber, PageSize, recalculateCantPages, DataFieldOrder, OrderType, Filters, LayoutChange, IdForQueryViewerCollection){
+			setTimeout( function() {
+				var paramobj = {  "PageNumber": PageNumber, "PageSize": PageSize,"RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, 
+					"OrderType":OrderType, "Filters":Filters, "LayoutChange":LayoutChange, "QueryviewerId": IdForQueryViewerCollection};
+				var evt = document.createEvent("Events")
+				evt.initEvent("RequestPageDataForTable", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
+		
+		
 		
 		this.getActualCantPages = function(UcId){  
 		 	return OAT_JS.grid.gridData[UcId].actualCantPages
@@ -931,31 +939,35 @@
 		this.getValuesForColumn = function (UcId, columnNumber, filterValue) {
 			var dataField = OAT_JS.grid.gridData[UcId].columnDataField[columnNumber]
 			if (filterValue != "") {
-				var page = 1
-				qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+				var page = 1;
+				
+				OAT_JS.grid.lastCallToQueryViewer = "getValuesForColumn"
+				OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": filterValue, "dataField": dataField }
+				
+				this.requestAttributeForTable(UcId, dataField, page, filterValue, 10)
+				/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 					var res = JSON.parse(resJSON);
 					OAT_JS.grid.changeValues(UcId, dataField, columnNumber, res, filterValue);
-				}).closure(this), [dataField, page, 10, filterValue]);
+				}).closure(this), [dataField, page, 10, filterValue]);*/
 			} else {
 				OAT_JS.grid.resetScrollValue(UcId, dataField, columnNumber)
 			}
 		}
-
+		
+		
+		this.requestAttributeForTable = function(UcId, dataField, page, filterValue, pageSize){
+			setTimeout( function() {
+				var paramobj = {  "Page": page, "PageSize": pageSize, "DataField": dataField, "Filters":filterValue, "QueryviewerId": UcId};
+				var evt = document.createEvent("Events")
+				evt.initEvent("RequestAttributeForTable", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		queryself.oat_element = pivot;
 
-		//setTimeout( function(){
 
-		//	if ((OAT_JS.grid.gridData[UcId].mustRedraw) && (this.pageSize)){
-		//		this.getDataForTable(this.UcId, 1, OAT_JS.grid.gridData[this.UcId].rowsPerPage, false, OAT_JS.grid.gridData[this.UcId].dataFieldOrder, OAT_JS.grid.gridData[this.UcId].orderType, "", "","", true)
-		//	}
-		//}, 500)*/
-
-		//redraw if table and initial ascending or descending
-		//if ( (self.serverPaging) && (type == "Table") && (OAT_JS.grid.gridData[this.UcId].dataFieldOrder != "")){
-		//self.getDataForTable(self.UcId, 1, OAT_JS.grid.gridData[self.UcId].rowsPerPage, false, OAT_JS.grid.gridData[self.UcId].dataFieldOrder, OAT_JS.grid.gridData[self.UcId].orderType, "", "")
-		//this.getDataForTable(this.UcId, 1, OAT_JS.grid.gridData[this.UcId].rowsPerPage, false, OAT_JS.grid.gridData[this.UcId].dataFieldOrder, OAT_JS.grid.gridData[this.UcId].orderType, "", "")		
-		//}
-		//return pivot;
 	}
 
 	var OAT_JS = {};
@@ -1185,6 +1197,13 @@
 
 			if (!_mthis.serverPaging) {
 				this.gridData[UcId].grid.applySaveState(this.gridData[UcId].rowsPerPage);
+			}
+
+			if (_mthis.previousState) {
+				var __mthis = this
+				setTimeout( function() {
+					self.getDataForTable(UcId, 1, __mthis.gridData[UcId].rowsPerPage, true, __mthis.gridData[UcId].dataFieldOrder, __mthis.gridData[UcId].orderType, "", "", "", false);
+				} , 0)
 			}
 
 			return this.gridData[UcId].grid;
@@ -1595,19 +1614,29 @@
 					var ValuePageInfo = this.gridData[UcId].differentValuesPaginationInfo[dataField]
 					var page = ValuePageInfo.previousPage + 1;
 					this.gridData[UcId].lastRequestValue = dataField;
-					qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+					
+					OAT_JS.grid.lastCallToQueryViewer = "readScrollValue"
+					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": "", "dataField": dataField }
+				
+					self.requestAttributeForTable(UcId, dataField, page, "", 10)
+					/*qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						OAT_JS.grid.appendNewValueData(UcId, res)
-					}).closure(this), [dataField, page, 10, ""]);
+					}).closure(this), [dataField, page, 10, ""]);*/
 				} else {
 					var ValuePageInfo = this.gridData[UcId].filteredValuesPaginationInfo[dataField]
 					var page = ValuePageInfo.previousPage + 1;
 					this.gridData[UcId].lastRequestValue = dataField;
 					var filterText = ValuePageInfo.filteredText
-					qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+					
+					OAT_JS.grid.lastCallToQueryViewer = "readScrollValueFilter"
+					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "posColumnNumber": posColumnNumber, "filterValue": filterText, "dataField": dataField, "filterText": filterText }
+				
+					self.requestAttributeForTable(UcId, dataField, page, filterText, 10)
+					/*qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						OAT_JS.grid.appendNewFilteredValueData(UcId, res, posColumnNumber, filterText)
-					}).closure(this), [dataField, page, 10, ValuePageInfo.filteredText]);
+					}).closure(this), [dataField, page, 10, ValuePageInfo.filteredText]);*/
 				}
 			}
 			var j = 0;
@@ -1782,7 +1811,16 @@
 				if ((qv.collection[this.gridData[UcId].IdForQueryViewerCollection].AutoRefreshGroup != "")) {
 					cantItems = 0;
 				}
-				qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+				
+				
+				OAT_JS.grid.lastCallToQueryViewer = "initValueRead"
+				OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": "", "dataField": requestDataField }
+				
+				self.requestAttributeForTable(UcId, this.gridData[UcId].grid.lastRequestValue, 1, "", cantItems)
+				
+				
+				
+				/*qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 					var data = JSON.parse(resJSON);
 					//load data
 					dataField = this.gridData[UcId].grid.lastRequestValue
@@ -1853,11 +1891,81 @@
 						OAT_JS.grid.initValueRead(UcId, columnNumber)
 					}
 
-				}).closure(this), [this.gridData[UcId].grid.lastRequestValue, 1, cantItems, ""]);
+				}).closure(this), [this.gridData[UcId].grid.lastRequestValue, 1, cantItems, ""]);*/
 			  } else {
 			  		columnNumber++;
 					OAT_JS.grid.initValueRead(UcId, columnNumber, requestDataField)
 			  }
+			}
+		},
+		initValueLoad: function (data, UcId, requestDataField){
+			//load data
+			dataField = this.gridData[UcId].grid.lastRequestValue
+			this.gridData[UcId].differentValuesPaginationInfo[dataField].previousPage = data.PageNumber
+			this.gridData[UcId].differentValuesPaginationInfo[dataField].totalPages = data.PagesCount
+
+			//end load data
+			var columnNumber = 0;
+			for (var t = 0; t < this.gridData[UcId].grid.columns.length; t++) {
+				if (this.gridData[UcId].grid.lastRequestValue == this.gridData[UcId].grid.columns[t].getAttribute("dataField")) {
+					columnNumber = t;
+					break;
+				}
+			}
+
+
+			//null value?
+			if (data.Null) {
+				this.gridData[UcId].blackLists[dataField].hasNull = true;
+				if (this.gridData[UcId].differentValues[dataField].indexOf("#NuN#") == -1) {
+					this.gridData[UcId].differentValues[dataField].push("#NuN#")
+				}
+				var nullIncluded = true;
+				for (var i = 0; i < this.gridData[UcId].filterInfo.length; i++) {
+					if (this.gridData[UcId].filterInfo[i].DataField == dataField) {
+						if (!this.gridData[UcId].filterInfo[i].NullIncluded) {
+							nullIncluded = false;
+						}
+					}
+				}
+				if ((nullIncluded) && (this.gridData[UcId].blackLists[dataField].visibles.indexOf("#NuN#") == -1)) {
+					this.gridData[UcId].blackLists[dataField].visibles.push("#NuN#");
+				}
+			} else {
+				this.gridData[UcId].blackLists[dataField].hasNull = false;
+			}
+
+
+			for (var i = 0; i < data.NotNullValues.length; i++) {
+				if (this.gridData[UcId].differentValues[dataField].indexOf(data.NotNullValues[i]) == -1) {
+					this.gridData[UcId].differentValues[dataField].push(data.NotNullValues[i])
+				}
+				if ((this.gridData[UcId].blackLists[dataField].state == "all")
+					&& (this.gridData[UcId].blackLists[dataField].visibles.indexOf(data.NotNullValues[i]) == -1)) {
+					this.gridData[UcId].blackLists[dataField].visibles.push(data.NotNullValues[i])
+				}
+				if ((this.gridData[UcId].blackLists[dataField].state == "none")
+					&& (this.gridData[UcId].blackLists[dataField].hiddens.indexOf(data.NotNullValues[i]) == -1)) {
+						this.gridData[UcId].blackLists[dataField].hiddens.push(data.NotNullValues[i])
+				}
+				if ((this.gridData[UcId].blackLists[dataField].defaultAction == "Exclude")
+					&& (this.gridData[UcId].blackLists[dataField].state == "") && (data.NotNullValues[i].trimpivot() != "")
+					&& (this.gridData[UcId].blackLists[dataField].visibles.length > 0)) { //correct blanck spaces when initial user filter
+					for (var j = 0; j < this.gridData[UcId].blackLists[dataField].visibles.length; j++) {
+						if (this.gridData[UcId].blackLists[dataField].visibles[j] == data.NotNullValues[i].trimpivot()) {
+							this.gridData[UcId].blackLists[dataField].visibles[j] = data.NotNullValues[i]
+						}
+					}
+				}
+			}
+
+
+
+			this.gridData[UcId].grid.loadDifferentValues(columnNumber, this.gridData[UcId].differentValues[dataField]);
+					
+			if (requestDataField == undefined){
+				columnNumber++;
+				OAT_JS.grid.initValueRead(UcId, columnNumber)
 			}
 		},
 		changeValues: function (UcId, dataField, columnNumber, data, filterText) { //when filter by search filter, delete pairs and show new ones
@@ -2000,16 +2108,29 @@
 					var ValuePageInfo = OAT_JS.grid.gridData[UcId].differentValuesPaginationInfo[df]
 					var page = ValuePageInfo.previousPage + 1;
 					OAT_JS.grid.gridData[UcId].lastRequestValue = df;
-					qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+					
+					OAT_JS.grid.lastCallToQueryViewer = "filterChange"
+					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId,  "filterValue": filterValue, "dataField": df, "oatDimension": oatDimension }
+				
+					self.requestAttributeForTable(UcId, df, page, "", 0)
+				
+					/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						OAT_JS.grid.appendNewValueData(UcId, res, true)
 						OAT_JS.grid.setFilterChangedWhenServerPagination(UcId, oatDimension)
-					}).closure(this), [df, page, 0, ""]);
+					}).closure(this), [df, page, 0, ""]);*/
 				}
 			}
 
 		},
 		getAllDataRowsForExport: function (UcId, _selfgrid, fileName, format) {
+			
+			OAT_JS.grid.lastCallToQueryViewer = "getAllDataRowsForExport"
+			OAT_JS.grid.lastCallData = {  "UcId": UcId, "_selfgrid":_selfgrid, "fileName":fileName, "format": format}
+			self.requestPageDataForTable(1, 0, false, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, false, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection)
+				
+			
+			/*
 			qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTable((function (resXML) {
 				var dataString = resXML;
 				var stringRecord = dataString.split("<Record>");
@@ -2044,7 +2165,7 @@
 				OAT_JS.grid.gridData[UcId].grid.removeAllCollapseRows()
 
 			}).closure(this), [1, 0, false, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo], false);
-
+*/
 			
 		},
 		restoreDefaultView: function (UcId) {

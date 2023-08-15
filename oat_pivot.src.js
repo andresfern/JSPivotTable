@@ -647,7 +647,600 @@
 			
 			return dataStr
 		}
+		
+		this.requestPageDataForPivotTable = function(PageNumber, PageSize, ReturnTotPages, AxesInfo, DataInfo, Filters, ExpandCollapse, LayoutChange){
+			setTimeout( function() {
+				var paramobj = {  "PageNumber": PageNumber, "PageSize": PageSize,"ReturnTotPages":ReturnTotPages, "AxesInfo":AxesInfo, 
+					"DataInfo":DataInfo, "Filters":Filters, "ExpandCollapse":ExpandCollapse, "LayoutChange":LayoutChange, "QueryviewerId": self.IdForQueryViewerCollection};
+				var evt = document.createEvent("Events")
+				evt.initEvent("RequestPageDataForPivotTable", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
+		this.setPageDataForPivotTable = function(resXML) {
+			switch(self.lastCallToQueryViewer) {
+				case "initWhenServerPagination":
+					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
+						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
+						self.preGoWhenServerPagination(true);
+
+						if (self.filterIndexes.length > 0) {
+							self.initValueRead(self, 0, self.stateLoad);
+						}
+
+						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+	
+					} else {
+						var errMsg = qv.util.getErrorFromText(resXML);
+						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
+					};
+					break;
+				case "callServiceWhenCustomeValues":
+					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+
+						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
+						self.preGoWhenServerPagination(true);
+						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+
+					} else {
+						var errMsg = qv.util.getErrorFromText(resXML);
+					qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
+					}
+					break;
+				case "refreshPivot":
+					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+
+						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
+						self.goWhenServerPagination(false, true);
+						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+
+					} else {
+						var errMsg = qv.util.getErrorFromText(resXML);
+						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
+					}
+					break;
+				case "hiddenDimension":	
+					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
+						self.goWhenServerPagination(false, false);
+						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+					} else {
+						var errMsg = qv.util.getErrorFromText(resXML);
+						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
+					}
+					break;
+				case "DataForPivot":	
+					self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows, self.ExportTo);
+					self.preGoWhenServerPagination(self.lastNotAutorefreshIndicator);
+					if (self.ExportTo != "") {
+						var FileName = self.query
+						if (FileName == "") {
+							FileName = "Query"
+							try {
+								FileName = self.controlName.split("_")[0]
+							} catch (error) { }
+						}
+						if (self.ExportTo == "HTML") {
+							self.ExportToHTMLWhenServerPagination()
+						}
+						if (self.ExportTo == "PDF") {
+							OAT.GeneratePDFOutput(self, FileName)
+						}
+						if (self.ExportTo == "XLS") {
+							self.ExportToExcel(FileName);
+						}
+						if (self.ExportTo == "XML") {
+							self.ExportToXMLWhenServerPagination();
+						}
+						if (self.ExportTo == "XLSX") {
+							self.ExportToXLSXWhenServerPagination();
+						}
+						self.cleanGridCache();
+					}
+					qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+					break;
+			  }
+		}
+		
+		
+		this.requestAttributeValues = function(DataField, Page, PageSize, FilterText)
+		{
+			setTimeout( function() {
+				
+				var paramobj = {  "DataField": DataField, "Page": Page,"PageSize":PageSize, "FilterText":FilterText, "QueryviewerId": self.IdForQueryViewerCollection};
+				var evt = document.createEvent("Events")
+				evt.initEvent("RequestAttributeValuesForPivotTable", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+				
+			}, 0)
+		}
+		
+		this.setAttributeValuesForPivotTable = function(resJSON)
+		{
+			
+			switch(self.lastRequestAttributeValues) {
+				case "initValueRead":
+					var data = JSON.parse(resJSON);
+					
+					var columnNumber = self.lastRequestAttributeColumnNumber
+					allData = self.lastRequestAttributeAllData 
+					requestDataField = self.lastRequestAttributeRequestDataField
+					
+					self.conditions[columnNumber].previousPage = data.PageNumber
+					self.conditions[columnNumber].totalPages = data.PagesCount
+					self.conditions[columnNumber].blocked = false
+					
+					if (allData) {
+						self.conditions[columnNumber].distinctValues = []
+					}
+					//null value?
+					if (data.Null) {
+						self.conditions[columnNumber].hasNull = true;
+						if (self.conditions[columnNumber].distinctValues.indexOf("#NuN#") == -1) {
+							self.conditions[columnNumber].distinctValues.push("#NuN#")
+						}
+						var nullIncluded = true;
+
+						if (!self.conditions[columnNumber].NullIncluded) {
+							nullIncluded = false;
+						}
+						if ((nullIncluded) && (self.conditions[columnNumber].visibles.indexOf("#NuN#") == -1)) {
+							self.conditions[columnNumber].visibles.push("#NuN#");
+						}
+					} else {
+						self.conditions[columnNumber].hasNull = false;
+					}
+
+					var includeLists = [];
+					for (var i = 0; i < data.NotNullValues.length; i++) {
+						var value = data.NotNullValues[i]
+						var include = false;
+						if ((self.conditions[columnNumber].state == "none") &&
+							(self.UserFilterValues.length > 0) && (self.UserFilterValues[columnNumber] != undefined)
+							&& (self.UserFilterValues[columnNumber].length > 0) && (self.UserFilterValues[columnNumber].indexOf(value.trimpivot()) != -1)) {
+							include = true;
+							includeLists.push(value)
+						}
+
+						if (self.conditions[columnNumber].distinctValues.indexOf(value) == -1) {
+							self.conditions[columnNumber].distinctValues.push(value)
+						}
+						if ((self.conditions[columnNumber].state == "all")
+							&& (self.conditions[columnNumber].visibles.indexOf(value) == -1)) {
+							self.conditions[columnNumber].visibles.push(value)
+						}
+						if ((self.conditions[columnNumber].state == "none")
+							&& (self.conditions[columnNumber].blackList.indexOf(value) == -1)
+							&& (!include)) {
+							self.conditions[columnNumber].blackList.push(value)
+						}
+
+						if ((allData) && (self.UserExpandValues.length > 0)) {//collapsed values
+							if (self.UserExpandValues[columnNumber] != undefined) {
+								if ((self.UserExpandValues[columnNumber][0] == "#ALLCOLLAPSE#") ||
+									(self.UserExpandValues[columnNumber].indexOf(value.trimpivot()) == -1)) {
+									self.conditions[columnNumber].collapsedValues.push(value);
+								}
+							}
+						}
+
+					}
+
+					for (var i = 0; i < includeLists.length; i++) {
+						self.createFilterInfo({ op: "pop", values: includeLists[i], dim: columnNumber }, true);
+					}
+					if (requestDataField == undefined){
+						columnNumber++;
+						self.initValueRead(self, columnNumber, allData)
+					}
+					break;
+				case "DrawFilters":
+					var data = JSON.parse(resJSON);
+					var columnNumber = self.lastRequestAttributeColumnNumber
+					
+					self.conditions[columnNumber].previousPage = data.PageNumber
+					self.conditions[columnNumber].totalPages = data.PagesCount
+					self.conditions[columnNumber].blocked = true
+					//null value?
+					if ((data.Null) && (!self.conditions[columnNumber].hasNull)) {
+						self.conditions[columnNumber].hasNull = true;
+						if (self.conditions[columnNumber].distinctValues.indexOf("#NuN#") == -1) {
+							self.conditions[columnNumber].distinctValues.push("#NuN#")
+						}
+						if (self.conditions[columnNumber].defaultAction == "Include") {
+							if (self.conditions[columnNumber].visibles.indexOf("#NuN#") == -1) {
+								self.conditions[columnNumber].visibles.push("#NuN#");
+							}
+						} else {
+							if (self.conditions[columnNumber].blackList.indexOf("#NuN#") == -1) {
+								self.conditions[columnNumber].blackList.push("#NuN#");
+							}
+						}
+					}
+
+					for (var i = 0; i < data.NotNullValues.length; i++) {
+						var value = data.NotNullValues[i]
+						if (self.conditions[columnNumber].distinctValues.indexOf(value) == -1) {
+							self.conditions[columnNumber].distinctValues.push(value)
+
+							if ((self.conditions[columnNumber].defaultAction == "Include")
+								&& (self.conditions[columnNumber].visibles.indexOf(value) == -1)) {
+								self.conditions[columnNumber].visibles.push(value)
+							}
+							if ((self.conditions[columnNumber].state == "Exclude")
+								&& (self.conditions[columnNumber].blackList.indexOf(value) == -1)) {
+								self.conditions[columnNumber].blackList.push(value)
+							}
+						}
+					}
+
+					var actualValues = self.conditions[columnNumber].distinctValues;
+					for (var j = 0; j < actualValues.length; j++) {
+						var v = actualValues[j];
+						if (self.conditions[columnNumber].filteredShowValues.indexOf(v) == -1) {
+							self.conditions[columnNumber].filteredShowValues.push(v);
+							if (v != "#NuN#") {
+								try {
+									OAT.Dom.option(self.dimensionPictureValue(v, columnNumber), v, s);
+								} catch (Error) {
+									OAT.Dom.option(v, v, s);
+								}
+							} else {
+								OAT.Dom.option(" ", v, s);
+							}
+						}
+					}
+					break;
+				case "hiddenDimension":
+						var data = JSON.parse(resJSON);
+						var columnNumber = self.lastRequestAttributeColumnNumber
+						
+						self.conditions[columnNumber].previousPage = data.PageNumber
+						self.conditions[columnNumber].totalPages = data.PagesCount
+						self.conditions[columnNumber].blocked = false
+						//null value?
+						if (data.Null) {
+							self.conditions[columnNumber].hasNull = true;
+							if (self.conditions[columnNumber].distinctValues.indexOf("#NuN#") == -1) {
+								self.conditions[columnNumber].distinctValues.push("#NuN#")
+							}
+							var nullIncluded = true;
+
+							if (!self.conditions[columnNumber].NullIncluded) {
+								nullIncluded = false;
+							}
+							if ((nullIncluded) && (self.conditions[columnNumber].visibles.indexOf("#NuN#") == -1)) {
+								self.conditions[columnNumber].visibles.push("#NuN#");
+							}
+						} else {
+							self.conditions[columnNumber].hasNull = false;
+						}
+
+						var includeLists = [];
+						for (var i = 0; i < data.NotNullValues.length; i++) {
+							var value = data.NotNullValues[i]
+							var include = false;
+							if ((self.conditions[columnNumber].state == "none") &&
+								(self.UserFilterValues.length > 0) && (self.UserFilterValues[columnNumber] != undefined)
+								&& (self.UserFilterValues[columnNumber].length > 0) && (self.UserFilterValues[columnNumber].indexOf(value.trimpivot()) != -1)) {
+								include = true;
+								includeLists.push(value)
+							}
+
+							if (self.conditions[columnNumber].distinctValues.indexOf(value) == -1) {
+								self.conditions[columnNumber].distinctValues.push(value)
+							}
+							if ((self.conditions[columnNumber].state == "all")
+								&& (self.conditions[columnNumber].visibles.indexOf(value) == -1)) {
+								self.conditions[columnNumber].visibles.push(value)
+							}
+							if ((self.conditions[columnNumber].state == "none")
+								&& (self.conditions[columnNumber].blackList.indexOf(value) == -1)
+								&& (!include)) {
+								self.conditions[columnNumber].blackList.push(value)
+							}
+
+							if ((self.UserExpandValues.length > 0)) {//collapsed values
+								if (self.UserExpandValues[columnNumber] != undefined) {
+									if ((self.UserExpandValues[columnNumber][0] == "#ALLCOLLAPSE#") ||
+										(self.UserExpandValues[columnNumber].indexOf(value.trimpivot()) == -1)) {
+											self.conditions[columnNumber].collapsedValues.push(value);
+										}
+									}
+								}
+
+						}
+
+						for (var i = 0; i < includeLists.length; i++) {
+							self.createFilterInfo({ op: "pop", values: includeLists[i], dim: columnNumber }, true);
+						}
+					break;
+				case "readScrollValueWithoutFilters":
+					var res = JSON.parse(resJSON);
+					self.appendNewValueData(self.lastRequestValue, res)
+					break;
+				case "readScrollValueWithFilters":
+					var res = JSON.parse(resJSON);
+					var columnNumber = self.lastRequestAttributeColumnNumber
+					var filterText = self.lastRequestAttributeFilterText
+					self.appendNewFilteredValueData(res, columnNumber, filterText)
+					break;
+				case "ValuesForColumn":
+					var res = JSON.parse(resJSON);
+					var columnNumber = self.lastRequestAttributeColumnNumber 
+					var filterValuePars = self.lastRequestAttributeFilterText
+					var dataField = self.lastRequestAttributeDataField
+					var UcId = self.lastRequestAttributeUcId = UcId
+					self.changeValues(UcId, dataField, columnNumber, res, filterValuePars);
+					break;
+				case "ExpandCollapse":
+					var data = JSON.parse(resJSON);
+					var columnNumber = self.lastColumnNumber
+					var elemvalue = self.lastRequestAttributeValuesElemValue
+					var action = self.lastRequestAttributeValuesAction 
+					
+					self.conditions[columnNumber].previousPage = data.PageNumber
+					self.conditions[columnNumber].totalPages = data.PagesCount
+					self.conditions[columnNumber].blocked = true
+
+					//null value?
+					if ((data.Null) && (!self.conditions[columnNumber].hasNull)) {
+						self.conditions[columnNumber].hasNull = true;
+						if (self.conditions[columnNumber].distinctValues.indexOf("#NuN#") == -1) {
+							self.conditions[columnNumber].distinctValues.push("#NuN#")
+						}
+						if (self.conditions[columnNumber].defaultAction == "Include") {
+							if (self.conditions[columnNumber].visibles.indexOf("#NuN#") == -1) {
+								self.conditions[columnNumber].visibles.push("#NuN#");
+							}
+						} else {
+							if (self.conditions[columnNumber].blackList.indexOf("#NuN#") == -1) {
+								self.conditions[columnNumber].blackList.push("#NuN#");
+							}
+						}
+					}
+
+					for (var i = 0; i < data.NotNullValues.length; i++) {
+						var val = data.NotNullValues[i]
+						if (self.conditions[columnNumber].distinctValues.indexOf(val) == -1) {
+							self.conditions[columnNumber].distinctValues.push(val)
+
+							if ((self.conditions[columnNumber].defaultAction == "Include")
+								&& (self.conditions[columnNumber].visibles.indexOf(val) == -1)) {
+								self.conditions[columnNumber].visibles.push(val)
+							}
+							if ((self.conditions[columnNumber].state == "Exclude")
+								&& (self.conditions[columnNumber].blackList.indexOf(val) == -1)) {
+								self.conditions[columnNumber].blackList.push(val)
+							}
+						}
+					}
+
+					var datastr = self.ExpandCollapseHandleWhenServerPaginationCreateXML(elemvalue, action)
+					datastr = datastr.replace(/\&/g, '&amp;');
+
+					self.getDataForPivot(self.UcId, self.pageData.ServerPageNumber, self.rowsPerPage, true, "", "", "", "", true);
+					setTimeout(function () {
+						qv.pivot.onItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
+					}, 2000);
+					break;
+				case "FilteredChanged":
+					setTimeout(function () {
+						var data = JSON.parse(resJSON);
+						self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(self.lastColumnNumber, data.NotNullValues, self.conditions[dimensionNumber].blackList);
+					}, 200)
+					break;
+			}
+					
+		}
+		
+		
+		
+		this.requestCalculatePivottableData = function()
+		{
+			setTimeout( function() {
+				
+				
+				var evt = document.createEvent("Events")
+				var paramobj = {"QueryviewerId": self.IdForQueryViewerCollection};
+				evt.initEvent("RequestCalculatePivottableData", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+				
+			}, 0)
+		}
+		
+		
+		this.setPivottableDataCalculation = function(resText)
+		{
+			
+			switch(self.lastRequestCalculation) {
+				case "ExportToXML":
+					self.allDataWithoutSort = OATgetDataFromXMLOldFormat(resText, self.pageData.dataFields)
+					self.allData = self.allDataWithoutSort
+
+					var prevConditions = jQuery.extend(true, [], self.conditions);
+					for (var t = 0; t < self.conditions.length; t++) {
+						if (self.conditions[t]) {
+							for (var i = 0; i < self.allData.length; i++) {
+								var value = self.allData[i][t];
+								if (value == undefined) {
+									value = " ";
+									self.allData[i][index] = " ";
+								}
+								if (self.conditions[t].distinctValues.indexOf(value) == -1) {
+									self.conditions[t].distinctValues.push(value);
+								}
+							}
+							try {
+								self.sort(self.conditions[t], t);
+							} catch (ERROR) { }
+						}
+					}
+
+					self.applyFilters();
+					self.createAggStructure();
+					self.fillAggStructure();
+					self.checkAggStructure();
+					//self.count();
+
+					str = self.ExportToXML();
+					self.allDataWithoutSort = []; self.allData = []; self.filteredData = [];
+					self.conditions = prevConditions;
+
+					if ((OAT.isSafari()) || (self.isSD)) { //for safari
+						window.open('data:text/xml,' + encodeURIComponent('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + str));
+					} else {
+						var blob = new Blob([str], { type: "text/xml" });
+						if (self.query != "") {
+							saveAs(blob, self.query + ".xml");
+						} else {
+							var name = 'Query'
+							try {
+								name = self.controlName.substr(4).split("_")[0]
+							} catch (error) { }
+							saveAs(blob, name + ".xml");
+						}
+					}
+					break;
+				case "ExportToXLSX":
+					var dataFields = [];
+				
+					for (var t = 0; t < self.initMetadata.Dimensions.length; t++){
+						if (self.initMetadata.Dimensions[t].Visible)
+							dataFields.push(self.initMetadata.Dimensions[t].dataField);
+					}				
+					for (var t = 0; t < self.pageData.AxisInfo.length; t++) {
+						if ((self.pageData.AxisInfo[t].Axis != undefined) && (self.pageData.AxisInfo[t].Axis.Type == "Hidden")) {
+							var index = dataFields.indexOf(self.pageData.AxisInfo[t].DataField);
+							if (index > -1) {
+								dataFields.splice(index, 1)
+							}
+						}
+					}
+				
+					for (var t = 0; t < self.initMetadata.Measures.length; t++){
+						if ((self.initMetadata.Measures[t].Visible) &&  (dataFields.indexOf(self.initMetadata.Measures[t].dataField) < 0))
+						{
+							dataFields.push(self.initMetadata.Measures[t].dataField)
+						} 
+					}
+
+					for (var t = 0; t < measures.length; t++) {
+						if (measures[t].getAttribute("aggregation") == "average") {
+							self.formulaInfo.measureFormula[t].hasFormula = true;
+							self.formulaInfo.measureFormula[t].textFormula = measures[t].getAttribute("dataField") + "_N/" + measures[t].getAttribute("dataField") + "_D"
+
+							self.formulaInfo.cantFormulaMeasures++;
+
+							var inlineFormula = self.formulaInfo.measureFormula[t].textFormula
+
+							var inline = inlineFormula
+							var opers = ['*', '-', '+', '/', '(', ')']
+							for (var j = 0; j < opers.length; j++) {
+								var inline2 = inline.split(opers[j])
+								if (inline2.length > 1) {
+									inline = ""
+									for (var i = 0; i < inline2.length - 1; i++) {
+										inline = inline + inline2[i] + " " + opers[j] + " "
+									}
+									inline = inline + inline2[inline2.length - 1]
+								}
+							}	
+
+							var polishNot = InfixToPostfix(inline)
+							formulaInfo.measureFormula[t].polishNotationText = polishNot
+							var items = polishNot.split(" ")
+							while (items.indexOf("") != -1) {
+								items.splice(items.indexOf(""), 1)
+							}
+							var relatedMeasure = []
+							for (var k = 0; k < items.length; k++) {
+								if ((opers.indexOf(items[k]) == -1) && (isNaN(parseInt(items[k])))) {
+								//add item
+									var operPositionInDataRow = formulaInfo.itemPosition[items[k]]
+									if (relatedMeasure.indexOf(operPositionInDataRow) == -1)
+										relatedMeasure.push(operPositionInDataRow)
+								}
+							}
+
+							self.formulaInfo.measureFormula[t].relatedMeasures = relatedMeasure
+
+							var arrayNot = polishNot.split(" ")
+							while (arrayNot.indexOf("") != -1) {
+								arrayNot.splice(arrayNot.indexOf(""), 1)
+							}
+							self.formulaInfo.measureFormula[t].PolishNotation = arrayNot
+						}
+					}
+					resText = resText.replace(/\&amp;/g, '&').replace(/\&lt;/g, '<').replace(/\&gt;/g, '>').replace(/\&apos;/g, '\'').replace(/\&quot/g, '\"')
+					var res = OATgetDataFromXMLOldFormat(resText, dataFields, self.OrderFildsHidden)
+					self.GeneralDataRows = res[0]
+					self.recordForFormula = res[1]
+					self.allData = self.GeneralDataRows
+
+					var prevConditions = jQuery.extend(true, [], self.conditions);
+					self.GeneralDistinctValues = [];
+					for (var t = 0; t < self.conditions.length; t++) {
+						if (self.conditions[t]) {
+						self.GeneralDistinctValues[t] = []
+						for (var i = 0; i < self.allData.length; i++) {
+							var value = self.allData[i][t];
+							if (value == undefined) {
+								value = " ";
+								self.allData[i][index] = " ";
+							}
+							if (self.conditions[t].distinctValues.indexOf(value) == -1) {
+								self.conditions[t].distinctValues.push(value);
+							}
+							if (self.GeneralDistinctValues[t].indexOf(value) == -1) {
+								self.GeneralDistinctValues[t].push(value);
+							}
+						}
+						try {
+							self.sort(self.conditions[t], t);
+						} catch (ERROR) { }
+					}
+					}
+
+					self.applyFilters();
+					self.createAggStructure();
+					self.fillAggStructure();
+					self.checkAggStructure();
+					//self.count();
+
+					var FileName = self.query
+					if (FileName == "") {
+						FileName = "Query"
+						try {
+							FileName = self.controlName.split("_")[0]
+						} catch (error) { }
+					}
+					OAT.GenerateExcelOutput(FileName, self, measures);
+
+					str = self.ExportToXML();
+					self.GeneralDataRows = []; self.allData = []; self.filteredData = []; self.GeneralDistinctValues = [];
+					self.conditions = prevConditions;
+
+					//quitar formulas averages
+					for (var t = 0; t < measures.length; t++) {
+						if (measures[t].getAttribute("aggregation") == "average") {
+							self.formulaInfo.measureFormula[t] = { hasFormula: false };
+							self.formulaInfo.cantFormulaMeasures--;
+						}
+					}
+				
+					break;
+			}
+				
+				
+		}
+		
+		
 		this.getFilteredDataXML = function () {
 			
 				var temp = self.QueryViewerCollection[self.IdForQueryViewerCollection].getPivottableDataSync();
@@ -2164,8 +2757,13 @@
 			if ((self.UserFilterValues.length == 0) && (self.UserExpandValues.length == 0)) {
 
 				self.pageData.CollapseInfo = self.CreateExpandCollapseInfo("");
-
-				self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
+				
+				self.lastCallToQueryViewer = "initWhenServerPagination"
+				
+				self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
+				
+				
+				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
 					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
@@ -2183,7 +2781,7 @@
 					}
 				}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);
 
-				
+				*/
 
 
 			} else {
@@ -2217,7 +2815,9 @@
 
 
 		} /* initWhenServerPagination */
+	
 
+	
 		this.initValueRead = function (self, columnNumber, allData, requestDataField) {
 			if (columnNumber >= self.columns.length) {
 
@@ -2285,7 +2885,14 @@
 				}
 				self.lastRequestValue = columnNumber;
 				
-				self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+				self.lastRequestAttributeValues = "initValueRead"
+				self.lastRequestAttributeColumnNumber = columnNumber
+				self.lastRequestAttributeAllData = allData
+				self.lastRequestAttributeRequestDataField = requestDataField
+				
+				self.requestAttributeValues(self.columns[columnNumber].getAttribute("dataField"), 1, cantItems, "")
+				
+				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 					var data = JSON.parse(resJSON);
 
 					self.conditions[columnNumber].previousPage = data.PageNumber
@@ -2355,16 +2962,22 @@
 						columnNumber++;
 						self.initValueRead(self, columnNumber, allData)
 					}
-				}).closure(this), [self.columns[columnNumber].getAttribute("dataField"), 1, cantItems, ""]);
+				}).closure(this), [self.columns[columnNumber].getAttribute("dataField"), 1, cantItems, ""]);*/
 			}
 		}
+
+		
 
 		this.callServiceWhenCustomeValues = function () {
 			self.pageData.CollapseInfo = self.CreateExpandCollapseInfo("");
 			var ParmAxisInfo = self.createNewAxisInfo()
 			var ParmDataInfo = self.createNewDataInfo()
-
-			self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
+			
+			self.lastCallToQueryViewer = "callServiceWhenCustomeValues"
+				
+			self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
+				
+			/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
 				if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
 					self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
@@ -2375,7 +2988,7 @@
 					var errMsg = qv.util.getErrorFromText(resXML);
 					qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
 				}
-			}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);
+			}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);*/
 
 		}
 
@@ -3533,7 +4146,14 @@
 				//load all other items
 				self.lastRequestValue = this.filterIndex; var columnNumber = this.filterIndex;
 				if (self.conditions[columnNumber].previousPage < self.conditions[columnNumber].totalPages) {
-					self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+					
+					self.lastRequestAttributeValues = "DrawFilters"
+					self.lastRequestAttributeColumnNumber = columnNumber
+					
+				
+					self.requestAttributeValues(self.columns[this.filterIndex].getAttribute("dataField"), 1, 0, "")
+					
+					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var data = JSON.parse(resJSON);
 
 						self.conditions[columnNumber].previousPage = data.PageNumber
@@ -3590,6 +4210,7 @@
 						}
 
 					}).closure(this), [self.columns[this.filterIndex].getAttribute("dataField"), 1, 0, ""]);
+					*/
 				}
 			}
 			var callgo = function () {
@@ -4087,9 +4708,16 @@
 				someExport = true;
 			}
 		}
-
+	
+		
+		
 		this.ExportToXMLWhenServerPagination = function () {
-			self.QueryViewerCollection[self.IdForQueryViewerCollection].calculatePivottableData((function (resText) {
+			
+			self.lastRequestPivotDataCalculation = ""
+			self.lastRequestCalculation = "ExportToXML"
+			self.requestCalculatePivottableData() 
+			
+			/*self.QueryViewerCollection[self.IdForQueryViewerCollection].calculatePivottableData((function (resText) {
 				self.allDataWithoutSort = OATgetDataFromXMLOldFormat(resText, self.pageData.dataFields)
 				self.allData = self.allDataWithoutSort
 
@@ -4137,7 +4765,7 @@
 					}
 				}
 
-			}).closure(this))
+			}).closure(this))*/
 		}
 
 		this.ExportToHTMLWhenServerPagination = function () {
@@ -4297,7 +4925,10 @@
 		}
 
 		this.ExportToXLSXWhenServerPagination = function () {
-			self.QueryViewerCollection[self.IdForQueryViewerCollection].calculatePivottableData((function (resText) {
+			
+			self.lastRequestCalculation = "ExportToXLSX"
+			self.requestCalculatePivottableData()
+			/*self.QueryViewerCollection[self.IdForQueryViewerCollection].calculatePivottableData((function (resText) {
 
 
 				var dataFields = [];
@@ -4425,7 +5056,7 @@
 						self.formulaInfo.cantFormulaMeasures--;
 					}
 				}
-			}).closure(this))
+			}).closure(this))*/
 		}
 
 		this.appendExportToExcel2010Option = function (content, someExport) {
@@ -9115,7 +9746,13 @@
 					var ParmDataInfo = self.createNewDataInfo()
 					var ParmAxisInfo =  self.createNewAxisInfo();
 					
-					self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
+					
+					self.lastCallToQueryViewer = "refreshPivot"
+				
+					self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
+
+					
+					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
 						if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
 							self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
@@ -9127,7 +9764,7 @@
 							qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
 						}
 
-					}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);
+					}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);*/
 				
 			}
 		}
@@ -9534,8 +10171,13 @@
 				self.pageData.DataInfo = self.createDataInfo()
 				
 				var ParmDataInfo = self.createNewDataInfo();
+				
+				self.lastCallToQueryViewer = "hiddenDimension"
+				
+				self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
 
-				self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
+				
+				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
 					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.goWhenServerPagination(false, false);
@@ -9544,7 +10186,7 @@
 						var errMsg = qv.util.getErrorFromText(resXML);
 						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
 					}
-				}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);
+				}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);*/
 
 				if (clean) {
 					self.initValueRead(self, 0);
@@ -9558,7 +10200,13 @@
 								cantItems = 0;
 							}
 							var columnNumber = i;
-							self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+							
+							self.lastRequestAttributeValues = "hiddenDimension"
+							self.lastRequestAttributeColumnNumber = columnNumber
+				
+							self.requestAttributeValues(self.columns[columnNumber].getAttribute("dataField"), 1, cantItems, "")
+							
+							/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 								var data = JSON.parse(resJSON);
 
 								self.conditions[columnNumber].previousPage = data.PageNumber
@@ -9623,7 +10271,7 @@
 
 
 
-							}).closure(this), [self.columns[columnNumber].getAttribute("dataField"), 1, cantItems, ""]);
+							}).closure(this), [self.columns[columnNumber].getAttribute("dataField"), 1, cantItems, ""]);*/
 						}
 					}
 
@@ -10161,7 +10809,13 @@
 				self.pageData.DataInfo = self.createDataInfo();
 				var ParmDataInfo = self.createNewDataInfo();
 				
-				self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
+				self.lastCallToQueryViewer = "DataForPivot"
+				self.lastNotAutorefreshIndicator = notAutorefresh
+				
+				self.requestPageDataForPivotTable(pageNumber, rowsPerPage, recalculateCantPages, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, layoutChange);
+
+				
+				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
 					self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows, self.ExportTo);
 					self.preGoWhenServerPagination(notAutorefresh);
 					if (self.ExportTo != "") {
@@ -10191,7 +10845,7 @@
 					}
 					qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
 				}).closure(this), [pageNumber, rowsPerPage, recalculateCantPages, ParmAxisInfo, ParmDataInfo,
-						self.pageData.FilterInfo, self.pageData.CollapseInfo, layoutChange]);
+						self.pageData.FilterInfo, self.pageData.CollapseInfo, layoutChange]);*/
 
 			}
 
@@ -10721,19 +11375,27 @@
 				if (!self.conditions[columnNumber].filtered) {
 					var page = self.conditions[columnNumber].previousPage + 1;
 					self.lastRequestValue = columnNumber;
-					self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+					self.lastRequestAttributeValues = "readScrollValueWithoutFilters"
+					self.requestAttributeValues(dataField, page, 10, "")
+					
+					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						self.appendNewValueData(self.lastRequestValue, res)
-					}).closure(this), [dataField, page, 10, ""]);
+					}).closure(this), [dataField, page, 10, ""]);*/
 				} else {
 					var ValuePageInfo = self.conditions[columnNumber].searchInfo
 					var page = ValuePageInfo.previousPage + 1;
 					self.lastRequestValue = dataField;
 					var filterText = ValuePageInfo.filteredText
-					self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+					
+					self.lastRequestAttributeValues = "readScrollValueWithFilters"
+					self.lastRequestAttributeColumnNumber = columnNumber
+					self.lastRequestAttributeFilterText = filterText
+					self.requestAttributeValues(dataField, page, 10, ValuePageInfo.filteredText)
+					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						self.appendNewFilteredValueData(res, columnNumber, filterText)
-					}).closure(this), [dataField, page, 10, ValuePageInfo.filteredText]);
+					}).closure(this), [dataField, page, 10, ValuePageInfo.filteredText]);*/
 				}
 			}
 		}
@@ -10743,10 +11405,19 @@
 			if (filterValue != "") {
 				var page = 1
 				var filterValuePars = filterValue.replace(/\\/g, "\\\\")
-				self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+				
+				self.lastRequestAttributeValues = "ValuesForColumn"
+				self.lastRequestAttributeColumnNumber = columnNumber
+				self.lastRequestAttributeFilterText = filterValuePars
+				self.lastRequestAttributeDataField = dataField
+				self.lastRequestAttributeUcId = UcId
+				self.requestAttributeValues(dataField, page, 10, filterValuePars)
+				
+				
+				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 					var res = JSON.parse(resJSON);
 					self.changeValues(UcId, dataField, columnNumber, res, filterValuePars);
-				}).closure(this), [dataField, page, 10, filterValuePars]);
+				}).closure(this), [dataField, page, 10, filterValuePars]);*/
 			} else {
 				self.resetScrollValue(UcId, dataField, columnNumber)
 			}
@@ -12452,7 +13123,12 @@
 					self.getDataForPivot(self.UcId, self.pageData.ServerPageNumber, self.rowsPerPage, true, "", "", "", "", true)
 				} else {
 					self.lastColumnNumber = number;
-					self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+					self.lastRequestAttributeValues = "ExpandCollapse"
+					self.lastRequestAttributeValuesElemValue = elemvalue
+					self.lastRequestAttributeValuesAction = action
+					self.requestAttributeValues(self.columns[number].getAttribute("dataField"), 1, 0, "")
+					
+					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var data = JSON.parse(resJSON);
 						var columnNumber = self.lastColumnNumber
 
@@ -12502,7 +13178,7 @@
 							//window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
 							qv.pivot.onItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
 						}, 2000);
-					}).closure(this), [self.columns[number].getAttribute("dataField"), 1, 0, ""]);
+					}).closure(this), [self.columns[number].getAttribute("dataField"), 1, 0, ""]);*/
 				}
 			} else {
 				self.getDataForPivot(self.UcId, self.pageData.ServerPageNumber, self.rowsPerPage, true, "", "", "", "", true);
@@ -12580,12 +13256,15 @@
 					self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(dimensionNumber, self.conditions[dimensionNumber].distinctValues, self.conditions[dimensionNumber].blackList);
 				} else {
 					self.lastColumnNumber = dimensionNumber;
-					self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
+					self.lastRequestAttributeValues = "FilteredChanged"
+					self.requestAttributeValues(self.columns[dimensionNumber].getAttribute("dataField"), 1, 0, "")
+					
+					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						setTimeout(function () {
 							var data = JSON.parse(resJSON);
 							self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(self.lastColumnNumber, data.NotNullValues, self.conditions[dimensionNumber].blackList);
 						}, 200)
-					}).closure(this), [self.columns[dimensionNumber].getAttribute("dataField"), 1, 0, ""]);
+					}).closure(this), [self.columns[dimensionNumber].getAttribute("dataField"), 1, 0, ""]);*/
 				}
 			}
 		}
