@@ -14631,7 +14631,7 @@
 
 		
 			xml = xml.replace(/\&/g, "&amp;");
-			if (((gx.util.browser.webkit) && (!gx.util.browser.chrome)) || (isSD)) { //for safari			
+			if ((OAT.isSafari()) || (isSD)) { //for safari			
 				window.open('data:text/xml,' + encodeURIComponent(xml));
 			} else {
 				var blob = new Blob([xml], { type: "text/xml" });
