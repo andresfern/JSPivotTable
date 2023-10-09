@@ -7,7 +7,7 @@
 .pivot_filter_div {
 	border: 1px solid #BBB;
 	color: black;
-	cursor: default;
+	cursor: default !important;
 	background: linear-gradient(rgba(239, 239, 239, 0.75), rgba(239, 239, 239, 0.75)) no-repeat, linear-gradient(rgb(15, 91, 120), rgb(15, 91, 120)) no-repeat;	/* Transparency hack */
 	border-bottom: none;
 	border-bottom-width: 0;
@@ -16,14 +16,14 @@
 	float: left;
 }
 
-/*.pivot_filter_div > span {
+.pivot_filter_div > span {
 	float: left;
-}*/
+}
 
 .pivot_title_div {
 	border: 1px solid #BBB;
 	color: black;
-	cursor: default;
+	cursor: default !important;
 	background-color: #FEFEFE;
 	border-bottom: none;
 	border-bottom-width: 0;
@@ -83,13 +83,13 @@
 	padding: 5px;
 }
 
-/*.pivot_table th.h1 {
+.pivot_table th.h1 {
 	background-color: #f0f0f0;
 }
 
 .pivot_table th.h2 {
 	background-color: #f0f0f0;
-}*/
+}
 
 .h2title {
 	background-color: rgb(15, 91, 120);
@@ -144,22 +144,22 @@
 }
 
 /*styles pop up*/
-.oat_pop-up {
+#pop-up {
 	background: repeat-x scroll 0 0 transparent;
 }
 
-.oat_pop-up hr {
+#pop-up hr {
 	background-color: #FFFFFF;
 	color: #FFFFFF;
 }
 
-.oat_pop-up > div {
+#pop-up > div {
 	margin-left: 16px;
 	margin-right: 16px;
 	margin-bottom: 8px;
 }
 
-.oat_pop-up > .last_div_popup {
+#pop-up > .last_div_popup {
 	margin-bottom: 16px;
 }
 
@@ -206,7 +206,7 @@
 }
 
 .h2title > div {
-	width: 100%;
+	width: 100% !important;
 }
 
 .oat_winrect_content_small .search_input {

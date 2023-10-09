@@ -24,7 +24,7 @@
 	position: relative;
 	text-align: center;
 	background-color: rgb(15, 91, 120);
-	color: white;
+	color: white !important;
 	margin: 0px;
 	height: auto;
 	margin-bottom: 8px;
@@ -91,7 +91,7 @@
 	margin-right: 16px;
 }
 
-.export_option_container { 
+#exportOptionsContainerGrid {
 	width: 400px;
 }
 

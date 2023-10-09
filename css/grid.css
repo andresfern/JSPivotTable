@@ -8,7 +8,7 @@
 .oatgrid_top_div {
 	border: 1px solid #BBB;
 	border-bottom: none;
-	cursor: default;
+	cursor: default !important;
 	background: linear-gradient(rgba(239, 239, 239, 0.75), rgba(239, 239, 239, 0.75)) no-repeat, linear-gradient(rgb(15, 91, 120), rgb(15, 91, 120)) no-repeat; /* Transparency hack */
 	box-sizing: border-box;
 	padding: 5px;

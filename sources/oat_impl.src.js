@@ -12,7 +12,7 @@
 	
 	
 	
-	renderJSPivot = function (pivotParams, QueryViewerCollection, queryself) {
+	renderJSPivot = function (pivotParams, QueryViewerCollection, translations, queryself) {
 		if (pivotParams.RealType != "Table") {
 			pivotParams.ServerPaging = false;
 		}
@@ -25,18 +25,18 @@
 		if ((pivotParams.RememberLayout) && (pivotParams.ServerPaging) && (pivotParams.RealType != "PivotTable")) {
 			var state = OAT.getStateWhenServingPaging(pivotParams.UcId + '_' + pivotParams.ObjectName.replace(/\./g, ""), pivotParams.ObjectName.replace(/\./g, ""))
 			if (!state) {
-				renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
+				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, null, queryself)
 			} else {
 				var pageValue = 1;
 				if (state.pageSize == "") { state.pageSize = undefined; pageValue = 0; }
 				
 				pivotParams.previousDataFieldOrder = state.dataFieldOrder;
 				pivotParams.orderType = state.orderType;
-				renderJSPivotInter(pivotParams, QueryViewerCollection, state, queryself)
+				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, state, queryself)
 			}
 		} else {
 			if (pivotParams.RealType != "Table") {
-				renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
+				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, null, queryself)
 			} else {
 
 				pivotParams.customFilterInfo = "";
@@ -116,14 +116,14 @@
 						renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
 					}).closure(this), [1, pivotParams.PageSize, true, dataFieldOrder, orderType, pivotParams.customFilterInfo, false]);
 				} else {*/
-					renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
+					renderJSPivotInter(pivotParams, QueryViewerCollection, translations, null, queryself)
 				//}
 
 			}
 		}
 	}
 
-	renderJSPivotInter = function (pivotParams, QueryViewerCollection, state, queryself) {
+	renderJSPivotInter = function (pivotParams, QueryViewerCollection, translations, state, queryself) {
 		var type = pivotParams.RealType
 		var container = pivotParams.container
 		var page = pivotParams.page
@@ -320,7 +320,7 @@
 				this.InitMetadata.Conditions = previousState.Conditions
 			}
 
-			result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot)
+			result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot, translations)
 		} else {
 			var hideDimension = [];
 			for (var i = 0; i < this.InitMetadata.Dimensions.length; i++) {
@@ -336,9 +336,9 @@
 				}
 			}
 			if ((pivotParams.RealType == "Table")) {
-				result = OATParseMetadata(metadata, [], hideMeasures, pivotParams.ServerPagingPivot)
+				result = OATParseMetadata(metadata, [], hideMeasures, pivotParams.ServerPagingPivot, translations)
 			} else {
-				result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot)
+				result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot, translations)
 			}
 		}
 		
@@ -736,11 +736,22 @@
 
 		var relativePath = urlRelative.substring(0, urlRelative.indexOf("QueryViewer/oatPivot"));
 		this.relativePath = relativePath
-
+	
+		this.fireOnPageChangeTable = function(UcId, move){
+			setTimeout( function() {
+				var paramobj = {"QueryviewerId": UcId, "Navigation": move};
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnPageChangeEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+	
 		var pivot;
 
 		queryName = queryName.replace(/\./g, "")
 		this.query = queryName
+		this.translations = translations
 		if (type == "PivotTable") {
 			pivot = OAT_JS.pivot.cb(this, this.pivotDiv, page, content, defaultPicture, QueryViewerCollection, colms,
 				this.formatValues, this.conditionalFormatsColumns, this.formatValuesMeasures, this.autoResize, this.disableColumnSort, this.UcId, this.IdForQueryViewerCollection,
@@ -771,44 +782,7 @@
 			}
 
 			if (this.pageSize) {
-				if (!self.serverPaging) {
-					setTimeout(function () {
-						var options = {
-							currPage: this.ServerPageNumber,
-							ignoreRows: jQuery('tbody tr[visibQ=tf]', jQuery("#" + this.UcId + "_" + this.query)),
-							optionsForRows: [10, 15, 20],
-							rowsPerPage: rowNum != 'undefined' ? rowNum : 10,
-							jstype: "table",
-							topNav: false,
-							controlName: this.UcId + "_" + this.query,
-							cantPages: this.ServerPageCount,
-							controlUcId: this.UcId,
-							control: this
-						}
-						OAT.tablePagination(jQuery("#" + this.UcId + "_" + this.query), options);
-						var wd2 = jQuery("#" + this.UcId + "_" + this.query)[0].clientWidth - 1;
-						jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ width: wd2 + "px" });
-						if (jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css('display') === 'none') {
-							jQuery("#" + this.UcId + "_" + this.query).css({ marginBottom: "0px" });
-						} else {
-							jQuery("#" + this.UcId + "_" + this.query).css("margin-bottom", "0px");
-						}
-
-						if ((jQuery("#" + this.UcId + "_" + this.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + this.UcId + "_" + this.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + this.UcId + "_" + this.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
-							jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ marginBottom: "0px" })
-						}
-						var wd = jQuery("#" + this.UcId + "_" + this.query)[0].offsetWidth - 4;
-						jQuery("#" + this.UcId + "_" + this.query + "_grid_top_div").css({ width: wd + "px" });
-
-						if ((this.serverPaging) && (this.pageSize == 10)) {
-							if (this.ServerPageCount <= 1) { //hide pagiantion
-								jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ display: "none" });
-							}
-						}
-
-					}, 50)
-
-				} else {
+				
 					var options = {
 						currPage: this.ServerPageNumber,
 						ignoreRows: jQuery('tbody tr[visibQ=tf]', jQuery("#" + this.UcId + "_" + this.query)),
@@ -819,6 +793,7 @@
 						controlName: this.UcId + "_" + this.query,
 						cantPages: this.ServerPageCount,
 						controlUcId: this.UcId,
+						translations: translations,
 						control: this
 					}
 					OAT.partialTablePagination(jQuery("#" + this.UcId + "_" + this.query),options);
@@ -841,7 +816,7 @@
 							jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ display: "none" });
 						}
 					}
-				}
+				
 
 			}
 			var wd = jQuery("#" + this.UcId + "_" + this.query)[0].offsetWidth - 4;
@@ -965,6 +940,17 @@
 			}, 0)
 		}
 		
+		
+		this.fireOnFilterChanged = function(UcId, FilterChangedData){
+			setTimeout( function() {
+				var paramobj = {"QueryViewerd": UcId, "FilterChangedData": FilterChangedData};
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnFilterChangedEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		queryself.oat_element = pivot;
 
 
@@ -993,7 +979,7 @@
 			
 			this.gridData[UcId].grid = new OAT.Grid(content, controlName, query, columnsDataType, colms, QueryViewerCollection, this.gridData[UcId].rowsPerPage,
 				disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, _mthis.serverPaging, _mthis.HideDataFilds, _mthis.orderFildsHidden, _mthis.TableOrderFilds, _mthis.relativePath,
-				this.gridData[UcId].selection, _mthis.pivotParams.Title );
+				this.gridData[UcId].selection, _mthis.pivotParams.Title, _mthis.translations );
 			this.gridData[UcId].grid.oat_component = this;
 			
 
@@ -1192,7 +1178,9 @@
 				this.gridData[UcId].endValueRead = false
 				//call OnFirstPage on load
 				qv.collection[this.gridData[UcId].IdForQueryViewerCollection].CurrentPage = 1;
-				if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
+				if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') 
+					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage")
 			}
 
 			if (!_mthis.serverPaging) {
@@ -1291,13 +1279,19 @@
 			if (OAT_JS.grid.gridData[UcId].actualPageNumber != pageNumber) {
 				qv.collection[this.gridData[UcId].IdForQueryViewerCollection].CurrentPage = pageNumber;
 				if (pageNumber == 1) {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
+					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') 
+					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage")
 				} else if (pageNumber == this.gridData[UcId].actualCantPages) {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage()
+					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage) == 'function') 
+					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnLastPage")
 				} else if (pageNumber < OAT_JS.grid.gridData[UcId].actualPageNumber) {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage()
+					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnPreviousPage")
 				} else {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage()
+					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnNextPage")
 				}
 
 			}
@@ -1314,10 +1308,21 @@
 					} else {
 						var meta = OAT.createXMLMetadata(OAT_JS.grid.gridData[UcId], null, true);
 						var spl = OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection;
-						var listennings = qv.collection[spl];
-						if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
+						//var listennings = qv.collection[spl];
+						/*if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
 							qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
-						}
+						}*/
+						
+						
+						setTimeout( function() {
+				
+									var paramobj = {  "QueryviewerId": spl, "Metadata": meta};
+									var evt = document.createEvent("Events")
+									evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
+									evt.parameter = paramobj;
+									document.dispatchEvent(evt);
+				
+								}, 50)
 					}
 				}
 				wait();
@@ -2039,20 +2044,32 @@
 						var meta = OAT.createXMLMetadata(OAT_JS.grid.gridData[UcId], null, true);
 
 						var spl = OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection;
-						var listennings = qv.collection[spl];
+						
+						
+						setTimeout( function() {
+				
+							var paramobj = {  "QueryviewerId": spl, "Metadata": meta};
+							var evt = document.createEvent("Events")
+							evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
+							evt.parameter = paramobj;
+							document.dispatchEvent(evt);
+				
+						}, 50)
+						
+						/*var listennings = qv.collection[spl];
 						if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
 							qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
-						}
+						}*/
 					}
 				}
 				wait();
 			}
 
 		},
-		getTableWhenServerPagination: function (UcId) {
-			var res = qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTableSync([1, 0, true, "", "", OAT_JS.grid.gridData[UcId].filterInfo, false]);
+		getTableWhenServerPagination: function (UcId, res) {
+			//var res = qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTableSync([1, 0, true, "", "", OAT_JS.grid.gridData[UcId].filterInfo, false]);
 			var t = 0;
-			var records = res.split("<Recordset");//res.split("<Page PageNumber=\"1\">")
+			var records = res.split("<Recordset");
 			var rec = "<Recordset" + records[1]
 			var last = rec.split("</Page>");
 			var finalRes = last[0] + '</Page>\n</Recordset>';//"</Table>";
@@ -2091,7 +2108,7 @@
 
 					var xml_doc = qv.util.dom.xmlDocument(datastr);
 					var Node = qv.util.dom.selectXPathNode(xml_doc, "/DATA");
-					qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData = {};
+					/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData = {};
 					qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData.Name = Node.getAttribute("name");
 					qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData.SelectedValues = [];
 					var valueIndex = -1;
@@ -2099,10 +2116,22 @@
 						if (Node.childNodes[i].nodeName == "VALUE") {
 							valueIndex++;
 							qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
-						}
-					if (qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChanged) {
+						}*/
+						
+					var FilterChangedData = {};
+					FilterChangedData.Name = Node.getAttribute("name");
+					FilterChangedData.SelectedValues = [];
+					var valueIndex = -1;
+					for (var i = 0; i < Node.childNodes.length; i++)
+						if (Node.childNodes[i].nodeName == "VALUE") {
+							valueIndex++;
+							FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
+						}	
+						
+					self.fireOnFilterChanged(UcId, FilterChangedData)
+					/*if (qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChanged) {
 						qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChanged();
-					}
+					}*/
 				} else {
 					OAT_JS.grid.gridData[UcId].differentValuesPaginationInfo[df].blocked = true;
 					var ValuePageInfo = OAT_JS.grid.gridData[UcId].differentValuesPaginationInfo[df]
@@ -2110,7 +2139,7 @@
 					OAT_JS.grid.gridData[UcId].lastRequestValue = df;
 					
 					OAT_JS.grid.lastCallToQueryViewer = "filterChange"
-					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId,  "filterValue": filterValue, "dataField": df, "oatDimension": oatDimension }
+					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId,  "filterValue": "", "dataField": df, "oatDimension": oatDimension }
 				
 					self.requestAttributeForTable(UcId, df, page, "", 0)
 				
@@ -2123,6 +2152,7 @@
 			}
 
 		},
+		
 		getAllDataRowsForExport: function (UcId, _selfgrid, fileName, format) {
 			
 			OAT_JS.grid.lastCallToQueryViewer = "getAllDataRowsForExport"
@@ -2273,14 +2303,42 @@
 					} else {
 						var meta = OAT.createXMLMetadata(OAT_JS.grid.gridData[UcId], null, true);
 						var spl = OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection;
-						var listennings = qv.collection[spl];
+						
+						setTimeout( function() {
+				
+							var paramobj = {  "QueryviewerId": spl, "Metadata": meta};
+							var evt = document.createEvent("Events")
+							evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
+							evt.parameter = paramobj;
+							document.dispatchEvent(evt);
+				
+						}, 50)
+						/*var listennings = qv.collection[spl];
 						if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
 							qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
-						}
+						}*/
 					}
 				}
 				wait();
 			}
+		},
+		fireOnItemClickEvent: function(query, datastr){
+			setTimeout( function() {
+				var paramobj = {"QueryViewer": query, "Data": datastr, "QueryviewerId": self.IdForQueryViewerCollection};
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnItemClickEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		},		
+		requestDataSynForTable: function(UcId){
+			setTimeout( function() {
+				var paramobj = {"QueryviewerId": UcId};
+				var evt = document.createEvent("Events")
+				evt.initEvent("RequestDataSynForTable", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
 		},
 		addValueToDifferentValues: function (UcId, dataField, val) {
 			var originalColumn = this.gridData[UcId].originalColumnDataField.indexOf(dataField);
@@ -2810,7 +2868,7 @@
 		return [data, fullData];
 	}
 
-	OATParseMetadata = function (metadata, hideDimension, hideMeasures, serverPaging) {
+	OATParseMetadata = function (metadata, hideDimension, hideMeasures, serverPaging, translations) {
 		//Parsear string metadata para remover measures ocultas
 		var orderFildsHidden = []; var hideDataFilds = []; var nameFildsHidden = [];
 
@@ -2886,7 +2944,7 @@
 			}
 		}
 		if ((serverPaging) && (allHide)) {
-			measuresString.push('<OLAPMeasure name="Quantity" displayName="' + gx.getMessage("GXPL_QViewerQuantity") + '" description="' + gx.getMessage("GXPL_QViewerQuantity") + '" dataField="F0" aggregation="count" summarize="yes" align="right" picture="" targetValue="0" defaultPosition="data" validPositions="data" dataType="integer" format="borderThickness:1"> </OLAPMeasure>');
+			measuresString.push('<OLAPMeasure name="Quantity" displayName="' + translations.GXPL_QViewerQuantity/*gx.getMessage("GXPL_QViewerQuantity")*/ + '" description="' + translations.GXPL_QViewerQuantity + '" dataField="F0" aggregation="count" summarize="yes" align="right" picture="" targetValue="0" defaultPosition="data" validPositions="data" dataType="integer" format="borderThickness:1"> </OLAPMeasure>');
 		}
 
 		var taileMetadata = "</OLAPCube>";

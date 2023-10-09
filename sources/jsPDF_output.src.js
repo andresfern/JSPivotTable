@@ -5122,7 +5122,7 @@
 		if (self.columns.length < 0) {
 
 			var xlpivotTable1 = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-				+ '<pivotTableDefinition name="Tabla dinamica1" cacheId="5" dataCaption="' + gx.getMessage("GXPL_QViewerJSValue") + '" createdVersion="3" updatedVersion="3" minRefreshableVersion="3" applyNumberFormats="0" applyBorderFormats="0" applyFontFormats="0" applyPatternFormats="0" applyAlignmentFormats="0" applyWidthHeightFormats="1" showCalcMbrs="0" useAutoFormatting="1" itemPrintTitles="1" indent="0" outline="1" outlineData="1" multipleFieldFilters="0" rowHeaderCaption="Make" ' + totalsExportPivotPdfOptions + 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+				+ '<pivotTableDefinition name="Tabla dinamica1" cacheId="5" dataCaption="' + "Value"/*gx.getMessage("GXPL_QViewerJSValue")*/ + '" createdVersion="3" updatedVersion="3" minRefreshableVersion="3" applyNumberFormats="0" applyBorderFormats="0" applyFontFormats="0" applyPatternFormats="0" applyAlignmentFormats="0" applyWidthHeightFormats="1" showCalcMbrs="0" useAutoFormatting="1" itemPrintTitles="1" indent="0" outline="1" outlineData="1" multipleFieldFilters="0" rowHeaderCaption="Make" ' + totalsExportPivotPdfOptions + 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
 				+ "<location ref=\"A1:" + lastPos + "\" firstHeaderRow=\"1\" firstDataRow=\"" + firstDataRow + "\" firstDataCol=\"" + firstDataCol + "\"/>"
 				+ "<pivotFields>"
 			var pfi = [];
@@ -5446,7 +5446,7 @@
 				}
 			}
 			var xlpivotTable1 = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
-				+ '<pivotTableDefinition name="Tabla dinamica1" cacheId="5" dataCaption="' + gx.getMessage("GXPL_QViewerJSValue") + '" createdVersion="3" updatedVersion="3" minRefreshableVersion="3" applyNumberFormats="0" applyBorderFormats="0" applyFontFormats="0" applyPatternFormats="0" applyAlignmentFormats="0" applyWidthHeightFormats="1" showCalcMbrs="0" useAutoFormatting="1" itemPrintTitles="1" indent="0" outline="1" outlineData="1" multipleFieldFilters="0" '
+				+ '<pivotTableDefinition name="Tabla dinamica1" cacheId="5" dataCaption="' + "Value"/*gx.getMessage("GXPL_QViewerJSValue")*/ + '" createdVersion="3" updatedVersion="3" minRefreshableVersion="3" applyNumberFormats="0" applyBorderFormats="0" applyFontFormats="0" applyPatternFormats="0" applyAlignmentFormats="0" applyWidthHeightFormats="1" showCalcMbrs="0" useAutoFormatting="1" itemPrintTitles="1" indent="0" outline="1" outlineData="1" multipleFieldFilters="0" '
 				+ rowLabel + ' ' + totalsExportPivotPdfOptions + ' xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">\n'
 				+ "<location "
 				+ "ref=\"A" + varRef + "\""//ref=\"A1\"' 

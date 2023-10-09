@@ -20,7 +20,7 @@
 	} /* GridData */
 
 	OAT.Grid = function (element, controlName, query, columnsDataType, colms, QueryViewerCollection,
-		pageSize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, serverPaging, HideDataFilds, OrderFildsHidden, TableDataFilds, relativePath, selection, GridTitle) {
+		pageSize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, serverPaging, HideDataFilds, OrderFildsHidden, TableDataFilds, relativePath, selection, GridTitle, translations) {
 		var self = this;
 		self.controlName = controlName;
 		self.columnsDataType = columnsDataType;
@@ -39,7 +39,7 @@
 		self.TableDataFilds = TableDataFilds;
 		self.relativePath = relativePath;
 		self.selection = selection;
-
+		self.translations = translations
 		self.isSD = OAT.isSD() 
 
 		self.conditions = new Array(columnsDataType.length);
@@ -256,7 +256,7 @@
 				} else {
 					spantitle.setAttribute("class", "winrect_title_label");
 				}
-				OAT.addTextNode(spantitle, gx.getMessage("GXPL_QViewerPopupTitle"));
+				OAT.addTextNode(spantitle,  self.translations.GXPL_QViewerPopupTitle); //gx.getMessage("GXPL_QViewerPopupTitle"));
 				jQuery(".oat_winrect_title").append(spantitle)
 
 				OAT.Dom.clear(self.exportPage);
@@ -289,7 +289,7 @@
 				self.exportPage.appendChild(div_down);
 
 				var label = document.createElement("span");
-				label.textContent = gx.getMessage("GXPL_QViewerJSVisibleColumns");
+				label.textContent = self.translations.GXPL_QViewerJSVisibleColumns;//gx.getMessage("GXPL_QViewerJSVisibleColumns");
 				var div_label = document.createElement("div");
 				div_label.setAttribute("class", "div_label_win");
 				div_label.appendChild(label);
@@ -414,6 +414,13 @@
 			}	
 		}
 		
+		
+		this.setDataSynForTable = function(dataSync){
+			_self = self.oat_component.lastCallData.self
+			
+			OAT.ClickHandle(_self, self.oat_component.lastCallData.elemvalue, dataSync)
+		}
+		
 		this.appendExportToXmlOption = function (content, someExport) {
 			var exportXMLButton;
 			var fileName = this.query;
@@ -428,7 +435,7 @@
 					var exportButtonSub = self.createExportButton(exportXMLButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportXml"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXml)//gx.getMessage("GXPL_QViewerContextMenuExportXml"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportXMLButton.appendChild(pvpl);
 
@@ -458,7 +465,7 @@
 					var exportButtonSub = self.createExportButton(exportHTMLButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportHtml"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportHtml)//gx.getMessage("GXPL_QViewerContextMenuExportHtml"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportHTMLButton.appendChild(pvpl);
 
@@ -529,7 +536,7 @@
 					var exportButtonSub = self.createExportButton(exportPDFButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportPdf"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportPdf); //gx.getMessage("GXPL_QViewerContextMenuExportPdf"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportPDFButton.appendChild(pvpl);
 
@@ -562,7 +569,7 @@
 					var exportButtonSub = self.createExportButton(exportXLSButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportXls2003"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXls2003); //gx.getMessage("GXPL_QViewerContextMenuExportXls2003"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportXLSButton.appendChild(pvpl);
 
@@ -594,7 +601,7 @@
 
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportXlsx"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXlsx);// gx.getMessage("GXPL_QViewerContextMenuExportXlsx"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportXLSButton.appendChild(pvpl);
 
@@ -1030,12 +1037,12 @@
 
 		}
 
-		this.getDataXML = function () {
+		this.getDataXML = function (serverData) {
 
-				spl = self.IdForQueryViewerCollection;
-				var temp = self.QueryViewerCollection[spl].getPivottableDataSync();
+				//spl = self.IdForQueryViewerCollection;
+				//var temp = self.QueryViewerCollection[spl].getPivottableDataSync();
 
-				dataStr = temp.split("<Recordset")[1];
+				var dataStr = serverData.split("<Recordset")[1];
 
 				dataStr = "<Recordset" + dataStr;
 
@@ -1043,8 +1050,8 @@
 				return dataStr;
 		}
 
-		this.getFilteredDataXML = function () {
-			return OAT_JS.grid.getTableWhenServerPagination(self.UcId);
+		this.getFilteredDataXML = function (serverData) {
+			return OAT_JS.grid.getTableWhenServerPagination(self.UcId, serverData);
 		}
 
 
@@ -2177,7 +2184,7 @@
 			
 			var IStyle = OAT.isIE() ? "top:-10px;" : ""; 
 			OAT.addImageNode(alabel, (_self.grid.conditions[colNumber].sort === 2)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+ascForId);
-			OAT.addTextNode(alabel, gx.getMessage("GXPL_QViewerJSAscending"))
+			OAT.addTextNode(alabel, self.translations.GXPL_QViewerJSAscending); //gx.getMessage("GXPL_QViewerJSAscending"))
 			div_order.appendChild(alabel);
 			div_order.appendChild(OAT.Dom.create("br"));
 			
@@ -2220,7 +2227,7 @@
 			dlabel.className = "first_div_label";
 			dlabel.htmlFor = dscForId;
 			OAT.addImageNode(dlabel, (_self.grid.conditions[colNumber].sort === 3)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+dscForId);
-			OAT.addTextNode(dlabel, gx.getMessage("GXPL_QViewerJSDescending"))
+			OAT.addTextNode(dlabel, self.translations.GXPL_QViewerJSDescending); //gx.getMessage("GXPL_QViewerJSDescending"))
 
 			div_order.appendChild(desc);
 			div_order.appendChild(dlabel);
@@ -2287,7 +2294,7 @@
 			});
 
 			var draglabel = OAT.Dom.create("label");
-			OAT.addTextNode(draglabel, gx.getMessage("GXPL_QViewerJSMoveColumnToLeft"))
+			OAT.addTextNode(draglabel, self.translations.GXPL_QViewerJSMoveColumnToLeft); //gx.getMessage("GXPL_QViewerJSMoveColumnToLeft"))
 			draglabel.htmlFor = "move_column_to_left" + cached;
 			dragDiv_L_sel_div.appendChild(draglabel);
 
@@ -2362,7 +2369,7 @@
 
 
 			var draglabelR = OAT.Dom.create("label");
-			OAT.addTextNode(draglabelR, gx.getMessage("GXPL_QViewerJSMoveColumnToRight"))
+			OAT.addTextNode(draglabelR, self.translations.GXPL_QViewerJSMoveColumnToRight)//gx.getMessage("GXPL_QViewerJSMoveColumnToRight"))
 			draglabelR.htmlFor = "move_column_to_right" + cached;
 			dragDiv_R_sel_div.appendChild(draglabelR);
 			OAT.Dom.append([dragDiv, dragDiv_R_sel_div]);
@@ -2381,7 +2388,7 @@
 			});
 
 			var rl = OAT.Dom.create("label");
-			OAT.addTextNode(rl, gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
+			OAT.addTextNode(rl, self.translations.GXPL_QViewerJSRestoreDefaultView);//gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
 			rl.htmlFor = "pivot_checkbox_restoreview";
 			restoreview_sel_div.appendChild(rl);
 			OAT.Dom.append([restoreview, restoreview_sel_div]);
@@ -2543,17 +2550,17 @@
 		d.setAttribute("class", "div_buttons_popup");
 
 		var all = document.createElement("button");
-		all.textContent = gx.getMessage("GXPL_QViewerJSAll");
+		all.textContent = self.translations.GXPL_QViewerJSAll; //gx.getMessage("GXPL_QViewerJSAll");
 		all.setAttribute("class", "btn");
 		jQuery(all).click(allRef);
 
 		var none = document.createElement("button");
-		none.textContent = gx.getMessage("GXPL_QViewerJSNone");
+		none.textContent = self.translations.GXPL_QViewerJSNone; //gx.getMessage("GXPL_QViewerJSNone");
 		none.setAttribute("class", "btn");
 		jQuery(none).click(noneRef);
 
 		var reverse = document.createElement("button");
-		reverse.textContent = gx.getMessage("GXPL_QViewerJSReverse");
+		reverse.textContent = self.translations.GXPL_QViewerJSReverse; //gx.getMessage("GXPL_QViewerJSReverse");
 		reverse.setAttribute("class", "btn");
 		jQuery(reverse).click(reverseRef);
 
@@ -2568,9 +2575,9 @@
 			searchInput.textContent = "none";
 			searchInput.setAttribute("class", "search_input");
 			searchInput.setAttribute("type", "text");
-			searchInput.setAttribute("label", gx.getMessage("GXPL_QViewerSearch"));
-			searchInput.setAttribute("title", gx.getMessage("GXPL_QViewerSearch"));
-			searchInput.setAttribute("placeholder", gx.getMessage("GXPL_QViewerSearch"));
+			searchInput.setAttribute("label", self.translations.GXPL_QViewerSearch); //gx.getMessage("GXPL_QViewerSearch"));
+			searchInput.setAttribute("title", self.translations.GXPL_QViewerSearch);  
+			searchInput.setAttribute("placeholder", self.translations.GXPL_QViewerSearch); 
 			searchInput.setAttribute("id", _self.grid.UcId + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]);
 			jQuery(searchInput).keyup(searchFilterClick);
 
@@ -2800,7 +2807,10 @@
 	var alreadyclicked = false;
 	var alreadyclickedTimeout;
 	OAT.onClickEventHandle = function (self, elemvalue) {
-		if (alreadyclicked) {
+		var datastr = OAT.PreClickHandle(self, elemvalue);
+		
+		//qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false);
+		/*if (alreadyclicked) {
 			//double click
 			alreadyclicked = false;
 			clearTimeout(alreadyclickedTimeout);
@@ -2820,21 +2830,31 @@
 				var spl = self.grid.IdForQueryViewerCollection;
 				qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false);
 			}, delay);
-		}
+		}*/
 	}
-
-	OAT.onDblClickEventHandle = function (self, elemvalue) {
+	
+	
+	/*OAT.onDblClickEventHandle = function (self, elemvalue) {
 		var datastr = OAT.ClickHandle(self, elemvalue);
 		var spl = self.grid.IdForQueryViewerCollection //self.grid.controlName.toUpperCase().split("_")[0] + "_" + self.grid.controlName.split("_")[0];
 		qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, true);
+	}*/
+
+	OAT.PreClickHandle = function (self, elemvalue) {
+		//if (self.grid.HideDataFilds.length) {
+			OAT_JS.grid.lastCallData = { "self": self, "elemvalue": elemvalue }
+			if (self.grid.HideDataFilds.length) {
+				OAT_JS.grid.requestDataSynForTable(self.grid.IdForQueryViewerCollection)
+			} else {
+				OAT.ClickHandle(self, elemvalue);
+			}	
+		//}
 	}
 
-	
-
-	OAT.ClickHandle = function (self, elemvalue) {
+	OAT.ClickHandle = function (self, elemvalue, dataSync) {
 		if (self.grid.HideDataFilds.length) {
 			var spl = self.grid.IdForQueryViewerCollection
-			var temp = self.grid.QueryViewerCollection[spl].getPivottableDataSync();
+			var temp = dataSync //self.grid.QueryViewerCollection[spl].getPivottableDataSync();
 
 			self.grid.allRowsPivot = []
 			self.grid.allFullRowsPivot = []
@@ -2961,7 +2981,10 @@
 
 		datastr = datastr + "</DATA>"
 
-		return datastr;
+
+		var spl = self.grid.IdForQueryViewerCollection;
+		OAT_JS.grid.fireOnItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false)
+		//return datastr;
 	}
 
 	OAT.onClickSelectNode = function (elemvalue, self) {

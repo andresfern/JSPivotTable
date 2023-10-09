@@ -1381,7 +1381,7 @@
 
 
 
-	//loadJS("QueryViewer/oatPivotTable/jsPDF.src.js", false);
+	
 
 	//loadJS("QueryViewer/oatPivotTable/jsPDF_output.src.js", false);
 	//loadJS("QueryViewer/oatPivotTable/oat_dialog.src.js", false);
@@ -1396,17 +1396,9 @@
 
 
 
-//jsPDF
 
-/**
-	Creates new jsPDF document object instance
-	@class
-	@param orientation One of "portrait" or "landscape" (or shortcuts "p" (Default), "l")
-	@param unit Measurement unit to be used when coordinates are specified. One of "pt" (points), "mm" (Default), "cm", "in"
-	@param format One of 'a3', 'a4' (Default),'a5' ,'letter' ,'legal'
-	@returns {jsPDF}
-	@name jsPDF
-	*/
+
+
 	var jsPDF = (function () {
 		'use strict';
 		/*jslint browser:true, plusplus: true, bitwise: true, nomen: true */
@@ -4335,7 +4327,42 @@
 	})(jsPDF.API)
 
 
+
+
+
+/*global jsPDF */
+
 //FILE jspdf_output
+
+
+/** ====================================================================
+ * jsPDF IE Below 9 Shim plugin 0.1.0
+ * Known to be compatible with jsPDF 0.9.0
+ *
+ * Copyright (c) 2013 James Hall, james@snapshotmedia.co.uk
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * ====================================================================
+ */
+
+
 	; (function (API) {
 		'use strict'
 
@@ -9428,7 +9455,7 @@
 		if (self.columns.length < 0) {
 
 			var xlpivotTable1 = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-				+ '<pivotTableDefinition name="Tabla dinamica1" cacheId="5" dataCaption="' + gx.getMessage("GXPL_QViewerJSValue") + '" createdVersion="3" updatedVersion="3" minRefreshableVersion="3" applyNumberFormats="0" applyBorderFormats="0" applyFontFormats="0" applyPatternFormats="0" applyAlignmentFormats="0" applyWidthHeightFormats="1" showCalcMbrs="0" useAutoFormatting="1" itemPrintTitles="1" indent="0" outline="1" outlineData="1" multipleFieldFilters="0" rowHeaderCaption="Make" ' + totalsExportPivotPdfOptions + 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
+				+ '<pivotTableDefinition name="Tabla dinamica1" cacheId="5" dataCaption="' + "Value"/*gx.getMessage("GXPL_QViewerJSValue")*/ + '" createdVersion="3" updatedVersion="3" minRefreshableVersion="3" applyNumberFormats="0" applyBorderFormats="0" applyFontFormats="0" applyPatternFormats="0" applyAlignmentFormats="0" applyWidthHeightFormats="1" showCalcMbrs="0" useAutoFormatting="1" itemPrintTitles="1" indent="0" outline="1" outlineData="1" multipleFieldFilters="0" rowHeaderCaption="Make" ' + totalsExportPivotPdfOptions + 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">'
 				+ "<location ref=\"A1:" + lastPos + "\" firstHeaderRow=\"1\" firstDataRow=\"" + firstDataRow + "\" firstDataCol=\"" + firstDataCol + "\"/>"
 				+ "<pivotFields>"
 			var pfi = [];
@@ -9752,7 +9779,7 @@
 				}
 			}
 			var xlpivotTable1 = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
-				+ '<pivotTableDefinition name="Tabla dinamica1" cacheId="5" dataCaption="' + gx.getMessage("GXPL_QViewerJSValue") + '" createdVersion="3" updatedVersion="3" minRefreshableVersion="3" applyNumberFormats="0" applyBorderFormats="0" applyFontFormats="0" applyPatternFormats="0" applyAlignmentFormats="0" applyWidthHeightFormats="1" showCalcMbrs="0" useAutoFormatting="1" itemPrintTitles="1" indent="0" outline="1" outlineData="1" multipleFieldFilters="0" '
+				+ '<pivotTableDefinition name="Tabla dinamica1" cacheId="5" dataCaption="' + "Value"/*gx.getMessage("GXPL_QViewerJSValue")*/ + '" createdVersion="3" updatedVersion="3" minRefreshableVersion="3" applyNumberFormats="0" applyBorderFormats="0" applyFontFormats="0" applyPatternFormats="0" applyAlignmentFormats="0" applyWidthHeightFormats="1" showCalcMbrs="0" useAutoFormatting="1" itemPrintTitles="1" indent="0" outline="1" outlineData="1" multipleFieldFilters="0" '
 				+ rowLabel + ' ' + totalsExportPivotPdfOptions + ' xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">\n'
 				+ "<location "
 				+ "ref=\"A" + varRef + "\""//ref=\"A1\"' 
@@ -10521,6 +10548,7 @@
 
 
 
+
 //FILE oat_grid -----------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -10542,7 +10570,7 @@
 	} /* GridData */
 
 	OAT.Grid = function (element, controlName, query, columnsDataType, colms, QueryViewerCollection,
-		pageSize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, serverPaging, HideDataFilds, OrderFildsHidden, TableDataFilds, relativePath, selection, GridTitle) {
+		pageSize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, serverPaging, HideDataFilds, OrderFildsHidden, TableDataFilds, relativePath, selection, GridTitle, translations) {
 		var self = this;
 		self.controlName = controlName;
 		self.columnsDataType = columnsDataType;
@@ -10561,7 +10589,7 @@
 		self.TableDataFilds = TableDataFilds;
 		self.relativePath = relativePath;
 		self.selection = selection;
-
+		self.translations = translations
 		self.isSD = OAT.isSD() 
 
 		self.conditions = new Array(columnsDataType.length);
@@ -10778,7 +10806,7 @@
 				} else {
 					spantitle.setAttribute("class", "winrect_title_label");
 				}
-				OAT.addTextNode(spantitle, gx.getMessage("GXPL_QViewerPopupTitle"));
+				OAT.addTextNode(spantitle,  self.translations.GXPL_QViewerPopupTitle); //gx.getMessage("GXPL_QViewerPopupTitle"));
 				jQuery(".oat_winrect_title").append(spantitle)
 
 				OAT.Dom.clear(self.exportPage);
@@ -10811,7 +10839,7 @@
 				self.exportPage.appendChild(div_down);
 
 				var label = document.createElement("span");
-				label.textContent = gx.getMessage("GXPL_QViewerJSVisibleColumns");
+				label.textContent = self.translations.GXPL_QViewerJSVisibleColumns;//gx.getMessage("GXPL_QViewerJSVisibleColumns");
 				var div_label = document.createElement("div");
 				div_label.setAttribute("class", "div_label_win");
 				div_label.appendChild(label);
@@ -10936,6 +10964,13 @@
 			}	
 		}
 		
+		
+		this.setDataSynForTable = function(dataSync){
+			_self = self.oat_component.lastCallData.self
+			
+			OAT.ClickHandle(_self, self.oat_component.lastCallData.elemvalue, dataSync)
+		}
+		
 		this.appendExportToXmlOption = function (content, someExport) {
 			var exportXMLButton;
 			var fileName = this.query;
@@ -10950,7 +10985,7 @@
 					var exportButtonSub = self.createExportButton(exportXMLButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportXml"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXml)//gx.getMessage("GXPL_QViewerContextMenuExportXml"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportXMLButton.appendChild(pvpl);
 
@@ -10980,7 +11015,7 @@
 					var exportButtonSub = self.createExportButton(exportHTMLButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportHtml"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportHtml)//gx.getMessage("GXPL_QViewerContextMenuExportHtml"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportHTMLButton.appendChild(pvpl);
 
@@ -11051,7 +11086,7 @@
 					var exportButtonSub = self.createExportButton(exportPDFButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportPdf"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportPdf); //gx.getMessage("GXPL_QViewerContextMenuExportPdf"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportPDFButton.appendChild(pvpl);
 
@@ -11084,7 +11119,7 @@
 					var exportButtonSub = self.createExportButton(exportXLSButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportXls2003"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXls2003); //gx.getMessage("GXPL_QViewerContextMenuExportXls2003"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportXLSButton.appendChild(pvpl);
 
@@ -11116,7 +11151,7 @@
 
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportXlsx"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXlsx);// gx.getMessage("GXPL_QViewerContextMenuExportXlsx"))
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					exportXLSButton.appendChild(pvpl);
 
@@ -11552,12 +11587,12 @@
 
 		}
 
-		this.getDataXML = function () {
+		this.getDataXML = function (serverData) {
 
-				spl = self.IdForQueryViewerCollection;
-				var temp = self.QueryViewerCollection[spl].getPivottableDataSync();
+				//spl = self.IdForQueryViewerCollection;
+				//var temp = self.QueryViewerCollection[spl].getPivottableDataSync();
 
-				dataStr = temp.split("<Recordset")[1];
+				var dataStr = serverData.split("<Recordset")[1];
 
 				dataStr = "<Recordset" + dataStr;
 
@@ -11565,8 +11600,8 @@
 				return dataStr;
 		}
 
-		this.getFilteredDataXML = function () {
-			return OAT_JS.grid.getTableWhenServerPagination(self.UcId);
+		this.getFilteredDataXML = function (serverData) {
+			return OAT_JS.grid.getTableWhenServerPagination(self.UcId, serverData);
 		}
 
 
@@ -12699,7 +12734,7 @@
 			
 			var IStyle = OAT.isIE() ? "top:-10px;" : ""; 
 			OAT.addImageNode(alabel, (_self.grid.conditions[colNumber].sort === 2)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+ascForId);
-			OAT.addTextNode(alabel, gx.getMessage("GXPL_QViewerJSAscending"))
+			OAT.addTextNode(alabel, self.translations.GXPL_QViewerJSAscending); //gx.getMessage("GXPL_QViewerJSAscending"))
 			div_order.appendChild(alabel);
 			div_order.appendChild(OAT.Dom.create("br"));
 			
@@ -12742,7 +12777,7 @@
 			dlabel.className = "first_div_label";
 			dlabel.htmlFor = dscForId;
 			OAT.addImageNode(dlabel, (_self.grid.conditions[colNumber].sort === 3)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+dscForId);
-			OAT.addTextNode(dlabel, gx.getMessage("GXPL_QViewerJSDescending"))
+			OAT.addTextNode(dlabel, self.translations.GXPL_QViewerJSDescending); //gx.getMessage("GXPL_QViewerJSDescending"))
 
 			div_order.appendChild(desc);
 			div_order.appendChild(dlabel);
@@ -12809,7 +12844,7 @@
 			});
 
 			var draglabel = OAT.Dom.create("label");
-			OAT.addTextNode(draglabel, gx.getMessage("GXPL_QViewerJSMoveColumnToLeft"))
+			OAT.addTextNode(draglabel, self.translations.GXPL_QViewerJSMoveColumnToLeft); //gx.getMessage("GXPL_QViewerJSMoveColumnToLeft"))
 			draglabel.htmlFor = "move_column_to_left" + cached;
 			dragDiv_L_sel_div.appendChild(draglabel);
 
@@ -12884,7 +12919,7 @@
 
 
 			var draglabelR = OAT.Dom.create("label");
-			OAT.addTextNode(draglabelR, gx.getMessage("GXPL_QViewerJSMoveColumnToRight"))
+			OAT.addTextNode(draglabelR, self.translations.GXPL_QViewerJSMoveColumnToRight)//gx.getMessage("GXPL_QViewerJSMoveColumnToRight"))
 			draglabelR.htmlFor = "move_column_to_right" + cached;
 			dragDiv_R_sel_div.appendChild(draglabelR);
 			OAT.Dom.append([dragDiv, dragDiv_R_sel_div]);
@@ -12903,7 +12938,7 @@
 			});
 
 			var rl = OAT.Dom.create("label");
-			OAT.addTextNode(rl, gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
+			OAT.addTextNode(rl, self.translations.GXPL_QViewerJSRestoreDefaultView);//gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
 			rl.htmlFor = "pivot_checkbox_restoreview";
 			restoreview_sel_div.appendChild(rl);
 			OAT.Dom.append([restoreview, restoreview_sel_div]);
@@ -13065,17 +13100,17 @@
 		d.setAttribute("class", "div_buttons_popup");
 
 		var all = document.createElement("button");
-		all.textContent = gx.getMessage("GXPL_QViewerJSAll");
+		all.textContent = self.translations.GXPL_QViewerJSAll; //gx.getMessage("GXPL_QViewerJSAll");
 		all.setAttribute("class", "btn");
 		jQuery(all).click(allRef);
 
 		var none = document.createElement("button");
-		none.textContent = gx.getMessage("GXPL_QViewerJSNone");
+		none.textContent = self.translations.GXPL_QViewerJSNone; //gx.getMessage("GXPL_QViewerJSNone");
 		none.setAttribute("class", "btn");
 		jQuery(none).click(noneRef);
 
 		var reverse = document.createElement("button");
-		reverse.textContent = gx.getMessage("GXPL_QViewerJSReverse");
+		reverse.textContent = self.translations.GXPL_QViewerJSReverse; //gx.getMessage("GXPL_QViewerJSReverse");
 		reverse.setAttribute("class", "btn");
 		jQuery(reverse).click(reverseRef);
 
@@ -13090,9 +13125,9 @@
 			searchInput.textContent = "none";
 			searchInput.setAttribute("class", "search_input");
 			searchInput.setAttribute("type", "text");
-			searchInput.setAttribute("label", gx.getMessage("GXPL_QViewerSearch"));
-			searchInput.setAttribute("title", gx.getMessage("GXPL_QViewerSearch"));
-			searchInput.setAttribute("placeholder", gx.getMessage("GXPL_QViewerSearch"));
+			searchInput.setAttribute("label", self.translations.GXPL_QViewerSearch); //gx.getMessage("GXPL_QViewerSearch"));
+			searchInput.setAttribute("title", self.translations.GXPL_QViewerSearch);  
+			searchInput.setAttribute("placeholder", self.translations.GXPL_QViewerSearch); 
 			searchInput.setAttribute("id", _self.grid.UcId + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]);
 			jQuery(searchInput).keyup(searchFilterClick);
 
@@ -13322,7 +13357,10 @@
 	var alreadyclicked = false;
 	var alreadyclickedTimeout;
 	OAT.onClickEventHandle = function (self, elemvalue) {
-		if (alreadyclicked) {
+		var datastr = OAT.PreClickHandle(self, elemvalue);
+		
+		//qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false);
+		/*if (alreadyclicked) {
 			//double click
 			alreadyclicked = false;
 			clearTimeout(alreadyclickedTimeout);
@@ -13342,21 +13380,31 @@
 				var spl = self.grid.IdForQueryViewerCollection;
 				qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false);
 			}, delay);
-		}
+		}*/
 	}
-
-	OAT.onDblClickEventHandle = function (self, elemvalue) {
+	
+	
+	/*OAT.onDblClickEventHandle = function (self, elemvalue) {
 		var datastr = OAT.ClickHandle(self, elemvalue);
 		var spl = self.grid.IdForQueryViewerCollection //self.grid.controlName.toUpperCase().split("_")[0] + "_" + self.grid.controlName.split("_")[0];
 		qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, true);
+	}*/
+
+	OAT.PreClickHandle = function (self, elemvalue) {
+		//if (self.grid.HideDataFilds.length) {
+			OAT_JS.grid.lastCallData = { "self": self, "elemvalue": elemvalue }
+			if (self.grid.HideDataFilds.length) {
+				OAT_JS.grid.requestDataSynForTable(self.grid.IdForQueryViewerCollection)
+			} else {
+				OAT.ClickHandle(self, elemvalue);
+			}	
+		//}
 	}
 
-	
-
-	OAT.ClickHandle = function (self, elemvalue) {
+	OAT.ClickHandle = function (self, elemvalue, dataSync) {
 		if (self.grid.HideDataFilds.length) {
 			var spl = self.grid.IdForQueryViewerCollection
-			var temp = self.grid.QueryViewerCollection[spl].getPivottableDataSync();
+			var temp = dataSync //self.grid.QueryViewerCollection[spl].getPivottableDataSync();
 
 			self.grid.allRowsPivot = []
 			self.grid.allFullRowsPivot = []
@@ -13483,7 +13531,10 @@
 
 		datastr = datastr + "</DATA>"
 
-		return datastr;
+
+		var spl = self.grid.IdForQueryViewerCollection;
+		OAT_JS.grid.fireOnItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false)
+		//return datastr;
 	}
 
 	OAT.onClickSelectNode = function (elemvalue, self) {
@@ -14710,6 +14761,8 @@
 
 
 
+
+
 //OAT_IMPL file
 
 
@@ -14724,7 +14777,7 @@
 	
 	
 	
-	renderJSPivot = function (pivotParams, QueryViewerCollection, queryself) {
+	renderJSPivot = function (pivotParams, QueryViewerCollection, translations, queryself) {
 		if (pivotParams.RealType != "Table") {
 			pivotParams.ServerPaging = false;
 		}
@@ -14737,18 +14790,18 @@
 		if ((pivotParams.RememberLayout) && (pivotParams.ServerPaging) && (pivotParams.RealType != "PivotTable")) {
 			var state = OAT.getStateWhenServingPaging(pivotParams.UcId + '_' + pivotParams.ObjectName.replace(/\./g, ""), pivotParams.ObjectName.replace(/\./g, ""))
 			if (!state) {
-				renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
+				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, null, queryself)
 			} else {
 				var pageValue = 1;
 				if (state.pageSize == "") { state.pageSize = undefined; pageValue = 0; }
 				
 				pivotParams.previousDataFieldOrder = state.dataFieldOrder;
 				pivotParams.orderType = state.orderType;
-				renderJSPivotInter(pivotParams, QueryViewerCollection, state, queryself)
+				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, state, queryself)
 			}
 		} else {
 			if (pivotParams.RealType != "Table") {
-				renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
+				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, null, queryself)
 			} else {
 
 				pivotParams.customFilterInfo = "";
@@ -14828,14 +14881,14 @@
 						renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
 					}).closure(this), [1, pivotParams.PageSize, true, dataFieldOrder, orderType, pivotParams.customFilterInfo, false]);
 				} else {*/
-					renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
+					renderJSPivotInter(pivotParams, QueryViewerCollection, translations, null, queryself)
 				//}
 
 			}
 		}
 	}
 
-	renderJSPivotInter = function (pivotParams, QueryViewerCollection, state, queryself) {
+	renderJSPivotInter = function (pivotParams, QueryViewerCollection, translations, state, queryself) {
 		var type = pivotParams.RealType
 		var container = pivotParams.container
 		var page = pivotParams.page
@@ -15032,7 +15085,7 @@
 				this.InitMetadata.Conditions = previousState.Conditions
 			}
 
-			result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot)
+			result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot, translations)
 		} else {
 			var hideDimension = [];
 			for (var i = 0; i < this.InitMetadata.Dimensions.length; i++) {
@@ -15048,9 +15101,9 @@
 				}
 			}
 			if ((pivotParams.RealType == "Table")) {
-				result = OATParseMetadata(metadata, [], hideMeasures, pivotParams.ServerPagingPivot)
+				result = OATParseMetadata(metadata, [], hideMeasures, pivotParams.ServerPagingPivot, translations)
 			} else {
-				result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot)
+				result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot, translations)
 			}
 		}
 		
@@ -15448,11 +15501,22 @@
 
 		var relativePath = urlRelative.substring(0, urlRelative.indexOf("QueryViewer/oatPivot"));
 		this.relativePath = relativePath
-
+	
+		this.fireOnPageChangeTable = function(UcId, move){
+			setTimeout( function() {
+				var paramobj = {"QueryviewerId": UcId, "Navigation": move};
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnPageChangeEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+	
 		var pivot;
 
 		queryName = queryName.replace(/\./g, "")
 		this.query = queryName
+		this.translations = translations
 		if (type == "PivotTable") {
 			pivot = OAT_JS.pivot.cb(this, this.pivotDiv, page, content, defaultPicture, QueryViewerCollection, colms,
 				this.formatValues, this.conditionalFormatsColumns, this.formatValuesMeasures, this.autoResize, this.disableColumnSort, this.UcId, this.IdForQueryViewerCollection,
@@ -15483,44 +15547,7 @@
 			}
 
 			if (this.pageSize) {
-				if (!self.serverPaging) {
-					setTimeout(function () {
-						var options = {
-							currPage: this.ServerPageNumber,
-							ignoreRows: jQuery('tbody tr[visibQ=tf]', jQuery("#" + this.UcId + "_" + this.query)),
-							optionsForRows: [10, 15, 20],
-							rowsPerPage: rowNum != 'undefined' ? rowNum : 10,
-							jstype: "table",
-							topNav: false,
-							controlName: this.UcId + "_" + this.query,
-							cantPages: this.ServerPageCount,
-							controlUcId: this.UcId,
-							control: this
-						}
-						OAT.tablePagination(jQuery("#" + this.UcId + "_" + this.query), options);
-						var wd2 = jQuery("#" + this.UcId + "_" + this.query)[0].clientWidth - 1;
-						jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ width: wd2 + "px" });
-						if (jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css('display') === 'none') {
-							jQuery("#" + this.UcId + "_" + this.query).css({ marginBottom: "0px" });
-						} else {
-							jQuery("#" + this.UcId + "_" + this.query).css("margin-bottom", "0px");
-						}
-
-						if ((jQuery("#" + this.UcId + "_" + this.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + this.UcId + "_" + this.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + this.UcId + "_" + this.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
-							jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ marginBottom: "0px" })
-						}
-						var wd = jQuery("#" + this.UcId + "_" + this.query)[0].offsetWidth - 4;
-						jQuery("#" + this.UcId + "_" + this.query + "_grid_top_div").css({ width: wd + "px" });
-
-						if ((this.serverPaging) && (this.pageSize == 10)) {
-							if (this.ServerPageCount <= 1) { //hide pagiantion
-								jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ display: "none" });
-							}
-						}
-
-					}, 50)
-
-				} else {
+				
 					var options = {
 						currPage: this.ServerPageNumber,
 						ignoreRows: jQuery('tbody tr[visibQ=tf]', jQuery("#" + this.UcId + "_" + this.query)),
@@ -15531,6 +15558,7 @@
 						controlName: this.UcId + "_" + this.query,
 						cantPages: this.ServerPageCount,
 						controlUcId: this.UcId,
+						translations: translations,
 						control: this
 					}
 					OAT.partialTablePagination(jQuery("#" + this.UcId + "_" + this.query),options);
@@ -15553,7 +15581,7 @@
 							jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ display: "none" });
 						}
 					}
-				}
+				
 
 			}
 			var wd = jQuery("#" + this.UcId + "_" + this.query)[0].offsetWidth - 4;
@@ -15677,6 +15705,17 @@
 			}, 0)
 		}
 		
+		
+		this.fireOnFilterChanged = function(UcId, FilterChangedData){
+			setTimeout( function() {
+				var paramobj = {"QueryViewerd": UcId, "FilterChangedData": FilterChangedData};
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnFilterChangedEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		queryself.oat_element = pivot;
 
 
@@ -15705,7 +15744,7 @@
 			
 			this.gridData[UcId].grid = new OAT.Grid(content, controlName, query, columnsDataType, colms, QueryViewerCollection, this.gridData[UcId].rowsPerPage,
 				disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, _mthis.serverPaging, _mthis.HideDataFilds, _mthis.orderFildsHidden, _mthis.TableOrderFilds, _mthis.relativePath,
-				this.gridData[UcId].selection, _mthis.pivotParams.Title );
+				this.gridData[UcId].selection, _mthis.pivotParams.Title, _mthis.translations );
 			this.gridData[UcId].grid.oat_component = this;
 			
 
@@ -15904,7 +15943,9 @@
 				this.gridData[UcId].endValueRead = false
 				//call OnFirstPage on load
 				qv.collection[this.gridData[UcId].IdForQueryViewerCollection].CurrentPage = 1;
-				if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
+				if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') 
+					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage")
 			}
 
 			if (!_mthis.serverPaging) {
@@ -16003,13 +16044,19 @@
 			if (OAT_JS.grid.gridData[UcId].actualPageNumber != pageNumber) {
 				qv.collection[this.gridData[UcId].IdForQueryViewerCollection].CurrentPage = pageNumber;
 				if (pageNumber == 1) {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
+					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') 
+					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage")
 				} else if (pageNumber == this.gridData[UcId].actualCantPages) {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage()
+					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage) == 'function') 
+					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnLastPage")
 				} else if (pageNumber < OAT_JS.grid.gridData[UcId].actualPageNumber) {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage()
+					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnPreviousPage")
 				} else {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage) == 'function') qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage()
+					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage()
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnNextPage")
 				}
 
 			}
@@ -16026,10 +16073,21 @@
 					} else {
 						var meta = OAT.createXMLMetadata(OAT_JS.grid.gridData[UcId], null, true);
 						var spl = OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection;
-						var listennings = qv.collection[spl];
-						if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
+						//var listennings = qv.collection[spl];
+						/*if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
 							qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
-						}
+						}*/
+						
+						
+						setTimeout( function() {
+				
+									var paramobj = {  "QueryviewerId": spl, "Metadata": meta};
+									var evt = document.createEvent("Events")
+									evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
+									evt.parameter = paramobj;
+									document.dispatchEvent(evt);
+				
+								}, 50)
 					}
 				}
 				wait();
@@ -16751,20 +16809,32 @@
 						var meta = OAT.createXMLMetadata(OAT_JS.grid.gridData[UcId], null, true);
 
 						var spl = OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection;
-						var listennings = qv.collection[spl];
+						
+						
+						setTimeout( function() {
+				
+							var paramobj = {  "QueryviewerId": spl, "Metadata": meta};
+							var evt = document.createEvent("Events")
+							evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
+							evt.parameter = paramobj;
+							document.dispatchEvent(evt);
+				
+						}, 50)
+						
+						/*var listennings = qv.collection[spl];
 						if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
 							qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
-						}
+						}*/
 					}
 				}
 				wait();
 			}
 
 		},
-		getTableWhenServerPagination: function (UcId) {
-			var res = qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTableSync([1, 0, true, "", "", OAT_JS.grid.gridData[UcId].filterInfo, false]);
+		getTableWhenServerPagination: function (UcId, res) {
+			//var res = qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTableSync([1, 0, true, "", "", OAT_JS.grid.gridData[UcId].filterInfo, false]);
 			var t = 0;
-			var records = res.split("<Recordset");//res.split("<Page PageNumber=\"1\">")
+			var records = res.split("<Recordset");
 			var rec = "<Recordset" + records[1]
 			var last = rec.split("</Page>");
 			var finalRes = last[0] + '</Page>\n</Recordset>';//"</Table>";
@@ -16803,7 +16873,7 @@
 
 					var xml_doc = qv.util.dom.xmlDocument(datastr);
 					var Node = qv.util.dom.selectXPathNode(xml_doc, "/DATA");
-					qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData = {};
+					/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData = {};
 					qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData.Name = Node.getAttribute("name");
 					qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData.SelectedValues = [];
 					var valueIndex = -1;
@@ -16811,10 +16881,22 @@
 						if (Node.childNodes[i].nodeName == "VALUE") {
 							valueIndex++;
 							qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
-						}
-					if (qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChanged) {
+						}*/
+						
+					var FilterChangedData = {};
+					FilterChangedData.Name = Node.getAttribute("name");
+					FilterChangedData.SelectedValues = [];
+					var valueIndex = -1;
+					for (var i = 0; i < Node.childNodes.length; i++)
+						if (Node.childNodes[i].nodeName == "VALUE") {
+							valueIndex++;
+							FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
+						}	
+						
+					self.fireOnFilterChanged(UcId, FilterChangedData)
+					/*if (qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChanged) {
 						qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChanged();
-					}
+					}*/
 				} else {
 					OAT_JS.grid.gridData[UcId].differentValuesPaginationInfo[df].blocked = true;
 					var ValuePageInfo = OAT_JS.grid.gridData[UcId].differentValuesPaginationInfo[df]
@@ -16822,7 +16904,7 @@
 					OAT_JS.grid.gridData[UcId].lastRequestValue = df;
 					
 					OAT_JS.grid.lastCallToQueryViewer = "filterChange"
-					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId,  "filterValue": filterValue, "dataField": df, "oatDimension": oatDimension }
+					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId,  "filterValue": "", "dataField": df, "oatDimension": oatDimension }
 				
 					self.requestAttributeForTable(UcId, df, page, "", 0)
 				
@@ -16835,6 +16917,7 @@
 			}
 
 		},
+		
 		getAllDataRowsForExport: function (UcId, _selfgrid, fileName, format) {
 			
 			OAT_JS.grid.lastCallToQueryViewer = "getAllDataRowsForExport"
@@ -16985,14 +17068,42 @@
 					} else {
 						var meta = OAT.createXMLMetadata(OAT_JS.grid.gridData[UcId], null, true);
 						var spl = OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection;
-						var listennings = qv.collection[spl];
+						
+						setTimeout( function() {
+				
+							var paramobj = {  "QueryviewerId": spl, "Metadata": meta};
+							var evt = document.createEvent("Events")
+							evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
+							evt.parameter = paramobj;
+							document.dispatchEvent(evt);
+				
+						}, 50)
+						/*var listennings = qv.collection[spl];
 						if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
 							qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
-						}
+						}*/
 					}
 				}
 				wait();
 			}
+		},
+		fireOnItemClickEvent: function(query, datastr){
+			setTimeout( function() {
+				var paramobj = {"QueryViewer": query, "Data": datastr, "QueryviewerId": self.IdForQueryViewerCollection};
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnItemClickEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		},		
+		requestDataSynForTable: function(UcId){
+			setTimeout( function() {
+				var paramobj = {"QueryviewerId": UcId};
+				var evt = document.createEvent("Events")
+				evt.initEvent("RequestDataSynForTable", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
 		},
 		addValueToDifferentValues: function (UcId, dataField, val) {
 			var originalColumn = this.gridData[UcId].originalColumnDataField.indexOf(dataField);
@@ -17522,7 +17633,7 @@
 		return [data, fullData];
 	}
 
-	OATParseMetadata = function (metadata, hideDimension, hideMeasures, serverPaging) {
+	OATParseMetadata = function (metadata, hideDimension, hideMeasures, serverPaging, translations) {
 		//Parsear string metadata para remover measures ocultas
 		var orderFildsHidden = []; var hideDataFilds = []; var nameFildsHidden = [];
 
@@ -17598,7 +17709,7 @@
 			}
 		}
 		if ((serverPaging) && (allHide)) {
-			measuresString.push('<OLAPMeasure name="Quantity" displayName="' + gx.getMessage("GXPL_QViewerQuantity") + '" description="' + gx.getMessage("GXPL_QViewerQuantity") + '" dataField="F0" aggregation="count" summarize="yes" align="right" picture="" targetValue="0" defaultPosition="data" validPositions="data" dataType="integer" format="borderThickness:1"> </OLAPMeasure>');
+			measuresString.push('<OLAPMeasure name="Quantity" displayName="' + translations.GXPL_QViewerQuantity/*gx.getMessage("GXPL_QViewerQuantity")*/ + '" description="' + translations.GXPL_QViewerQuantity + '" dataField="F0" aggregation="count" summarize="yes" align="right" picture="" targetValue="0" defaultPosition="data" validPositions="data" dataType="integer" format="borderThickness:1"> </OLAPMeasure>');
 		}
 
 		var taileMetadata = "</OLAPCube>";
@@ -17915,12 +18026,8 @@
 	function init() {
 
 	}
-
-
-
-
-
-
+	
+	
 	//FILE OAT.Layers
 	OAT.Layers = function (f) {
 		var a = this;
@@ -18576,6 +18683,9 @@
 	}
 
 
+	
+
+
 
 //FILE oat_pivot -----------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -18614,7 +18724,7 @@
 		this.relativePath = relativePath;
 		this.selection = selection;
 		this.GrandTotalVisibility = GrandTotalVisibility;
-		
+		this.translations = _mthis.translations
 		this.isSD = OAT.isSD();
 		
 		fromUndefinedToBlanck(dataRows);
@@ -19213,17 +19323,21 @@
 				self.goWhenHide(true);
 			}
 		}
-
-		this.getDataXML = function () {
-			var dataStr;
-			
-				var temp = self.QueryViewerCollection[self.IdForQueryViewerCollection].getPivottableDataSync();
-
-				dataStr = temp.split("<Recordset")[1];
-
-				dataStr = "<Recordset" + dataStr;
-				
-			
+		
+		/*this.requestDataSyncForPivotTable = function(){
+			setTimeout( function() {
+				var paramobj = { "QueryviewerId": self.IdForQueryViewerCollection} ;
+				var evt = document.createEvent("Events")
+				evt.initEvent("RequestDataSyncForPivotTable", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}*/
+		
+		this.getDataXML = function(serverData) {
+			var dataStr = serverData.split("<Recordset")[1];
+			//var temp = self.QueryViewerCollection[self.IdForQueryViewerCollection].getPivottableDataSync();
+			dataStr = "<Recordset" + dataStr;
 			return dataStr
 		}
 		
@@ -19604,20 +19718,29 @@
 
 					self.getDataForPivot(self.UcId, self.pageData.ServerPageNumber, self.rowsPerPage, true, "", "", "", "", true);
 					setTimeout(function () {
-						qv.pivot.onItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
+						self.fireOnItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
+						//qv.pivot.onItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
 					}, 2000);
 					break;
 				case "FilteredChanged":
 					setTimeout(function () {
 						var data = JSON.parse(resJSON);
-						self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(self.lastColumnNumber, data.NotNullValues, self.conditions[dimensionNumber].blackList);
+						self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(self.lastColumnNumber, data.NotNullValues, self.conditions[self.lastColumnNumber].blackList);
 					}, 200)
 					break;
 			}
 					
 		}
 		
-		
+		this.fireOnItemExpandCollapseEvent = function(query, datastr, collapse){
+			setTimeout( function() {
+				var paramobj = {"QueryViewer": query, "Data": datastr, "QueryviewerId": self.IdForQueryViewerCollection, "IsCollapse": collapse};
+				var evt = document.createEvent("Events")
+				evt.initEvent("PivotTableOnItemExpandCollapseEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
 		
 		this.requestCalculatePivottableData = function()
 		{
@@ -19820,10 +19943,10 @@
 		}
 		
 		
-		this.getFilteredDataXML = function () {
+		this.getFilteredDataXML = function (serverData) {
 			
-				var temp = self.QueryViewerCollection[self.IdForQueryViewerCollection].getPivottableDataSync();
-				temp = temp.replace(/\&amp;/g, '&').replace(/\&lt;/g, '<').replace(/\&gt;/g, '>').replace(/\&apos;/g, '\'').replace(/\&quot/g, '\"');
+				//var temp = self.QueryViewerCollection[self.IdForQueryViewerCollection].getPivottableDataSync();
+				temp = serverData.replace(/\&amp;/g, '&').replace(/\&lt;/g, '<').replace(/\&gt;/g, '>').replace(/\&apos;/g, '\'').replace(/\&quot/g, '\"');
 				var stringRecord = temp.split("<Record>")
 
 				var tempData = [];
@@ -20859,11 +20982,11 @@
 			var cond = {
 				distinctValues: [], blackList: [], whiteList: [], greyList: [], collapsedValues: [],
 				sort: sortValue, subtotals: showSubtotals, hideSubtotalOption: hideSubtotalsOption, validPosition: validPosition,
-				dataRowPosition: index, isDimension: isDimension, topFilterValue: gx.getMessage("GXPL_QViewerJSAllOption")/*"[all]"*/
+				dataRowPosition: index, isDimension: isDimension, topFilterValue: self.translations.GXPL_QViewerJSAllOption//gx.getMessage("GXPL_QViewerJSAllOption")/*"[all]"*/
 			}
 		
 				cond.topFilterValue = "[all]"
-				cond.topFilterString = gx.getMessage("GXPL_QViewerJSAllOption")
+				cond.topFilterString = self.translations.GXPL_QViewerJSAllOption // gx.getMessage("GXPL_QViewerJSAllOption")
 			
 
 			self.conditions.push(cond);
@@ -20958,75 +21081,6 @@
 			}
 		}
 
-		/* pseudo-init routines */
-		this.pseudoInitCondition = function (index, prevCondition) {
-			if (index == self.dataColumnIndex) { /* dummy condition */
-				self.conditions.push(false);
-				return;
-			}
-			var sortValue = 1;
-			var showSubtotals = 1;
-			var hideSubtotalsOption = false;
-			var validPosition = "filters;rows;columns;hidden";
-			var isDimension = false;
-			if (self.columns[index] != undefined) {
-				var isDimension = true;
-				if ((self.columns[index].getAttribute("order") != undefined) && (self.columns[index].getAttribute("order") === "descending")) {
-					sortValue = -1;
-				}
-				if ((self.columns[index].getAttribute("order") != undefined) && (self.columns[index].getAttribute("order") === "custom")) {
-					sortValue = 0;
-				}
-				if ((self.columns[index].getAttribute("summarize") != undefined) && (self.columns[index].getAttribute("summarize") === "yes")) {
-					showSubtotals = 1;
-					if ((self.columns[index].firstElementChild != undefined) && (self.columns[index].firstElementChild.localName == "exclude")) {
-						showSubtotals = false;
-					}
-				}
-				if (prevCondition[index].sort != undefined) {
-					sortValue = prevCondition[index].sort;
-				}
-				if (prevCondition[index].subtotals != undefined) {
-					showSubtotals = prevCondition[index].subtotals;
-				}
-				if ((self.columns[index].getAttribute("summarize") != undefined) && (self.columns[index].getAttribute("summarize") === "no")) {
-					showSubtotals = false;
-					hideSubtotalsOption = true;
-				}
-				var validPosition = ""
-				var metadatavisible = self.columns[index].getAttribute("visible")
-				if (metadatavisible != "Never"){
-					validPosition = (self.columns[index].getAttribute("canDragToPages") == "true") ? "filters;" : ""; 
-					validPosition = validPosition + "rows;columns;hidden";
-				}
-			}
-
-			var cond = {
-				distinctValues: [], blackList: [], whiteList: [], greyList: [], collapsedValues: [],
-				sort: sortValue, subtotals: showSubtotals, hideSubtotalOption: hideSubtotalsOption, validPosition: validPosition,
-				dataRowPosition: index, isDimension: isDimension, topFilterValue: gx.getMessage("GXPL_QViewerJSAllOption")/*"[all]"*/
-			}
-
-			self.conditions.push(cond);
-			for (var i = 0; i < self.allData.length; i++) {
-				var value = self.allData[i][index];
-				if (value == undefined) {
-					value = " ";
-					self.allData[i][index] = " ";
-				}
-				if (cond.distinctValues.indexOf(value) == -1) { /* not yet present */
-					cond.distinctValues.push(value);
-				} /* if new value */
-			} /* for all rows */
-
-			/*set previus black & collapsed values list*/
-			cond.blackList = prevCondition[index].blackList;
-			cond.collapsedValues = prevCondition[index].collapsedValues;
-
-			if (self.allData.length > 0) {
-				self.sort(cond, index);
-			}
-		}
 
 		
 		this.initWhenServerPagination = function () {
@@ -21342,25 +21396,7 @@
 				self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
 				
 				
-				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
-						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
-						self.preGoWhenServerPagination(true);
-						
-						if (self.filterIndexes.length > 0){
-							self.initValueRead(self, 0, stateLoad);
-						}
-						
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-
-					} else {
-						var errMsg = qv.util.getErrorFromText(resXML);
-						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					}
-				}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);
-
-				*/
 
 
 			} else {
@@ -21471,77 +21507,6 @@
 				
 				self.requestAttributeValues(self.columns[columnNumber].getAttribute("dataField"), 1, cantItems, "")
 				
-				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
-					var data = JSON.parse(resJSON);
-
-					self.conditions[columnNumber].previousPage = data.PageNumber
-					self.conditions[columnNumber].totalPages = data.PagesCount
-					self.conditions[columnNumber].blocked = false
-					
-					if (allData) {
-						self.conditions[columnNumber].distinctValues = []
-					}
-					//null value?
-					if (data.Null) {
-						self.conditions[columnNumber].hasNull = true;
-						if (self.conditions[columnNumber].distinctValues.indexOf("#NuN#") == -1) {
-							self.conditions[columnNumber].distinctValues.push("#NuN#")
-						}
-						var nullIncluded = true;
-
-						if (!self.conditions[columnNumber].NullIncluded) {
-							nullIncluded = false;
-						}
-						if ((nullIncluded) && (self.conditions[columnNumber].visibles.indexOf("#NuN#") == -1)) {
-							self.conditions[columnNumber].visibles.push("#NuN#");
-						}
-					} else {
-						self.conditions[columnNumber].hasNull = false;
-					}
-
-					var includeLists = [];
-					for (var i = 0; i < data.NotNullValues.length; i++) {
-						var value = data.NotNullValues[i]
-						var include = false;
-						if ((self.conditions[columnNumber].state == "none") &&
-							(self.UserFilterValues.length > 0) && (self.UserFilterValues[columnNumber] != undefined)
-							&& (self.UserFilterValues[columnNumber].length > 0) && (self.UserFilterValues[columnNumber].indexOf(value.trimpivot()) != -1)) {
-							include = true;
-							includeLists.push(value)
-						}
-
-						if (self.conditions[columnNumber].distinctValues.indexOf(value) == -1) {
-							self.conditions[columnNumber].distinctValues.push(value)
-						}
-						if ((self.conditions[columnNumber].state == "all")
-							&& (self.conditions[columnNumber].visibles.indexOf(value) == -1)) {
-							self.conditions[columnNumber].visibles.push(value)
-						}
-						if ((self.conditions[columnNumber].state == "none")
-							&& (self.conditions[columnNumber].blackList.indexOf(value) == -1)
-							&& (!include)) {
-							self.conditions[columnNumber].blackList.push(value)
-						}
-
-						if ((allData) && (self.UserExpandValues.length > 0)) {//collapsed values
-							if (self.UserExpandValues[columnNumber] != undefined) {
-								if ((self.UserExpandValues[columnNumber][0] == "#ALLCOLLAPSE#") ||
-									(self.UserExpandValues[columnNumber].indexOf(value.trimpivot()) == -1)) {
-									self.conditions[columnNumber].collapsedValues.push(value);
-								}
-							}
-						}
-
-					}
-
-					for (var i = 0; i < includeLists.length; i++) {
-						self.createFilterInfo({ op: "pop", values: includeLists[i], dim: columnNumber }, true);
-					}
-					if (requestDataField == undefined){
-						columnNumber++;
-						self.initValueRead(self, columnNumber, allData)
-					}
-				}).closure(this), [self.columns[columnNumber].getAttribute("dataField"), 1, cantItems, ""]);*/
 			}
 		}
 
@@ -21556,19 +21521,7 @@
 				
 			self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
 				
-			/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
-				if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
-
-					self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
-					self.preGoWhenServerPagination(true);
-					qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-
-				} else {
-					var errMsg = qv.util.getErrorFromText(resXML);
-					qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-				}
-			}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);*/
-
+	
 		}
 
 
@@ -21648,8 +21601,8 @@
 					if (self.colConditions[i] == sourceCI) { sourceType = self.colConditions; sourceI = i; }
 					if (self.colConditions[i] == targetCI) { targetType = self.colConditions; targetI = i; }
 				}
-				if (targetCI == -1) {
-					/* no cols - lets create one */
+				/*if (targetCI == -1) {
+					// no cols - lets create one 
 					self.colConditions.push(sourceCI);
 					self.rowConditions.splice(sourceI, 1);
 					
@@ -21659,7 +21612,7 @@
 					return;
 				}
 				if (targetCI == -2) {
-					/* no rows - lets create one */
+					// no rows - lets create one 
 					self.rowConditions.push(sourceCI);
 					self.colConditions.splice(sourceI, 1);
 					
@@ -21667,7 +21620,7 @@
 					
 					self.go(self);
 					return;
-				}
+				}*/
 				if (sourceType == targetType) {
 					/* same condition type */
 					if (sourceI + 1 == targetI) {
@@ -21744,10 +21697,10 @@
 
 			jQuery(contentDiv).data('anchorRef', anchorRef);
 
-			var refresh = function () {
+			/*var refresh = function () {
 				self.propPage._Instant_hide();
 				self.go(false);
-			}
+			}*/
 			return [function (event) {
 				
 					if (self.conditions[dimensionNumber].previousPage == undefined) {
@@ -21855,7 +21808,7 @@
 				div_order.appendChild(alabel);
 				div_order.appendChild(OAT.Dom.create("br"));
 				OAT.addImageNode(alabel, (cond.sort == 1)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+ascForId);
-				OAT.addTextNode(alabel, gx.getMessage("GXPL_QViewerJSAscending"))
+				OAT.addTextNode(alabel,self.translations.GXPL_QViewerJSAscending /*gx.getMessage("GXPL_QViewerJSAscending")*/)
 				
 				var desc = OAT.Dom.radio("order");
 				var dscForId = "pivot_order_desc" + "_" + self.containerName + "_" + self.columns[dimensionNumber].getAttribute("dataField");
@@ -21888,7 +21841,7 @@
 				dlabel.htmlFor = dscForId;
 				div_order.appendChild(dlabel);
 				OAT.addImageNode(dlabel, (cond.sort == 1)?"radio_button_unchecked":"radio_button_checked", IStyle, "i_"+dscForId);
-				OAT.addTextNode(dlabel, gx.getMessage("GXPL_QViewerJSDescending"))
+				OAT.addTextNode(dlabel, self.translations.GXPL_QViewerJSDescending /*gx.getMessage("GXPL_QViewerJSDescending")*/)
 				
 
 				toAppend.push(div_order);
@@ -21943,7 +21896,7 @@
 				
 				OAT.addImageNode(sl, cond.subtotals ? "check_box" : "check_box_outline_blank", "");
 				
-				OAT.addTextNode(sl, gx.getMessage("GXPL_QViewerJSSubtotals"))
+				OAT.addTextNode(sl, self.translations.GXPL_QViewerJSSubtotals/*gx.getMessage("GXPL_QViewerJSSubtotals")*/)
 				sl.htmlFor = "pivot_checkbox_subtotals";
 				subtotal_sel_div.appendChild(sl);
 				OAT.Dom.append([subtotals, subtotal_sel_div]);
@@ -21964,7 +21917,7 @@
 
 
 				var rl = OAT.Dom.create("label");
-				OAT.addTextNode(rl, gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
+				OAT.addTextNode(rl, self.translations.GXPL_QViewerJSRestoreDefaultView /*gx.getMessage("GXPL_QViewerJSRestoreDefaultView")*/)
 				rl.setAttribute("id", "restore_default_view");
 				rl.htmlFor = "pivot_checkbox_restoreview";
 				rl.setAttribute("class", "pivot_checkbox_restoreview");
@@ -21991,9 +21944,9 @@
 
 				var pvpl = OAT.Dom.create("label");
 				if (self.rowConditions.indexOf(dimensionNumber) != -1)
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerJSPivotDimensionToColumn"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerJSPivotDimensionToColumn /*gx.getMessage("GXPL_QViewerJSPivotDimensionToColumn")*/)
 				else
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerJSPivotDimensionToRow"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerJSPivotDimensionToRow /*gx.getMessage("GXPL_QViewerJSPivotDimensionToRow")*/)
 
 				pvpl.htmlFor = "pivot_checkbox_restoreview";
 				pvpl.setAttribute("class", "pivot_checkbox_restoreview");
@@ -22023,7 +21976,7 @@
 						});
 
 						var ippl = OAT.Dom.create("label");
-						OAT.addTextNode(ippl, gx.getMessage("GXPL_QViewerJSMoveToFilterBar"))
+						OAT.addTextNode(ippl, self.translations.GXPL_QViewerJSMoveToFilterBar /*gx.getMessage("GXPL_QViewerJSMoveToFilterBar")*/)
 						ippl.htmlFor = "pivot_checkbox_movetocolumn";
 						Ipadpurp_sel_div.appendChild(ippl);
 
@@ -22343,17 +22296,17 @@
 			var d = OAT.Dom.create("div");
 			d.setAttribute("class", "div_buttons_popup");
 			var all = document.createElement("button");
-			all.textContent = gx.getMessage("GXPL_QViewerJSAll");
+			all.textContent = self.translations.GXPL_QViewerJSAll; /*gx.getMessage("GXPL_QViewerJSAll");*/
 			all.setAttribute("class", "btn");
 			jQuery(all).click(allRef);
 
 			var none = document.createElement("button");
-			none.textContent = gx.getMessage("GXPL_QViewerJSNone");
+			none.textContent = self.translations.GXPL_QViewerJSNone //gx.getMessage("GXPL_QViewerJSNone");
 			none.setAttribute("class", "btn");
 			jQuery(none).click(noneRef);
 
 			var reverse = document.createElement("button");
-			reverse.textContent = gx.getMessage("GXPL_QViewerJSReverse");
+			reverse.textContent = self.translations.GXPL_QViewerJSReverse //gx.getMessage("GXPL_QViewerJSReverse");
 			reverse.setAttribute("class", "btn");
 			jQuery(reverse).click(reverseRef);
 
@@ -22370,9 +22323,9 @@
 					searchInput.textContent = "none";
 					searchInput.setAttribute("class", "search_input");
 					searchInput.setAttribute("type", "text");
-					searchInput.setAttribute("label", gx.getMessage("GXPL_QViewerSearch"));
-					searchInput.setAttribute("title", gx.getMessage("GXPL_QViewerSearch"));
-					searchInput.setAttribute("placeholder", gx.getMessage("GXPL_QViewerSearch"));
+					searchInput.setAttribute("label", self.translations.GXPL_QViewerSearch/*gx.getMessage("GXPL_QViewerSearch")*/);
+					searchInput.setAttribute("title", self.translations.GXPL_QViewerSearch/*gx.getMessage("GXPL_QViewerSearch")*/);
+					searchInput.setAttribute("placeholder", self.translations.GXPL_QViewerSearch /*gx.getMessage("GXPL_QViewerSearch")*/);
 					searchInput.setAttribute("id", self.UcId + dimensionNumber);
 					jQuery(searchInput).keyup(searchFilterClick);
 
@@ -22675,7 +22628,7 @@
 				spanHover.setAttribute("class", "spanHoverLabel");
 				spanHover.setAttribute("id", "filterSpanInfo");
 				OAT.addImageNode(filterInfoIcon, "info", "");
-				OAT.addTextNode(spanHover, gx.getMessage("GXPL_QViewerInfoUser"));
+				OAT.addTextNode(spanHover, self.translations.GXPL_QViewerInfoUser /*gx.getMessage("GXPL_QViewerInfoUser")*/);
 			}
 
 			for (var i = 0; i < div.selects.length; i++) {
@@ -22685,7 +22638,7 @@
 			self.gd.addTarget(div);
 			div.selects = [];
 			if (!self.filterIndexes.length) {
-				var strng = gx.getMessage("GXPL_QViewerJSDropFiltersHere");
+				var strng = self.translations.GXPL_QViewerJSDropFiltersHere;// gx.getMessage("GXPL_QViewerJSDropFiltersHere");
 
 				if (self.isSD) {
 					strng = "";
@@ -22732,64 +22685,7 @@
 				
 					self.requestAttributeValues(self.columns[this.filterIndex].getAttribute("dataField"), 1, 0, "")
 					
-					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
-						var data = JSON.parse(resJSON);
-
-						self.conditions[columnNumber].previousPage = data.PageNumber
-						self.conditions[columnNumber].totalPages = data.PagesCount
-						self.conditions[columnNumber].blocked = true
-						//null value?
-						if ((data.Null) && (!self.conditions[columnNumber].hasNull)) {
-							self.conditions[columnNumber].hasNull = true;
-							if (self.conditions[columnNumber].distinctValues.indexOf("#NuN#") == -1) {
-								self.conditions[columnNumber].distinctValues.push("#NuN#")
-							}
-							if (self.conditions[columnNumber].defaultAction == "Include") {
-								if (self.conditions[columnNumber].visibles.indexOf("#NuN#") == -1) {
-									self.conditions[columnNumber].visibles.push("#NuN#");
-								}
-							} else {
-								if (self.conditions[columnNumber].blackList.indexOf("#NuN#") == -1) {
-									self.conditions[columnNumber].blackList.push("#NuN#");
-								}
-							}
-						}
-
-						for (var i = 0; i < data.NotNullValues.length; i++) {
-							var value = data.NotNullValues[i]
-							if (self.conditions[columnNumber].distinctValues.indexOf(value) == -1) {
-								self.conditions[columnNumber].distinctValues.push(value)
-
-								if ((self.conditions[columnNumber].defaultAction == "Include")
-									&& (self.conditions[columnNumber].visibles.indexOf(value) == -1)) {
-									self.conditions[columnNumber].visibles.push(value)
-								}
-								if ((self.conditions[columnNumber].state == "Exclude")
-									&& (self.conditions[columnNumber].blackList.indexOf(value) == -1)) {
-									self.conditions[columnNumber].blackList.push(value)
-								}
-							}
-						}
-
-						var actualValues = self.conditions[columnNumber].distinctValues;
-						for (var j = 0; j < actualValues.length; j++) {
-							var v = actualValues[j];
-							if (self.conditions[columnNumber].filteredShowValues.indexOf(v) == -1) {
-								self.conditions[columnNumber].filteredShowValues.push(v);
-								if (v != "#NuN#") {
-									try {
-										OAT.Dom.option(self.dimensionPictureValue(v, columnNumber), v, s);
-									} catch (Error) {
-										OAT.Dom.option(v, v, s);
-									}
-								} else {
-									OAT.Dom.option(" ", v, s);
-								}
-							}
-						}
-
-					}).closure(this), [self.columns[this.filterIndex].getAttribute("dataField"), 1, 0, ""]);
-					*/
+					
 				}
 			}
 			var callgo = function () {
@@ -22801,12 +22697,7 @@
 					self.EneablePivot();
 					return;
 				
-				self.DiseablePivot();
 
-				setTimeout(function () {
-					self.go(false);
-					self.EneablePivot();
-				}, 200)
 			}
 			var prevFilterSelectedValue = [];
 			var loaded = [];
@@ -22816,7 +22707,7 @@
 					var index = self.filterIndexes[i];
 					var s = OAT.Dom.create("select");
 					s.setAttribute("id", "page_select_" + i)
-					OAT.Dom.option(gx.getMessage("GXPL_QViewerJSAllOption"), "[all]", s);
+					OAT.Dom.option(self.translations.GXPL_QViewerJSAllOption /*gx.getMessage("GXPL_QViewerJSAllOption")*/, "[all]", s);
 
 					var actualValues;
 					
@@ -23069,7 +22960,7 @@
 				} else {
 					spantitle.setAttribute("class", "winrect_title_label");
 				}
-				OAT.addTextNode(spantitle, gx.getMessage("GXPL_QViewerPopupTitle"));
+				OAT.addTextNode(spantitle, self.translations.GXPL_QViewerPopupTitle/*gx.getMessage("GXPL_QViewerPopupTitle")*/);
 				jQuery(".oat_winrect_title").append(spantitle)
 
 
@@ -23108,7 +22999,7 @@
 				self.exportPage.appendChild(div_down);
 
 				var label = document.createElement("span");
-				label.textContent = gx.getMessage("GXPL_QViewerJSVisibleColumns");
+				label.textContent = self.translations.GXPL_QViewerJSVisibleColumns//gx.getMessage("GXPL_QViewerJSVisibleColumns")
 				var div_label = document.createElement("div");
 				div_label.setAttribute("class", "div_label_win");
 				div_label.appendChild(label);
@@ -23265,7 +23156,7 @@
 					exportXMLButtonSub = self.createExportButton(exportXMLButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportXml"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXml/*gx.getMessage("GXPL_QViewerContextMenuExportXml")*/)
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					pvpl.setAttribute("class", "pivot_checkbox_restoreview");
 					exportXMLButton.appendChild(pvpl);
@@ -23296,55 +23187,7 @@
 			self.lastRequestCalculation = "ExportToXML"
 			self.requestCalculatePivottableData() 
 			
-			/*self.QueryViewerCollection[self.IdForQueryViewerCollection].calculatePivottableData((function (resText) {
-				self.allDataWithoutSort = OATgetDataFromXMLOldFormat(resText, self.pageData.dataFields)
-				self.allData = self.allDataWithoutSort
 
-				var prevConditions = jQuery.extend(true, [], self.conditions);
-				for (var t = 0; t < self.conditions.length; t++) {
-					if (self.conditions[t]) {
-						for (var i = 0; i < self.allData.length; i++) {
-							var value = self.allData[i][t];
-							if (value == undefined) {
-								value = " ";
-								self.allData[i][index] = " ";
-							}
-							if (self.conditions[t].distinctValues.indexOf(value) == -1) {
-								self.conditions[t].distinctValues.push(value);
-							}
-						}
-						try {
-							self.sort(self.conditions[t], t);
-						} catch (ERROR) { }
-					}
-				}
-
-				self.applyFilters();
-				self.createAggStructure();
-				self.fillAggStructure();
-				self.checkAggStructure();
-				//self.count();
-
-				str = self.ExportToXML();
-				self.allDataWithoutSort = []; self.allData = []; self.filteredData = [];
-				self.conditions = prevConditions;
-
-				if ((OAT.isSafari()) || (self.isSD)) { //for safari
-					window.open('data:text/xml,' + encodeURIComponent('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + str));
-				} else {
-					var blob = new Blob([str], { type: "text/xml" });
-					if (self.query != "") {
-						saveAs(blob, self.query + ".xml");
-					} else {
-						var name = 'Query'
-						try {
-							name = self.controlName.substr(4).split("_")[0]
-						} catch (error) { }
-						saveAs(blob, name + ".xml");
-					}
-				}
-
-			}).closure(this))*/
 		}
 
 		this.ExportToHTMLWhenServerPagination = function () {
@@ -23404,7 +23247,7 @@
 					exportButtonSub = self.createExportButton(exportHTMLButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportHtml"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportHtml/*gx.getMessage("GXPL_QViewerContextMenuExportHtml")*/)
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					pvpl.setAttribute("class", "pivot_checkbox_restoreview");
 					exportHTMLButton.appendChild(pvpl);
@@ -23438,7 +23281,7 @@
 					exportButtonSub = self.createExportButton(exportPdfButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportPdf"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportPdf /*gx.getMessage("GXPL_QViewerContextMenuExportPdf")*/)
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					pvpl.setAttribute("class", "pivot_checkbox_restoreview");
 					exportPdfButton.appendChild(pvpl);
@@ -23473,8 +23316,8 @@
 					exportButtonSub = self.createExportButton(exportXLSButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportXls2003"))
-					gx.getMessage("GXPL_QViewerContextMenuExportPdf")
+					OAT.addTextNode(pvpl,self.translations.GXPL_QViewerContextMenuExportXls2003 /*gx.getMessage("GXPL_QViewerContextMenuExportXls2003")*/)
+					//gx.getMessage("GXPL_QViewerContextMenuExportPdf")
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					pvpl.setAttribute("class", "pivot_checkbox_restoreview");
 					exportXLSButton.appendChild(pvpl);
@@ -23507,135 +23350,7 @@
 			
 			self.lastRequestCalculation = "ExportToXLSX"
 			self.requestCalculatePivottableData()
-			/*self.QueryViewerCollection[self.IdForQueryViewerCollection].calculatePivottableData((function (resText) {
 
-
-				var dataFields = [];
-				
-				for (var t = 0; t < self.initMetadata.Dimensions.length; t++){
-					if (self.initMetadata.Dimensions[t].Visible)
-						dataFields.push(self.initMetadata.Dimensions[t].dataField);
-				}				
-				for (var t = 0; t < self.pageData.AxisInfo.length; t++) {
-					if ((self.pageData.AxisInfo[t].Axis != undefined) && (self.pageData.AxisInfo[t].Axis.Type == "Hidden")) {
-						var index = dataFields.indexOf(self.pageData.AxisInfo[t].DataField);
-						if (index > -1) {
-							dataFields.splice(index, 1)
-						}
-					}
-				}
-				
-				for (var t = 0; t < self.initMetadata.Measures.length; t++){
-					if ((self.initMetadata.Measures[t].Visible) &&  (dataFields.indexOf(self.initMetadata.Measures[t].dataField) < 0))
-					{
-						dataFields.push(self.initMetadata.Measures[t].dataField)
-					} 
-				}
-
-				for (var t = 0; t < measures.length; t++) {
-					if (measures[t].getAttribute("aggregation") == "average") {
-						self.formulaInfo.measureFormula[t].hasFormula = true;
-						self.formulaInfo.measureFormula[t].textFormula = measures[t].getAttribute("dataField") + "_N/" + measures[t].getAttribute("dataField") + "_D"
-
-						self.formulaInfo.cantFormulaMeasures++;
-
-						var inlineFormula = self.formulaInfo.measureFormula[t].textFormula
-
-						var inline = inlineFormula
-						var opers = ['*', '-', '+', '/', '(', ')']
-						for (var j = 0; j < opers.length; j++) {
-							var inline2 = inline.split(opers[j])
-							if (inline2.length > 1) {
-								inline = ""
-								for (var i = 0; i < inline2.length - 1; i++) {
-									inline = inline + inline2[i] + " " + opers[j] + " "
-								}
-								inline = inline + inline2[inline2.length - 1]
-							}
-						}
-
-						var polishNot = InfixToPostfix(inline)
-						formulaInfo.measureFormula[t].polishNotationText = polishNot
-						var items = polishNot.split(" ")
-						while (items.indexOf("") != -1) {
-							items.splice(items.indexOf(""), 1)
-						}
-						var relatedMeasure = []
-						for (var k = 0; k < items.length; k++) {
-							if ((opers.indexOf(items[k]) == -1) && (isNaN(parseInt(items[k])))) {
-								//add item
-								var operPositionInDataRow = formulaInfo.itemPosition[items[k]]
-								if (relatedMeasure.indexOf(operPositionInDataRow) == -1)
-									relatedMeasure.push(operPositionInDataRow)
-							}
-						}
-
-						self.formulaInfo.measureFormula[t].relatedMeasures = relatedMeasure
-
-						var arrayNot = polishNot.split(" ")
-						while (arrayNot.indexOf("") != -1) {
-							arrayNot.splice(arrayNot.indexOf(""), 1)
-						}
-						self.formulaInfo.measureFormula[t].PolishNotation = arrayNot
-					}
-				}
-				resText = resText.replace(/\&amp;/g, '&').replace(/\&lt;/g, '<').replace(/\&gt;/g, '>').replace(/\&apos;/g, '\'').replace(/\&quot/g, '\"')
-				var res = OATgetDataFromXMLOldFormat(resText, dataFields, self.OrderFildsHidden)
-				self.GeneralDataRows = res[0]
-				self.recordForFormula = res[1]
-				self.allData = self.GeneralDataRows
-
-				var prevConditions = jQuery.extend(true, [], self.conditions);
-				self.GeneralDistinctValues = [];
-				for (var t = 0; t < self.conditions.length; t++) {
-					if (self.conditions[t]) {
-						self.GeneralDistinctValues[t] = []
-						for (var i = 0; i < self.allData.length; i++) {
-							var value = self.allData[i][t];
-							if (value == undefined) {
-								value = " ";
-								self.allData[i][index] = " ";
-							}
-							if (self.conditions[t].distinctValues.indexOf(value) == -1) {
-								self.conditions[t].distinctValues.push(value);
-							}
-							if (self.GeneralDistinctValues[t].indexOf(value) == -1) {
-								self.GeneralDistinctValues[t].push(value);
-							}
-						}
-						try {
-							self.sort(self.conditions[t], t);
-						} catch (ERROR) { }
-					}
-				}
-
-				self.applyFilters();
-				self.createAggStructure();
-				self.fillAggStructure();
-				self.checkAggStructure();
-				//self.count();
-
-				var FileName = self.query
-				if (FileName == "") {
-					FileName = "Query"
-					try {
-						FileName = self.controlName.split("_")[0]
-					} catch (error) { }
-				}
-				OAT.GenerateExcelOutput(FileName, self, measures);
-
-				str = self.ExportToXML();
-				self.GeneralDataRows = []; self.allData = []; self.filteredData = []; self.GeneralDistinctValues = [];
-				self.conditions = prevConditions;
-
-				//quitar formulas averages
-				for (var t = 0; t < measures.length; t++) {
-					if (measures[t].getAttribute("aggregation") == "average") {
-						self.formulaInfo.measureFormula[t] = { hasFormula: false };
-						self.formulaInfo.cantFormulaMeasures--;
-					}
-				}
-			}).closure(this))*/
 		}
 
 		this.appendExportToExcel2010Option = function (content, someExport) {
@@ -23648,7 +23363,7 @@
 					exportButtonSub = self.createExportButton(exportXLSButton)
 
 					var pvpl = OAT.Dom.create("label");
-					OAT.addTextNode(pvpl, gx.getMessage("GXPL_QViewerContextMenuExportXlsx"))
+					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXlsx /*gx.getMessage("GXPL_QViewerContextMenuExportXlsx")*/)
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					pvpl.setAttribute("class", "pivot_checkbox_restoreview");
 					exportXLSButton.appendChild(pvpl);
@@ -23699,896 +23414,6 @@
 			return divContainer;
 		}
 
-		this.countTotals = function () { /* totals */
-			self.rowTotals = [[], []];
-			self.colTotals = [[], []];
-			self.gTotal = [];
-			for (var i = 0; i < self.w; i++) { self.colTotals[0].push([]); self.colTotals[1].push([]); }
-			for (var i = 0; i < self.h; i++) { self.rowTotals[0].push([]); self.rowTotals[1].push([]); }
-
-			var colTotalsWithNun = [];
-			for (var i = 0; i < self.w; i++) {
-				for (var j = 0; j < self.h; j++) {
-					var val = self.tabularData[i][j][0];
-					if ((val != self.EmptyValue) && (val != "#NuN#")) {
-						if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-							self.colTotals[0][i].push(self.tabularData[i][j][2][0])
-						} else {
-							self.colTotals[0][i].push(val);
-						}
-						self.colTotals[1][i].push(self.tabularData[i][j][1]);
-						if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-							self.rowTotals[0][j].push(self.tabularData[i][j][2][0]);
-						} else {
-							self.rowTotals[0][j].push(val);
-						}
-						self.rowTotals[1][j].push(self.tabularData[i][j][1]);
-						if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-							self.gTotal.push(self.tabularData[i][j][2][0]);
-						} else {
-							self.gTotal.push(val);
-						}
-					} else if (val == "#NuN#") {
-						colTotalsWithNun[i] = true;
-					}
-				}
-			}
-
-			var func = OAT.Statistics[OAT.Statistics.list[self.options.aggTotals].func]; /* statistics */
-			for (var i = 0; i < self.rowTotals[0].length; i++) {
-				if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-					self.rowTotals[0][i] = self.calculateFormulaTotal(self.rowTotals[0][i], measures.length - 1, "MesaureAsColumn");
-				} else {
-					self.rowTotals[0][i] = func(self.rowTotals[0][i]);
-				}
-			}
-			for (var i = 0; i < self.colTotals[0].length; i++) {
-				if ((self.colTotals[0][i].length == 0) && (colTotalsWithNun[i])) self.colTotals[0][i] = "#NuN#"
-				else {
-					if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-						self.colTotals[0][i] = self.calculateFormulaTotal(self.colTotals[0][i], measures.length - 1, "MesaureAsColumn")
-					} else {
-						self.colTotals[0][i] = func(self.colTotals[0][i]);
-					}
-				}
-			}
-
-
-			if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-				self.gTotal = self.calculateFormulaTotal(self.gTotal, measures.length - 1, "MesaureAsColumn")
-			} else {
-				self.gTotal = func(self.gTotal);
-			}
-		}
-
-		this.countSubTotals = function () { /* sub-totals */
-			function clean(ptrArray, count) {
-				for (var i = 0; i < ptrArray.length - 1; i++) {
-					var stack = ptrArray[i];
-					for (var j = 0; j < stack.length; j++) {
-						stack[j].totals = [];
-						stack[j].filtrows = [];
-						for (var k = 0; k < count; k++) { stack[j].totals.push([]); stack[j].filtrows.push([]); }
-					}
-				}
-			}
-			clean(self.colPointers, self.h);
-			clean(self.rowPointers, self.w);
-
-			function addTotal(arr, arrIndex, totalIndex, value, filtrows) {
-				if (!arr.length) { return; }
-				var item = arr[arr.length - 1][arrIndex].parent;
-				while (item.parent) {
-					item.totals[totalIndex].push(value);
-					item.filtrows[totalIndex].push(filtrows);
-					item = item.parent;
-				}
-			}
-			for (var i = 0; i < self.w; i++) {
-				for (var j = 0; j < self.h; j++) {
-					var val = self.tabularData[i][j][0];
-					var filtrows = self.tabularData[i][j][1];
-					if (val != self.EmptyValue) {
-						if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-							addTotal(self.colPointers, i, j, self.tabularData[i][j][2][0], filtrows);
-							addTotal(self.rowPointers, j, i, self.tabularData[i][j][2][0], filtrows);
-						} else {
-							addTotal(self.colPointers, i, j, val, filtrows);
-							addTotal(self.rowPointers, j, i, val, filtrows);
-						}
-					}
-				}
-			}
-
-			function apply(ptrArray, func) {
-				for (var i = 0; i < ptrArray.length - 1; i++) {
-					var stack = ptrArray[i];
-					for (var j = 0; j < stack.length; j++) {
-						var totals = stack[j].totals;
-						var filtrows = stack[j].filtrows;
-						for (var k = 0; k < totals.length; k++) {
-							if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-								var addValue = self.calculateFormulaTotal(totals[k], measures.length - 1, "MesaureAsColumn")
-								totals[k] = { array: totals[k], value: addValue, rows: filtrows[k] };
-							} else {
-								totals[k] = { array: totals[k], value: func(totals[k]), rows: filtrows[k] };
-							}
-						}
-					}
-				}
-			}
-			var func = OAT.Statistics[OAT.Statistics.list[self.options.aggTotals].func]; /* statistics */
-			apply(self.colPointers, func);
-			apply(self.rowPointers, func);
-		}
-
-		this.countPointers = function () { /* create arrays of pointers to levels of agg structures */
-			function DeepCopy(item) {
-				var a = [];
-				for (var i=0;i<item.length;i++) { a.push(item[i]); }
-				return a;
-			}
-			
-			function count(struct, arr, propName) {
-				if (!self.ShowMeasuresAsRows) {
-					self[propName] = [];
-					var stack = [struct];
-					for (var i = 0; i < arr.length; i++) {
-						var newstack = [];
-						for (var j = 0; j < stack.length; j++) {
-							var item = stack[j];
-							for (var k = 0; k < item.items.length; k++) {
-								newstack.push(item.items[k]);
-							}
-						}
-						stack = newstack;
-						self[propName].push(DeepCopy(stack));
-					}
-				} else {
-					self[propName] = [];
-					var stack = [struct];
-					var dim = arr.length - (measures.length - 1) + 1
-					if (propName == "colPointers") {
-						dim = arr.length
-					}
-					for (var i = 0; i < dim; i++) {
-						var newstack = [];
-						for (var j = 0; j < stack.length; j++) {
-							var item = stack[j];
-							for (var k = 0; k < item.items.length; k++) {
-								newstack.push(item.items[k]);
-							}
-						}
-						stack = newstack;
-						self[propName].push(DeepCopy(stack));
-					}
-				}
-			}
-
-			count(self.rowStructure, self.rowConditions, "rowPointers");
-			count(self.colStructure, self.colConditions, "colPointers");
-		}
-
-		this.countOffsets = function () { /* starting offsets for aggregate structures */
-			function count(ptrArray) {
-				for (var i = 0; i < ptrArray.length; i++) {
-					var stack = ptrArray[i];
-					var counter = 0;
-					for (var j = 0; j < stack.length; j++) {
-						var item = stack[j];
-						item.offset = counter;
-						counter += item.spanData;
-					}
-				}
-			}
-
-			count(self.rowPointers);
-			count(self.colPointers);
-		}
-
-		this.count = function () { /* create tabularData from filteredData Sets the span of ths */
-			/* compute spans = table dimensions */
-			function spans(ptr, arr, isForRow, actualDepth, maxDepth) { /* return span for a given aggregate pointer */
-				var s = 0;
-				var sD = 0; var draw = 0;
-				if (!ptr.items) {
-					ptr.span = 1;
-					ptr.spanData = 1;
-					ptr.spanDraw = 1;
-					return [ptr.span, ptr.spanData, ptr.spanDraw];
-				}
-
-				for (var i = 0; i < ptr.items.length; i++) {
-					var tmp = spans(ptr.items[i], arr, isForRow, actualDepth + 1, maxDepth);
-					s += tmp[0];
-					sD += tmp[1];
-					if ((!isForRow) || (actualDepth < maxDepth)) {
-						draw += tmp[2];
-					}
-				}
-
-
-				ptr.span = s;
-				ptr.spanData = sD;
-				ptr.spanDraw = draw;
-				if (ptr.items.length && ptr.items[0].items) {
-					if (!self.ShowMeasuresAsRows) {
-						var cond = self.conditions[arr[ptr.items[0].depth]];
-						if ((cond.subtotals) &&  (self.colConditions.length == 0)) { // aument span value for subtotal rows
-
-							var punt = ptr.items;
-							var prof = 0;
-							if (ptr.items.length > 0) {
-								while (punt != false) //calc depth 
-								{
-									prof++;
-									punt = punt[0].items;
-								}
-							}
-							for (var hi = 0; hi < ptr.items.length; hi++) {
-								var cantmeasures = measures.length;
-								if ((ptr.items[hi].items != null) && ((prof - cantmeasures > 0))) { //((columns.length < 3) && (ptr.items[hi].items.length > 1)) || 
-									//if depth of subitem (that is the next dimension columns) if mayor than 1 (there are another column --a dimension?)then an aditional row is needed for the sum of the next dimension
-									ptr.span = ptr.span + 1;
-									ptr.spanDraw = ptr.spanDraw + 1;
-								}
-							}
-						}
-					}
-				}
-				if ((!isForRow) || (actualDepth < maxDepth)) {
-				} else {
-					ptr.spanDraw = 1;
-				}
-				if ((ptr.collapsed != undefined) && (ptr.collapsed)) {
-					ptr.span = 1; ptr.spanDraw = 1;
-					//ptr.spanData = 2;
-					return [ptr.span, ptr.spanData, ptr.spanDraw];
-				}
-				return [ptr.span, ptr.spanData, ptr.spanDraw];
-			}
-			function spansWhenMeasuresAsRows(ptr, arr, actualDepth, maxDepth) { /* return span for a given aggregate pointer */
-				var s = 0;
-				var sD = 0;
-				if (!ptr.items) {
-					ptr.span = 1;
-					ptr.spanData = 1;
-					return [ptr.span, ptr.spanData];
-				}
-				var ramasSecas = 0;
-				for (var i = 0; i < ptr.items.length; i++) {
-					var tmp = spansWhenMeasuresAsRows(ptr.items[i], arr, actualDepth + 1, maxDepth);
-					s += tmp[0];
-					sD += tmp[1];
-					if (tmp[0] == 0) ramasSecas = ramasSecas + 1;
-				}
-				ptr.span = s;
-				ptr.spanData = sD;
-				if ((actualDepth != -1) && (actualDepth < maxDepth)) {
-					var cond = self.conditions[arr[actualDepth + 1]];
-					if (cond.subtotals) { // aument span value for subtotal rows
-						//for(var hi=0; hi < ptr.items.length; hi++){
-						ptr.span = ptr.span + measures.length * (ptr.items.length - ramasSecas);
-						//}
-					}
-
-				}
-				if ((ptr.collapsed != undefined) && (ptr.collapsed)) {
-					ptr.span = 1;
-					//ptr.spanData = 2;
-					return [ptr.span, ptr.spanData];
-				}
-				return [ptr.span, ptr.spanData];
-			}
-
-			if (!self.ShowMeasuresAsRows) {
-				var maxDepth = self.rowConditions.length - (measures.length - 1) - 1
-				var initDepth = -1
-				spans(self.rowStructure, self.rowConditions, true, initDepth, maxDepth);
-				spans(self.colStructure, self.colConditions, false);
-			} else {
-				var maxDepth = self.rowConditions.length - (measures.length - 1) - 2
-				var initDepth = -1
-				spansWhenMeasuresAsRows(self.rowStructure, self.rowConditions, initDepth, maxDepth);
-				spansWhenMeasuresAsRows(self.colStructure, self.colConditions, 0, 0);
-			}
-
-			self.countPointers();
-			self.countOffsets();
-
-
-			/* create blank table */
-			self.tabularData = [];
-			var filterDataId = []; var formulaData = []
-			self.w = 1;
-			self.h = 1;
-			if (self.colConditions.length) { self.w = self.colPointers[self.colPointers.length - 1].length; }
-			if (self.rowConditions.length) { self.h = self.rowPointers[self.rowPointers.length - 1].length; }
-
-			if (!self.ShowMeasuresAsRows) {
-
-				for (var i = 0; i < self.w; i++) {
-					var col = new Array(self.h);
-					var fil = new Array(self.h); var fla = new Array(self.h);
-					for (var j = 0; j < self.h; j++) { col[j] = []; fil[j] = []; fla[j] = [] }
-					self.tabularData.push(col);
-					filterDataId.push(fil); formulaData.push(fla);
-				}
-
-				function coords(struct, arr, row) {
-					var pos = 0;
-					var ptr = struct;
-					for (var i = 0; i < arr.length; i++) {
-						var rindex = arr[i];
-						var value = row[rindex];
-						var o = false;
-						for (var j = 0; j < ptr.items.length; j++) {
-							if (ptr.items[j].value != value) {
-								pos += ptr.items[j].spanData;
-							} else {
-								o = ptr.items[j];
-								break;
-							}
-						}
-						
-
-						if (o)
-							ptr = o;
-						
-					} /* for all conditions */
-					return pos;
-				}
-
-				function coordsY(struct, arr, row) {
-					var pos = 0;
-					var ptr = struct;
-					var lessArr = [];
-					for (var i = 0; i < (self.rowConditions.length - measures.length + 1); i++) {
-						lessArr.push(arr[i])
-					}
-
-					for (var i = 0; i < lessArr.length; i++) {
-						var rindex = lessArr[i];
-						var value = row[rindex];
-						var o = false;
-						for (var j = 0; j < ptr.items.length; j++) {
-							if (ptr.items[j].value != value) {
-								pos += ptr.items[j].spanData;
-							} else {
-								o = ptr.items[j];
-								break;
-							}
-						}
-						
-
-						if (o)
-							ptr = o;
-						
-					} /* for all conditions */
-					return pos;
-				}
-
-
-				for (var i = 0; i < self.filteredData.length; i++) { /* reposition value array to grid */
-					var row = self.filteredData[i];
-					var x = coords(self.colStructure, self.colConditions, row);
-					//C1Line
-					var y = coordsY(self.rowStructure, self.rowConditions, row);
-					//var y = coords(self.rowStructure, self.rowConditions, row);
-					var val = row[self.dataColumnIndex];
-					val = val.toString();
-					val = val.replace(/,/g, '.');
-					val = val.replace(/%/g, '');
-					val = val.replace(/ /g, '');
-					if (val != "#NuN#") {
-						val = parseFloat(val);
-						if (isNaN(val)) { val = 0; }
-					}
-					
-						if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-							var formval = self.getFormulaRowByDataRow(row, measures.length - 1, "grandTotal-Tab")
-							if (val == 0) {
-								self.tabularData[x][y].push(val);
-								self.tabularData[x][y] = self.calculateFormulaTotal([formval], measures.length - 1, "MesaureAsColumn")
-							} else {
-								self.tabularData[x][y].push(self.calculateFormulaTotal([formval], measures.length - 1, "MesaureAsColumn"));
-							}
-							formulaData[x][y].push(formval);
-						} else {
-							self.tabularData[x][y].push(val);
-						}
-						filterDataId[x][y].push(i);
-					
-				}
-				var func = OAT.Statistics[OAT.Statistics.list[self.options.agg].func]; /* statistics */
-				for (var i = 0; i < self.w; i++) {
-					for (var j = 0; j < self.h; j++) {
-						var cellNotFill = (self.tabularData[i][j].length == 0)
-						var isNuN = ((self.tabularData[i][j].length == 1) && (self.tabularData[i][j][0] == "#NuN#"))
-						var result = parseFloat(func(self.tabularData[i][j]));
-						if ((!cellNotFill) && (!isNuN))//(result != 0)
-							self.tabularData[i][j] = [result, filterDataId[i][j]];
-						else if (!isNuN)
-							self.tabularData[i][j] = [self.EmptyValue, filterDataId[i][j]]; /* this 0 is for non value, but if use for TOTAL and subTotal purposes*/
-						else {
-							self.tabularData[i][j] = ["#NuN#", filterDataId[i][j]];
-						}
-						if ((measures.length > 0) && (self.formulaInfo.measureFormula[measures.length - 1].hasFormula)) {
-							if ((!cellNotFill) && (!isNuN)) {
-								self.tabularData[i][j] = [result, filterDataId[i][j]];
-							}
-							self.tabularData[i][j].push(formulaData[i][j])
-						}
-					}
-				}
-
-				self.options.subtotals = 0;
-				for (var i = 0; i < self.conditions.length; i++) {
-					var cond = self.conditions[i];
-					if (cond.subtotals) { self.options.subtotals = true; }
-				}
-		/*if (self.options.subtotals) {*/ self.countSubTotals(); /*}*/
-				if (self.options.totals) { self.countTotals(); }
-
-			}
-		} /* Pivot::count() */
-
-		this._drawGTotal = function (tr, grandTotals) {
-			var td = OAT.Dom.create("td", {}, "gtotal grandtotalvalue");
-			if (self.gTotal != NaN) {
-
-				 if (self.FilterByTopFilter) {
-					if (isNaN(self.gTotal)) { self.gTotal = 0; }
-					OAT.addTextNode(td, self.defaultPictureValue(self.gTotal.toString(), true, 0))
-					td = self.applyConditionalFormats(td, self.gTotal.toString(), true, 0);
-					self.setClickEventHandlers(td, self.gTotal.toString(), "MEASURE", measures.length - 1, 'GrandTotal');
-				} else {
-					var resSum = grandTotals;
-					OAT.addTextNode(td, self.defaultPictureValue(resSum[resSum.length - 1].toString(), true, 0))
-					td = self.applyConditionalFormats(td, resSum[resSum.length - 1].toString(), true, 0);
-					self.setClickEventHandlers(td, resSum[resSum.length - 1].toString(), "MEASURE", measures.length - 1, 'GrandTotal');
-				}
-			} else {
-				OAT.addTextNode(td, "-")
-			}
-			tr.appendChild(td);
-		}
-
-		this._drawRowTotals = function (tr, GrandTotals, partialGrandtotalsmeasuresList, columnsDataHide) { //for Grand Total only
-			var granSumaLateral = []; var partialSumaLateral = []; for (var iGSL = 0; iGSL < measures.length - 1; iGSL++) { granSumaLateral[iGSL] = []; partialSumaLateral[iGSL] = []; }
-			var severalMeasures = ((self.colConditions.length > 1) && (measures.length > 1));
-			var partialLateralTotalLastMeasure = [];
-			var func = OAT.Statistics[OAT.Statistics.list[self.options.aggTotals].func]; /* statistics */
-			if (self.colConditions.length) {
-				for (var i = 0; i < self.w; i++) {
-					var filteredRowNumber = -1;
-					if (self.colConditions.length > 0) {
-						for (var fg = 0; fg < measures.length - 1; fg++) {
-							var td = OAT.Dom.create("td", {},"gtotal grandtotalvalue");//total
-							for (var ti = 0; ti < partialGrandtotalsmeasuresList.length; ti++) {
-								if (partialGrandtotalsmeasuresList[ti][2] === i) /*if is the record for this row*/ {
-									if (func(partialGrandtotalsmeasuresList[ti][0][fg]) != NaN) { /*partial grand total, the sum of all values from the above row*/
-										OAT.addTextNode(td, self.defaultPictureValue(func(partialGrandtotalsmeasuresList[ti][0][fg]).toString(), false, fg))
-										td = self.applyConditionalFormats(td, func(partialGrandtotalsmeasuresList[ti][0][fg]).toString(), false, fg);//partialGrandtotalsmeasuresList[ti][1]);
-										self.setClickEventHandlers(td, func(partialGrandtotalsmeasuresList[ti][0][fg]).toString(), "MEASURE", fg, ['PartialGrandTotal', partialGrandtotalsmeasuresList[ti][3]]);
-										filteredRowNumber = ti;
-										granSumaLateral[fg].push(func(partialGrandtotalsmeasuresList[ti][0][fg]));
-										partialSumaLateral[fg].push(func(partialGrandtotalsmeasuresList[ti][0][fg]));
-									} else {
-										OAT.addTextNode(td, "-")
-									}
-								} else {
-									if ((partialGrandtotalsmeasuresList[ti][2] == undefined) && (partialGrandtotalsmeasuresList[ti][0][0][fg] != undefined)){
-										if (partialGrandtotalsmeasuresList[ti][0][2] === i) {
-											var values = [];
-											for (var vl = 0; vl < partialGrandtotalsmeasuresList[ti][0][0][fg].length; vl++){
-												values.push(partialGrandtotalsmeasuresList[ti][0][0][fg][vl][0])
-											}
-										
-											if (func(values) != NaN) { /*partial grand total, the sum of all values from the above row*/
-												OAT.addTextNode(td, self.defaultPictureValue(func(values).toString(), false, fg))
-												td = self.applyConditionalFormats(td, func(values).toString(), false, fg);//partialGrandtotalsmeasuresList[ti][1]);
-												self.setClickEventHandlers(td, func(values).toString(), "MEASURE", fg, ['PartialGrandTotal', partialGrandtotalsmeasuresList[ti][0][3]]);
-												filteredRowNumber = ti;
-												granSumaLateral[fg].push(func(values));
-												partialSumaLateral[fg].push(func(values));
-											} else {
-												OAT.addTextNode(td, "-")
-											}
-										}
-									}
-									
-									
-									
-								}
-							}
-							if (columnsDataHide.indexOf(i) == -1) {
-								tr.appendChild(td);
-							}
-						}
-					}
-
-					var td = OAT.Dom.create("td", {}, "gtotal grandtotalvalue");
-					if (!isNaN(self.colTotals[0][i]) || self.colTotals[0][i] == "#NuN#" || self.colTotals[0][i] == "#FoE#") {
-						OAT.addTextNode(td, self.defaultPictureValue(self.colTotals[0][i].toString(), true, 0))
-						td = self.applyConditionalFormats(td, self.colTotals[0][i].toString(), true, 0);
-						if (filteredRowNumber != -1) {
-							self.setClickEventHandlers(td, self.colTotals[0][i].toString(), "MEASURE", measures.length - 1, ['PartialGrandTotal', partialGrandtotalsmeasuresList[filteredRowNumber][3]]);
-						} else {
-							self.setClickEventHandlers(td, self.colTotals[0][i].toString(), "MEASURE", measures.length - 1, ['PtrTotals', self.colTotals[1][i]]);
-						}
-						partialLateralTotalLastMeasure.push(self.colTotals[0][i]);
-					} else {
-						OAT.addTextNode(td, "")
-					}
-					if (columnsDataHide.indexOf(i) == -1) {
-						tr.appendChild(td);
-					}
-					if (!self.colPointers.length) { continue; }
-					var item = self.colPointers[self.colPointers.length - 1][i].parent;
-					while (item.parent) {
-						var cond = self.conditions[self.colConditions[item.depth]];
-						if (cond.subtotals && item.offset + item.spanData - 1 == i) {
-							
-							//add measures partial lateral totals
-							if (severalMeasures){
-								for (var ind = 0; ind < measures.length - 1; ind++) {
-									var td = OAT.Dom.create("td", {}, "gtotal grandtotalvalue");
-									OAT.addTextNode(td, self.defaultPictureValue(func(partialSumaLateral[ind]).toString(), false, ind))
-									td = self.applyConditionalFormats(td, func(partialSumaLateral[ind]).toString(), false, ind);   //
-									self.setClickEventHandlers(td, func(partialSumaLateral[ind]).toString(), "MEASURE", ind, 'GrandTotal');
-									tr.appendChild(td);
-									partialSumaLateral[ind] = [];
-								}
-								
-								//last measure
-								var td = OAT.Dom.create("td", {}, "gtotal grandtotalvalue");
-								OAT.addTextNode(td, self.defaultPictureValue(func(partialLateralTotalLastMeasure).toString(), true, 0))
-								td = self.applyConditionalFormats(td, func(partialLateralTotalLastMeasure).toString(), true, 0);
-								self.setClickEventHandlers(td, func(partialLateralTotalLastMeasure).toString(), "MEASURE", measures.length - 1, 'GrandTotal');
-								
-								partialLateralTotalLastMeasure = [];
-								
-								tr.appendChild(td);
-							} else {
-							
-								var td = OAT.Dom.create("td", {}, "gtotal grandtotalvalue");
-								var tmp = [];
-								for (var l = 0; l < item.totals.length; l++) { tmp.push(item.totals[l].array); }
-
-								if (func(tmp) != NaN) {
-									OAT.addTextNode(td, self.defaultPictureValue(func(tmp).toString(), true, 0))
-									td = self.applyConditionalFormats(td, func(tmp).toString(), true, 0);
-									self.setClickEventHandlers(td, func(tmp).toString(), "MEASURE", measures.length - 1, 'GrandTotal');
-								} else {
-									OAT.addTextNode(td, "-")
-								}
-								tr.appendChild(td);
-							}
-						} /* irregular subtotal */
-						item = item.parent;
-					}
-				}
-			}
-
-
-			/* draw grand total for several values*/
-			if ((self.colConditions.length > 0)  && (self.GrandTotalVisibility.TotalForColumns == "Yes")) {
-				for (var ind = 0; ind < measures.length - 1; ind++) {
-					var td = OAT.Dom.create("td", {}, "gtotal grandtotalvalue");
-					OAT.addTextNode(td, self.defaultPictureValue(func(granSumaLateral[ind]).toString(), false, ind))
-					td = self.applyConditionalFormats(td, func(granSumaLateral[ind]).toString(), false, ind);   //
-					self.setClickEventHandlers(td, func(granSumaLateral[ind]).toString(), "MEASURE", ind, 'GrandTotal');
-					tr.appendChild(td);
-				}
-			}
-			
-			if ((self.colConditions.length == 0) || (self.GrandTotalVisibility.TotalForColumns == "Yes")) {
-				self._drawGTotal(tr, GrandTotals);
-			}
-
-		}
-
-		this._drawRowSubtotals = function (tr, i, ptr, subtotalsmeasuresList, td_temp_forCollapseInfo, itemColumnNumber, td_temp_forTotalOfCollapseInfo) { /* subtotals for i-th row */
-			var func = OAT.Statistics[OAT.Statistics.list[self.options.aggTotals].func]; /* statistics */
-			var partialSubtotals = []; var partialLateralSubtotals = []; //for (var iPS = 0; iPS < measures.length - 1; iPS++) { partialSubtotals[iPS] = [];  } 
-			for (var iPS = 0; iPS < measures.length; iPS++) {  partialLateralSubtotals[iPS] = []; partialSubtotals[iPS] = [];}//para agregar los valores totales de las ultimas columnas
-			for (var k = 0; k < self.w; k++) {
-				var td = OAT.Dom.create("td", {}, "gtotal firstlevelvalue");//gtotal
-				if (ptr.totals[k].array.length > 0) {				/* sumo valores para filas de subtotales solo si hay valores para sumar si no, se muestran espacios en blanco*/
-					if (self.colConditions.length > 0) {
-						for (var fg = 0; fg < measures.length - 1; fg++) {
-							var td2 = OAT.Dom.create("td", {}, "gtotal firstlevelvalue");
-
-							if (subtotalsmeasuresList[0] != undefined) {
-								for (var colP = 0; colP < subtotalsmeasuresList.length; colP++) {
-									var arrayColumnNumber = subtotalsmeasuresList[colP][2]
-									if (self.colConditions.length > 1){
-										arrayColumnNumber = subtotalsmeasuresList[colP][0][2]
-									}
-									if (arrayColumnNumber == (k)) {//es la columna que corresponde
-										var subtotalColumn = subtotalsmeasuresList[colP][0][fg]
-										if (self.colConditions.length > 1){
-											subtotalColumn = subtotalsmeasuresList[colP][0][fg][0]
-										}
-										var tempValues = []
-										for (var iSML = 0; iSML < subtotalColumn.length; iSML++) {
-											if (itemColumnNumber < subtotalColumn[iSML][1]) {
-												tempValues.push(subtotalColumn[iSML][0])
-												subtotalColumn[iSML][1] = itemColumnNumber
-											}
-										}
-										if ((func(tempValues) != NaN)) {
-											OAT.addTextNode(td2, self.defaultPictureValue(func(tempValues).toString(), false, fg))
-											td2 = self.applyConditionalFormats(td2, func(tempValues).toString(), false, fg);//subtotalsmeasuresList[0][1]);
-											self.setClickEventHandlers(td2, func(tempValues).toString(), "MEASURE", fg, ['PartialGrandTotal', subtotalsmeasuresList[0][3]]);
-											partialSubtotals[fg].push(func(tempValues));
-											partialLateralSubtotals[fg].push(func(tempValues));
-										} else {
-											OAT.addTextNode(td2, "")
-										}
-
-									}
-								}
-							}
-							tr.appendChild(td2);
-						}
-					}
-					OAT.addTextNode(td, self.defaultPictureValue(ptr.totals[k].value.toString(), true, 0))
-					partialLateralSubtotals[measures.length-1].push(ptr.totals[k].value);
-					partialSubtotals[measures.length-1].push(ptr.totals[k].value);
-					if (td_temp_forCollapseInfo) {
-						OAT.addTextNode(td_temp_forCollapseInfo, self.defaultPictureValue(ptr.totals[k].value.toString(), true, 0))
-					}
-					td = self.applyConditionalFormats(td, ptr.totals[k].value.toString(), true, 0);
-					self.setClickEventHandlers(td, ptr.totals[k].value.toString(), "MEASURE", measures.length - 1, ['PtrTotals', ptr.totals[k].rows]); //ptr.items has the relation of the filteredRows from this subtotal
-				} else {
-					if (self.colConditions.length > 0) {
-						for (var fg = 0; fg < measures.length - 1; fg++) {
-							var td2 = OAT.Dom.create("td", {}, "total");
-							OAT.addTextNode(td2, "")
-							tr.appendChild(td2);
-						}
-					}
-					OAT.addTextNode(td, "")
-				}
-
-				tr.appendChild(td);
-				if (!self.colPointers.length) { continue; }
-				var item = self.colPointers[self.colPointers.length - 1][k].parent;
-				
-				
-				
-				while (item.parent) {
-					
-					
-					
-					var cond = self.conditions[self.colConditions[item.depth]];
-					if (cond.subtotals && item.offset + item.spanData - 1 == k) {
-						
-						
-						if ((measures.length > 1) && (self.colConditions.length > 1)){
-							//partial lateral column subtotoal except last dimension
-							
-							for (var pIter = 0; pIter < measures.length; pIter++)
-							{
-								var td = OAT.Dom.create("td", {}, "gtotal firstlevelvalue");
-								if (func(partialLateralSubtotals[pIter]) != NaN) {
-									OAT.addTextNode(td, self.defaultPictureValue(func(partialLateralSubtotals[pIter]).toString(), (pIter == measures.length-1), 0))
-									td = self.applyConditionalFormats(td, func(partialLateralSubtotals[pIter]).toString(), (pIter == measures.length-1), 0);
-									self.setClickEventHandlers(td, func(partialLateralSubtotals[pIter]).toString(), "MEASURE", measures.length - 1, '');
-									partialLateralSubtotals[pIter] = [];
-								} else {
-									OAT.addTextNode(td, "")
-								}
-								tr.appendChild(td);
-							}
-						
-						
-						}	else { 
-						
-								var td = OAT.Dom.create("td", {}, "gtotal firstlevelvalue");
-								tr.appendChild(td);
-								var tmp = [];
-								for (var l = 0; l < ptr.totals.length; l++) {
-									if (l >= item.offset && l < item.spanData + item.offset) { tmp.push(ptr.totals[l].array); }
-								} /* for all possible totals of this row */
-
-								if (func(tmp) != NaN) {
-									OAT.addTextNode(td, self.defaultPictureValue(func(tmp).toString(), true, 0))
-									td = self.applyConditionalFormats(td, func(tmp).toString(), true, 0);
-									self.setClickEventHandlers(td, func(tmp).toString(), "MEASURE", measures.length - 1, '');
-								} else {
-									OAT.addTextNode(td, "-")
-								}
-						}
-					} /* irregular subtotal */
-					item = item.parent;
-				}
-			} /* for all regular subtotals */
-
-			/* here the value for the latest columns of a subtotal row*/
-			if (self.options.totals && self.colConditions.length && (self.GrandTotalVisibility.TotalForColumns == "Yes")) {
-
-				if (self.colConditions.length > 0) {
-					var td = OAT.Dom.create("td", {}, "gtotal firstlevelvalue"); /* here the first measures (as rowConditions) */
-					var cantMeasures = (measures.length > 1) ? measures.length : measures.length - 1;
-					for (var ind = 0; ind < cantMeasures; ind++) {
-
-						var td = OAT.Dom.create("td", {}, "gtotal firstlevelvalue");
-						var tmp = partialSubtotals[ind];
-						if (func(tmp) != NaN) {
-							OAT.addTextNode(td, self.defaultPictureValue(func(tmp).toString(), (ind == measures.length - 1), ind))
-							td = self.applyConditionalFormats(td, func(tmp).toString(), false, ind);
-						} else {
-							OAT.addTextNode(td, "-")
-						}
-						tr.appendChild(td);
-
-
-					}
-				}
-
-				if ((self.colConditions.length == 0) || (measures.length < 2)) {
-					var tmp = [];
-					for (var l = 0; l < ptr.totals.length; l++) { tmp.push(ptr.totals[l].array); }
-					var td = OAT.Dom.create("td", {}, "total");
-
-					if (self.formulaInfo.measureFormula[measures.length - 1].hasFormula) {
-						var totals_ = self.calculateFormulaTotal(tmp, measures.length - 1, "MeasureInRows");
-						if ((totals_ != NaN) && (!isNaN(totals_))) {
-							OAT.addTextNode(td, self.defaultPictureValue(totals_.toString(), true, 0))
-							td = self.applyConditionalFormats(td, totals_.toString(), true, 0);
-							self.setClickEventHandlers(td, totals_.toString(), "MEASURE", measures.length - 1, '');
-						} else {
-							OAT.addTextNode(td, "-")
-						}
-					} else {
-						if (func(tmp) != NaN) {
-							OAT.addTextNode(td, self.defaultPictureValue(func(tmp).toString(), true, 0))
-							if (td_temp_forTotalOfCollapseInfo) {
-								OAT.addTextNode(td_temp_forTotalOfCollapseInfo, self.defaultPictureValue(func(tmp).toString(), true, 0))
-								td_temp_forTotalOfCollapseInfo = false;
-							}
-							td = self.applyConditionalFormats(td, func(tmp).toString(), true, 0);
-							self.setClickEventHandlers(td, func(tmp).toString(), "MEASURE", measures.length - 1, '');
-						} else {
-							OAT.addTextNode(td, "-")
-						}
-					}
-					tr.appendChild(td);
-				}
-			}
-		}
-
-		this._drawRowSubtotalsAutoPaging = function (tr, subtotals) { /* subtotals for i-th row */
-			for (var fg = 0; fg < subtotals.length; fg++) {
-				var lastMeasure = (fg == subtotals.length - 1) ? true : false;
-				var td2 = OAT.Dom.create("td", {}, "total");
-				if (subtotals[fg] != NaN) {
-					OAT.addTextNode(td2, self.defaultPictureValue(subtotals[fg].toString(), lastMeasure, fg))
-					td2 = self.applyConditionalFormats(td2, subtotals[fg].toString(), lastMeasure, fg);
-					self.setClickEventHandlers(td2, subtotals[fg].toString(), "MEASURE", fg, '');
-				} else {
-					OAT.addTextNode(td2, " ")
-				}
-				tr.appendChild(td2);
-			}
-
-		}
-
-		this._sumValuesInDept = function (item, dept, array) {
-			if (dept === 0) {
-				var items = item.items;
-				var totals_ = 0;
-				if (items != false) {
-					for (var iv = 0; iv < items.length; iv++) {
-						totals_ = totals_ + parseFloat(items[iv].value);
-						if (items[iv].value == "#NuN#") {
-							array.push("#NuN#");
-						} else {
-							array.push(parseFloat(items[iv].value));
-						}
-					}
-				} else {
-					array.push(parseFloat(item.value));
-					return parseFloat(item.value);
-				}
-				return totals_
-			} else {
-				var subitems = item.items;
-				var subtotals_ = 0;
-				for (var iv = 0; iv < subitems.length; iv++) {
-					subtotals_ = subtotals_ + self._sumValuesInDept(subitems[iv], dept - 1, array);
-				}
-				return subtotals_
-			}
-		}
-
-		this._sumValuesInDeptFormula = function (item, dept, array, dimNum) {
-			if (dept === 0) {
-				var items = item.items;
-				if (items != false) {
-					for (var iv = 0; iv < items.length; iv++) {
-						var ref = items[iv];
-						for (var l = 0; l < dimNum; l++) {
-							ref = ref.parent
-						}
-						var addRow = self.getFormulaRowByCoord(ref, [], dimNum, "")
-						array.push([addRow]);
-					}
-				} else {
-					var addRow = self.getFormulaRowByCoord(items[iv], [], dimNum, "")
-					array.push([addRow]);
-					return
-				}
-				return
-			} else {
-				var subitems = item.items;
-				var subtotals_ = 0;
-				for (var iv = 0; iv < subitems.length; iv++) {
-					self._sumValuesInDeptFormula(subitems[iv], dept - 1, array, dimNum);
-				}
-				return
-			}
-		}
-
-		this._drawRowSubtotalsForMeasures = function (tr, i, ptr, dept, dimNum, th, td_collection_forCollapseInfo) { // subtotals for i-th row Idem al anterior pero calcula medidas para mesaures
-
-			var func = OAT.Statistics[OAT.Statistics.list[self.options.aggTotals].func]; // statistics 
-			var td = OAT.Dom.create("td", {}, "gtotal firstlevelvalue");//subtotal
-			var _measureNumber = dept;
-			var cantDimensions = self.rowConditions.length - (measures.length - 1); //esta es la cantidad de dimensiones, es decir columnas iniciales que no son valores
-
-			if ((cantDimensions >= 3) && (dimNum != -1)) {
-				dept = (cantDimensions - dimNum) + dept - 1;
-			} else {
-				dept = cantDimensions - 1 + dept; //"quito" el primer y sumo profundidad de esta mesearue
-			}
-
-			var tmp = [];
-			if (self.formulaInfo.measureFormula[_measureNumber].hasFormula) {
-				var totals_ = self._sumValuesInDeptFormula(ptr, dept, tmp, _measureNumber);
-			} else {
-				var totals_ = self._sumValuesInDept(ptr, dept, tmp);
-			}
-			var y;
-			if (tmp.length > 0) {
-				if (self.formulaInfo.measureFormula[_measureNumber].hasFormula) {
-					var res = self.calculateFormulaTotal(tmp, _measureNumber, "MeasureInRows")
-					if (res != NaN) {
-						OAT.addTextNode(td, self.defaultPictureValue(res.toString(), false, _measureNumber))
-						td = self.applyConditionalFormats(td, res.toString(), false, _measureNumber); //before: dept
-						self.setClickEventHandlers(td, res.toString(), "MEASURE", _measureNumber, ['PtrTotals', ptr.filtrows]);
-						if (th != undefined) {
-							self.setClickEventHandlers(th, th.textContent, "DIMENSION", _measureNumber, ['PtrTotals', ptr.filtrows]);
-						}
-					} else {
-						OAT.addTextNode(td, "")
-					}
-				} else {
-					if (func(tmp) != NaN) {
-						OAT.addTextNode(td, self.defaultPictureValue(func(tmp).toString(), false, _measureNumber))
-						td = self.applyConditionalFormats(td, func(tmp).toString(), false, _measureNumber); //before: dept
-						self.setClickEventHandlers(td, func(tmp).toString(), "MEASURE", _measureNumber, ['PtrTotals', ptr.filtrows]);
-						if (th != undefined) {
-							self.setClickEventHandlers(th, th.textContent, "DIMENSION", _measureNumber, ['PtrTotals', ptr.filtrows]);
-						}
-					} else {
-						OAT.addTextNode(td, "")
-					}
-				}
-			} else {
-				OAT.addTextNode(td, "")
-			}
-
-			if ((td_collection_forCollapseInfo != undefined) && (td_collection_forCollapseInfo[_measureNumber])) {
-				OAT.addTextNode(td_collection_forCollapseInfo[_measureNumber], td.textContent)
-				td_collection_forCollapseInfo[_measureNumber] = false
-			}
-
-			tr.appendChild(td);
-		}
 
 
 		this._drawCorner = function (th, target) {
@@ -24599,11 +23424,7 @@
 			}
 		}
 
-		this._drawCornerCustom = function (th, target) {
-			OAT.addTextNode(th, "")
-			th.className = "h2titlewhite";
-			this.setTitleTexrtAlign(th, th.textContent);
-		}
+
 
 		this._drawRowConditionsHeadingsCustom = function (tr) {
 			/* rowConditions headings */
@@ -24658,7 +23479,7 @@
 				var th = OAT.Dom.create("th", {}, "h2title");
 				var divCont = OAT.Dom.create("div", { position: "relative", minWidth: largo + "px" });
 				var div = OAT.Dom.create("div", { overflow: "hidden" });
-				OAT.addTextNode(div, gx.getMessage("GXPL_QViewerJSMeasures") + "\u00A0\u00A0\u00A0")
+				OAT.addTextNode(div, self.translations.GXPL_QViewerJSMeasures /*gx.getMessage("GXPL_QViewerJSMeasures")*/ + "\u00A0\u00A0\u00A0")
 				OAT.Dom.append([th, divCont], [divCont, div], [tr, th]);
 				th.rowSpan = self.colConditions.length + 1;
 				OAT.Dom.append([th, div], [tr, th]);
@@ -24777,13 +23598,13 @@
 				var divCont = OAT.Dom.create("div", { position: "relative", minWidth: largo + "px" });
 				var div = OAT.Dom.create("div", { overflow: "hidden" });
 
-				OAT.addTextNode(div, gx.getMessage("GXPL_QViewerJSMeasures") + "\u00A0\u00A0\u00A0")
+				OAT.addTextNode(div, self.translations.GXPL_QViewerJSMeasures /*gx.getMessage("GXPL_QViewerJSMeasures")*/ + "\u00A0\u00A0\u00A0")
 				OAT.Dom.append([th, divCont], [divCont, div], [tr, th]);
 				//"Value" Title
 				var th = OAT.Dom.create("th", {}, "h2titlewhite");
 				var div = OAT.Dom.create("div");
 
-				OAT.addTextNode(div, gx.getMessage("GXPL_QViewerJSValue"))
+				OAT.addTextNode(div, self.translations.GXPL_QViewerJSValue /*gx.getMessage("GXPL_QViewerJSValue")*/)
 				th.style.textAlign = "end"
 				OAT.Dom.append([th, div], [tr, th]);
 			}
@@ -25523,60 +24344,6 @@
 			}
 		}
 
-		this.concatToGrandTotal = function (grandTotal, subArray) {
-			var res = grandTotal;
-			for (var sAi = 0; sAi < subArray.length; sAi++) { //for every element of a subtotal
-				var exists = false;
-				for (var ief = 0; ief < res.length; ief++) {
-					if ((self.colConditions.length > 0) && (subArray[sAi][2] == undefined))
-					{
-						if (res[ief][0][2] == subArray[sAi][0][2]){
-							exists = true;
-							
-							if (res[ief][0][0][subArray[sAi][0][1]] == undefined){
-								res[ief][0][0][subArray[sAi][0][1]] = []
-							} 
-							res[ief][0][0][subArray[sAi][0][1]].push(subArray[sAi][0][0][subArray[sAi][0][1]][0][0])
-							//res[ief][0][0][0].push(subArray[sAi][0][0][subArray[sAi][0][1]][0][0])
-						}
-					} else {
-						if (res[ief][2] === subArray[sAi][2]) {
-							exists = true;
-							for (var rMPos = 0; rMPos < measures.length - 1; rMPos++)
-								/*res[ief][0][rMPos] = res[ief][0][rMPos].concat(subArray[sAi][0][rMPos]);*/
-								for (var iRMPos = 0; iRMPos < subArray[sAi][0][rMPos].length; iRMPos++) {
-									if (subArray[sAi][0][rMPos][iRMPos][1] == 99) {
-										res[ief][0][rMPos].push(subArray[sAi][0][rMPos][iRMPos][0]);
-									}
-								}
-						}
-					}
-			
-				}
-				if (!exists) {
-					var deepCopy = jQuery.extend(true, [], subArray[sAi]);
-					var temp = []
-					for (var iDC = 0; iDC < deepCopy[0].length; iDC++) {
-						var subTemp = []
-						for (var subIDC = 0; subIDC < deepCopy[0][iDC].length; subIDC++) {
-							subTemp.push(deepCopy[0][iDC][subIDC][0]);
-						}
-						
-						temp.push(subTemp)
-					}
-					
-					
-					if ((self.colConditions.length > 0) && (iDC = 2))
-					{
-							temp[2] = subArray[sAi][0][2]
-					}
-					deepCopy[0] = temp
-					res.push(deepCopy);
-					
-				}
-			}
-			return res;
-		}
 
 		this.countedRows = 0;
 
@@ -25604,757 +24371,6 @@
 			
 			tbody.appendChild(row);
 		}
-
-		this.drawTable = function () {
-			OAT.Dom.clear(self.div);
-			// START create toolbar table
-
-			self.div.setAttribute("class", "conteiner_table_div");
-			var myTable = OAT.Dom.create("table", {}, "");
-			myTable.id = self.controlName + "_" + self.query + "_toolbar";
-			var myTbody = OAT.Dom.create("tbody");
-			var myRow = OAT.Dom.create("tr");
-			self.div.appendChild(myTable);
-			// END
-
-			var table = OAT.Dom.create("table", {}, "pivot_table");
-			table.id = this.controlName + "_" + this.query;
-			//add control name and query name as the id of main table
-			var tbody = OAT.Dom.create("tbody");
-
-
-			if ((self.autoPaging) && (self.allData.length < self.filteredData.length) && (self.colPointers.length > 1)) {
-				self.allData = self.filteredData;
-			} else if ((self.autoPaging) && (self.filteredData.length > self.allData.length) && (self.colPointers.length === 0)) {
-				self.filteredData = self.allData;
-			}
-			
-			self.drawTitleDiv();
-			self.drawFilters();
-			self.countedRows = 0;
-			if (OAT.isIE()) {
-				var divIeContainer = document.createElement("div");
-				divIeContainer.setAttribute("class", "divIeContainer");
-				self.div.appendChild(divIeContainer);
-				OAT.Dom.append([table, tbody], [divIeContainer, table]);
-				table.style.marginBottom = "0px";
-			} else {
-				OAT.Dom.append([table, tbody], [self.div, table]);
-			}
-
-			self.countedRows = 0;
-			var firstRow;
-			var firstRowTotalSpan = self.colConditions.length;
-			if (self.colConditions.length > 0) {
-				var i = 0;
-				var tr = OAT.Dom.create("tr");
-				self._drawRowConditionsHeadingsCustom(tr);
-				// create a list of the dimension name, that are not pivot, with heigth span equal to   colConditions.length
-				for (var ni = 0; ni < self.colConditions.length; ni++) {// creat a list of the dimension name, that are pivot as columns
-					tr = self._drawColConditionsHeadingsCustom(tr, ni, (ni === self.colConditions.length - 1));
-				}
-				//tr.setAttribute("title_row", true);
-				self.appendRowToTable(tbody, tr, true);//tbody.appendChild(tr);
-				firstRow = tr;
-			}
-			try {
-				var _mtotalSpan = 0 - firstRowTotalSpan;
-				var collapsedColInfo = [false, 0, 0] //firts son of a collapsed parent, the collapsed parent, total hidden 
-				var columnsDataHide = []
-				var columnsDataHideFillWithBlanck = []
-				var td_temp_forCollapseInfo = false; var td_temp_forTotalOfCollapseInfo = false;
-				var td_collection_forCollapseInfo = [];
-				var severalMeasures = ((measures.length>1) && (self.colConditions.length > 1))
-				for (var i = 0; i < measures.length; i++) {
-					td_collection_forCollapseInfo[i] = false;
-				}
-
-				for (var i = 0; i < self.colConditions.length; i++) {
-					var tr = OAT.Dom.create("tr");
-
-					var stack = self.colPointers[i];
-					var drawColumn = 0; //number of actual column being draw 
-					for (var j = 0; j < stack.length; j++) {//column values here the diferents values of the pivoted dimensions
-						var item = stack[j];
-						var th = OAT.Dom.create("th", {}, "even gx-pv-even-row");
-						if (item.span === 0)
-							item.span = 1;
-						th.colSpan = item.span * measures.length;
-						if (measures.length == 0) {
-							th.colSpan = item.span;
-						}
-						if (item.span === 0) {//calc for the span of the top right blanck cell
-							_mtotalSpan++;
-						} else {
-							_mtotalSpan = _mtotalSpan + (item.span * measures.length);
-							if (measures.length == 0) {
-								_mtotalSpan = _mtotalSpan + item.span
-							}
-						}
-						OAT.addTextNode(th, self.dimensionPictureValue(item.value, self.colConditions[i]))
-
-
-						th = self.applyFormatValues(th, item.value, self.colConditions[i]);
-
-
-						//find if some parent of the item is collapsed
-						var tempItem = item;
-						var hide = false;
-						var blankcell = false;
-						while (tempItem.parent) {
-							if (tempItem.parent.collapsed == undefined) {
-								collapsedColInfo[0] = false;
-								break;
-							}
-							if (tempItem.parent.collapsed) {
-								if ((!collapsedColInfo[0]) || (tempItem.parent != collapsedColInfo[1])) {
-									blankcell = true;
-									if (i == self.colConditions.length - 1) {
-										columnsDataHideFillWithBlanck.push(j);
-									}
-								} else {
-									collapsedColInfo[2]++;
-								}
-								if ((i == self.colConditions.length - 1) && (!blankcell)) //the last col conditions
-								{
-									columnsDataHide.push(j);
-								}
-								collapsedColInfo[0] = true;
-								collapsedColInfo[1] = tempItem.parent;
-								OAT.addTextNode(th, "")
-								hide = true;
-								th.colSpan = 1;
-								break;
-							} else {
-								tempItem = tempItem.parent;
-							}
-						}
-						var itemCollapsed = (self.conditions[self.colConditions[i]].collapsedValues.indexOf(item.value) != -1);
-						if ((!hide) && (i < self.colConditions.length - 1)) {
-							th = self.addExpandCollapseFunctionality(th, item, i, !itemCollapsed, false);
-						}
-						if ((!hide) || (blankcell)) { //when no hide or when collapse add one column blank cells
-							tr.appendChild(th);
-						}
-
-						var cond = self.conditions[self.colConditions[item.depth]];
-						if ((cond.subtotals && i + 1 < self.colConditions.length) && (measures.length > 0)) {// subtotal columns
-							var th = OAT.Dom.create("th", {}, "h2subtitle ");
-							OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotalFor") + " " + self.dimensionPictureValue(item.value, self.colConditions[i]))
-							th.rowSpan = self.colConditions.length - i + 1;
-							if (severalMeasures){
-								th.rowSpan = th.rowSpan - 1 
-								th.colSpan = measures.length
-							}
-							_mtotalSpan = _mtotalSpan + self.colConditions.length - i;
-							if (!((collapsedColInfo[0]) && (collapsedColInfo[1] != item))) { //if an item parent is collapse dont show subtotals
-								tr.appendChild(th);
-							}
-						}
-
-						//advance the column counter
-						drawColumn = drawColumn + item.span * measures.length
-					}
-					if ((self.options.totals && (self.GrandTotalVisibility.TotalForColumns == "Yes") && i == 0) && (measures.length > 0)) {
-						var th = OAT.Dom.create("th", {}, "h2subtitle");
-						OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotal"))
-						//"TOTAL" gran total
-						th.rowSpan = self.colConditions.length;
-						if (self.colConditions.length > 0) {
-							th.colSpan = measures.length;
-							_mtotalSpan = _mtotalSpan + self.colConditions.length + (measures.length - 1)
-						} else {
-							_mtotalSpan = _mtotalSpan + self.colConditions.length
-						}
-						totalSpan = self.colConditions.length
-						tr.appendChild(th);
-					}
-					if (self.options.headingAfter) {// column headings after
-						self._drawColConditionsHeadings(tr, i);
-					}
-					//tr.setAttribute("title_row", true);
-					self.appendRowToTable(tbody, tr, true);//tbody.appendChild(tr);
-
-				}
-
-				/*add a column only with the name of  measures */
-				if (self.colConditions.length > 0) {
-					var tr = OAT.Dom.create("tr");
-					var hideTotals = (self.GrandTotalVisibility.TotalForColumns == "Yes") ? 0: 1;
-					var entries = stack.length - collapsedColInfo[2] - hideTotals
-					if (severalMeasures)
-					  entries = entries + self.colPointers[0].length
-					for (var j = 0; j <= entries; j++) {
-						for (var m = 0; m < measures.length; m++) {
-							var th = OAT.Dom.create("th", {}, "h2titlewhite");
-							th.colSpan = 1;
-							OAT.addTextNode(th, measures[m].attributes.getNamedItem("displayName").nodeValue)
-							self.setTitleTexrtAlign(th, th.textContent);
-							tr.appendChild(th);
-						}
-					}
-					//tr.setAttribute("title_row", true);
-					self.appendRowToTable(tbody, tr, true);//tbody.appendChild(tr);
-				}
-				/* end of column only with the name of  measures */
-
-				if (_mtotalSpan > 0) {
-					var th = OAT.Dom.create("th", {}, "h2subtitle ");
-					OAT.addTextNode(th, "")
-					th.colSpan = _mtotalSpan;
-					th.style.borderLeftColor = "transparent";
-					firstRow.appendChild(th);
-				}
-
-				/* first connector */
-				if ((self.rowConditions.length && self.options.headingBefore) && (self.colConditions.length === 0)) {
-					self._drawRowConditionsHeadings(tbody);
-				} else if ((self.rowConditions.length == 0) && (self.options.headingBefore) && (self.colConditions.length === 0)) {
-					try {
-						self._drawRowConditionsHeadings(tbody);
-					} catch (Error) { }
-				}
-
-				var several_totals = measures.length > 1;
-				var colSpan;
-				if (several_totals) {
-					colSpan = self.rowConditions.length - (measures.length - 1);
-				} else {
-					colSpan = self.rowConditions.length;
-				}
-
-				var collapsedInfo = [false, 9999, true, 0]
-				//[working under collapse item, row condition of the collapse item, first row of collapses rows, actual row condition]
-				var subtotalsmeasuresList = [];
-				/* store values to show in the subtotal row */
-				var grandtotalsmeasuresList = [];
-				//C1Line
-				var lineaEnBlanco = false;
-				for (var i = 0; i < self.h; i++) {
-
-					var tr = OAT.Dom.create("tr");
-					if (self.rowConditions.length) {
-						var item = self.rowPointers[self.rowConditions.length - 1][i];
-						/* stack has number of values equal to height of table */
-						var ptrArray = [];
-						var ptr = item;
-						while (ptr.parent) {
-							ptrArray.unshift(ptr);
-							ptr = ptr.parent;
-						}
-					}
-
-					for (var j = 0; j < self.rowConditions.length - (measures.length - 1); j++) {/* row header values */
-						var item = ptrArray[j];
-						if ((item != undefined) && (item.offset == i)) {
-							//add collapse image option
-							var itemCollapsed = (self.conditions[self.rowConditions[j]].collapsedValues.indexOf(item.value) != -1);
-							if (j >= (self.rowConditions.length - (measures.length - 1) - 1)) {
-								itemCollapsed = false;
-							}
-
-							var th = OAT.Dom.create("th", {}, "even gx-pv-even-row");
-							if ((!collapsedInfo[0]) || (collapsedInfo[1] >= j)) {//if the line is not collapsed
-								th.rowSpan = ptrArray[j].spanDraw;
-
-								OAT.addTextNode(th, self.dimensionPictureValue(item.value, self.rowConditions[j]))
-								/* picture for columns */
-								th = self.applyFormatValues(th, item.value, self.rowConditions[j]);
-								/* format  for columns */
-								self.setClickEventHandlers(th, item.value, "DIMENSION", self.rowConditions[j], item);
-
-								if ((j < self.rowConditions.length - (measures.length - 1) - 1) && ((measures.length > 0) || (j < self.rowConditions.length - 1))) {
-									th = self.addExpandCollapseFunctionality(th, item, j, !itemCollapsed, true);
-								}
-							} else {
-								th.rowSpan = 1;
-								OAT.addTextNode(th, "")
-								/* picture for columns */
-							}
-
-							if (collapsedInfo[1] >= j) {
-								collapsedInfo[0] = itemCollapsed;
-								collapsedInfo[3] = item;
-								if (itemCollapsed) {
-									collapsedInfo[1] = j;
-								} else {
-									collapsedInfo[1] = 9999;
-								}
-								collapsedInfo[2] = true;
-							}
-
-							lineaEnBlanco = false;
-							tr.appendChild(th);
-						} else {
-							if (measures.length > 0) {
-								lineaEnBlanco = true;
-							}
-						}
-					}
-					/* blank space before */
-					if ((self.rowConditions.length - (measures.length - 1) == 0) && (i > 0) && (measures.length > 0)) {
-						lineaEnBlanco = true;
-					}
-
-					/* initial "crude data" part of a row, only the data of the measures shows in one column*/
-					var mesauresList = new Array();
-
-					var measureslength = measures.length;
-					if (measureslength === 0) {
-						measureslength = 1;
-					}
-
-					for (var ji = 0; ji < (measureslength - 1); ji++) {
-						var item = ptrArray[self.rowConditions.length - (measureslength - 1) + ji];
-
-						var td = OAT.Dom.create("td", {}, "even gx-pv-even-row");
-
-						if (item.value != self.EmptyValue) {
-							if ((!collapsedInfo[0]) || (self.autoPaging)) {
-								OAT.addTextNode(td, self.defaultPictureValue(item.value, false, ji))
-								td = self.applyConditionalFormats(td, item.value, false, ji);
-								self.setClickEventHandlers(td, item.value, "MEASURE", ji, item);
-							}
-						} else {
-							OAT.addTextNode(td, "")
-						}
-						if (collapsedInfo[0] && (!td_collection_forCollapseInfo[ji])) {
-							td_collection_forCollapseInfo[ji] = td;
-						}
-
-						if (!mesauresList[ji]) {
-							mesauresList[ji] = []
-						}
-						var rowNumValue = (ptrArray[ptrArray.length - 1].row != undefined) ? ptrArray[ptrArray.length - 1].row : item.row
-						mesauresList[ji].push([[item.value, [rowNumValue]]]);
-						/* when some conditions is move to columns, remember the value and the asociate filteredDataRow*/
-
-						if (self.colConditions.length === 0) {
-							tr.appendChild(td);
-						}
-					}
-
-					if (self.colConditions.length && i == 0 && self.options.headingBefore) {
-						var th = OAT.Dom.create("th");
-						if (!self.rowConditions.length) {
-							self._drawCorner(th, true);
-							th.conditionIndex = -2;
-						} else {
-							th.style.border = "none";
-						}
-						th.rowSpan = self.rowStructure.span;
-						th.hidden = true;
-					}
-					var tdTempSubtotalForColumn = false;
-					var sumaLaterales = []; var sumaLateralParcial = []; for (var iSL = 0; iSL < measureslength - 1; iSL++) { sumaLaterales[iSL] = []; sumaLateralParcial[iSL] = [];}
-					for (var j = 0; j < self.w; j++) {/* data */
-						var result = self.tabularData[j][i][0];
-						var isNun = false;
-						try {
-							isNun = ((result == "#NaV#") && (self.tabularData[j][i][1].length > 0));
-						} catch (Error) { }
-						/* add empty space for measures and col condition, and fill if here theres a value */
-						if (self.colConditions.length > 0) {
-							for (var fg = 0; fg < measureslength - 1; fg++) {
-								var td = OAT.Dom.create("td", {}, self.getClassName(i, j));
-								if ((result != self.EmptyValue) || isNun) {
-									//C1Line
-									var valMeasureToAdd = getValueMeasureFromMeasureList(mesauresList, self.tabularData[j][i][1][0], fg, self.filteredData, measures.length)
-									OAT.addTextNode(td, self.defaultPictureValue(valMeasureToAdd, false, fg))
-									td = self.applyConditionalFormats(td, valMeasureToAdd, false, fg);
-									self.setClickEventHandlers(td, valMeasureToAdd, "MEASURE", fg, self.tabularData[j][i][1]);
-									var pres = false;
-									for (var mll = 0; mll < subtotalsmeasuresList.length; mll++) {
-										if (subtotalsmeasuresList[mll][2] === j) {
-											if (valMeasureToAdd == "#NuN#") {
-												subtotalsmeasuresList[mll][0][fg].push(["#NuN#", 99]);
-											} else if (valMeasureToAdd == "#FoE#") {
-												listValoresMeasures[fg].push([["#FoE#", 99]])
-											} else {
-												subtotalsmeasuresList[mll][0][fg].push([parseFloat(valMeasureToAdd), 99]); //el segundo valor el maximo nivel en que ya se uso el valor
-											}
-											subtotalsmeasuresList[mll][3].push(self.tabularData[j][i][1].slice());
-											pres = true
-										}
-									}
-
-									if (!pres) {
-										var listValoresMeasures = []; for (var lVMi = 0; lVMi < measureslength - 1; lVMi++) { listValoresMeasures[lVMi] = [] }
-										if (valMeasureToAdd == "#NuN#") {
-											listValoresMeasures[fg].push([["#NuN#", 99]])
-										} else if (valMeasureToAdd == "#FoE#") {
-											listValoresMeasures[fg].push([["#FoE#", 99]])
-										} else {
-											listValoresMeasures[fg].push([[parseFloat(valMeasureToAdd), 99]])
-										}
-										subtotalsmeasuresList.push([[listValoresMeasures, fg, j, self.tabularData[j][i][1].slice()]]);
-									}
-									if (!isNaN(parseFloat(valMeasureToAdd))) {
-										sumaLaterales[fg].push(parseFloat(valMeasureToAdd));
-										sumaLateralParcial[fg].push(parseFloat(valMeasureToAdd));
-									}
-								} else {
-									OAT.addTextNode(td, "")
-								}
-								if (columnsDataHideFillWithBlanck.indexOf(j) != -1) {
-									OAT.addTextNode(td, "")
-								}
-								if (columnsDataHide.indexOf(j) == -1) { //dont add if column is hide because of collapse column dimension
-									tr.appendChild(td);
-								}
-							}
-						}
-						/* */
-
-						var td = OAT.Dom.create("td", {}, self.getClassName(i, j));
-
-						if (columnsDataHide.indexOf(j) == -1) {
-							if ((result != self.EmptyValue) && (measures.length > 0)) {
-								OAT.addTextNode(td, self.defaultPictureValue(result.toString(), true, 0))
-								td = self.applyConditionalFormats(td, result.toString(), true, 0);
-								self.setClickEventHandlers(td, result, "MEASURE", measureslength - 1, self.tabularData[j][i][1]);
-							} else {
-								OAT.addTextNode(td, "")
-							}
-
-							if ((((columnsDataHideFillWithBlanck.indexOf(j) != -1) || (collapsedInfo[0]))) && (!self.autoPaging)) {
-								if (!td_temp_forCollapseInfo) td_temp_forCollapseInfo = td;
-								if (!tdTempSubtotalForColumn) tdTempSubtotalForColumn = td;
-								OAT.addTextNode(td, "")
-							}
-
-							if ((measures.length > 0)) {//&& (!collapsedInfo[0])) {
-								tr.appendChild(td);
-							}
-						}
-						/* column subtotals */
-						if (measures.length > 0) {
-							if (self.colPointers.length > 0) { // && self.options.subtotals
-								var item = self.colPointers[self.colPointers.length - 1][j].parent;
-								while (item.parent) {
-									var tempItem = item.parent
-									var collapseFather = false;
-									while (tempItem != undefined) {
-										collapseFather = ((item.parent.collapsed != undefined) && (item.parent.collapsed)) ? true : false;
-										tempItem = tempItem.parent
-									}
-
-									if (!collapseFather) {
-										var cond = self.conditions[self.colConditions[item.depth]];
-										if (item.offset + item.spanData - 1 == j) { 
-											if (severalMeasures){						
-												for (var fg = 0; fg < measureslength - 1; fg++) {
-													var td = OAT.Dom.create("td", {}, "subtotal");	
-									
-														var _colTotal = 0;
-														for (var posIt = 0; posIt < sumaLateralParcial[fg].length; posIt++) {
-															if (!isNaN(sumaLateralParcial[fg][posIt])) {
-																_colTotal = parseFloat(sumaLateralParcial[fg][posIt]) + _colTotal
-																sumaLateralParcial[fg][posIt] = 0;
-															}
-														}
-														OAT.addTextNode(td, self.defaultPictureValue(_colTotal.toString(), false, fg))
-														td = self.applyConditionalFormats(td, _colTotal.toString(), false, fg);
-													tr.appendChild(td);	
-												}
-											}
-											
-											var td = OAT.Dom.create("td", {}, "subtotal");
-												
-											if (item.totals[i].value > 0) {
-												OAT.addTextNode(td, self.defaultPictureValue(item.totals[i].value.toString(), true, 0))
-												td = self.applyConditionalFormats(td, item.totals[i].value.toString(), true, 0);
-												self.setClickEventHandlers(td, item.totals[i].value.toString(), "MEASURE", measureslength - 1, item);
-												if (tdTempSubtotalForColumn != false) {
-													OAT.addTextNode(tdTempSubtotalForColumn, self.defaultPictureValue(item.totals[i].value.toString(), true, 0))
-													tdTempSubtotalForColumn = false;
-												}
-											} else {
-												OAT.addTextNode(td, "")
-											}
-											if (cond.subtotals) {
-												tr.appendChild(td);
-											}
-										}
-									}
-									item = item.parent;
-								}
-							} /* if subtotals */
-						}
-					}/* for all rows */
-
-					if (self.options.totals && self.colConditions.length && (self.GrandTotalVisibility.TotalForColumns == "Yes")) {/* columns totals */
-						/* totals for other measure when move to column (its not properly a total, indeed is the value for that row of the measure)*/
-						if (self.colConditions.length > 0) {//dont last mesaures totals
-							for (var fg = 0; fg < measureslength - 1; fg++) {
-								var td = OAT.Dom.create("td", {}, "total");
-								//get total 
-								//C1Line
-								var _colTotal = 0;
-								for (var posIt = 0; posIt < sumaLaterales[fg].length; posIt++) {
-									if (!isNaN(sumaLaterales[fg][posIt])) {
-										_colTotal = parseFloat(sumaLaterales[fg][posIt]) + _colTotal
-									}
-								}
-
-								OAT.addTextNode(td, self.defaultPictureValue(_colTotal.toString(), false, fg))
-								td = self.applyConditionalFormats(td, _colTotal.toString(), false, fg);
-								self.setClickEventHandlers(td, _colTotal.toString(), "MEASURE", fg, ['PtrTotals', self.rowTotals[1][i]]);
-								tr.appendChild(td);
-							}
-						}
-						/* */
-						if (self.rowConditions.length) {//last meseasure total
-							var td = OAT.Dom.create("td", {}, "total");
-							if (!isNaN(self.rowTotals[0][i])) {
-								OAT.addTextNode(td, self.defaultPictureValue(self.rowTotals[0][i].toString(), true, 0))
-								td = self.applyConditionalFormats(td, self.rowTotals[0][i].toString(), true, 0);
-								self.setClickEventHandlers(td, self.rowTotals[0][i].toString(), "MEASURE", measureslength - 1, ['PtrTotals', self.rowTotals[1][i]]);
-
-								if ((((columnsDataHideFillWithBlanck.indexOf(j) != -1) || (collapsedInfo[0]))) && (!self.autoPaging)) {
-									if (td_temp_forCollapseInfo)
-										if (!td_temp_forTotalOfCollapseInfo) td_temp_forTotalOfCollapseInfo = td;
-								}
-
-							} else {
-								OAT.addTextNode(td, "-")
-							}
-							//check the value of asociate filteredData row
-							if (measures.length > 0)
-								tr.appendChild(td);
-						} else {
-							self._drawGTotal(tr);
-						}
-					}
-
-					if (self.colConditions.length && i == 0 && self.options.headingAfter) {/* blank space after */
-						var th = OAT.Dom.create("th");
-						if (!self.rowConditions.length) {
-							self._drawCorner(th, true);
-							th.conditionIndex = -2;
-						} else {
-							th.style.border = "none";
-						}
-						th.rowSpan = self.rowStructure.span + (self.options.totals && self.rowConditions.length ? 1 : 0);
-						tr.appendChild(th);
-					}
-					if (collapsedInfo[0] && !collapsedInfo[2]) {
-
-					} else {
-						if (!lineaEnBlanco) {//C1Line
-							self.appendRowToTable(tbody, tr, false);//tbody.appendChild(tr);
-							collapsedInfo[2] = false;
-						}
-					}
-
-					var subTotalRowNumber = self.rowConditions.length - 2;
-					if ((several_totals) && (self.rowConditions.length - 2 >= 0) && (ptrArray[self.rowConditions.length - 2] != undefined) && (ptrArray[self.rowConditions.length - 2].items != undefined) && (ptrArray[self.rowConditions.length - 2].items.length <= 1) && (self.colConditions.length <= 0)) {
-						subTotalRowNumber = self.rowConditions.length - 2 - (measureslength - 1);
-					}
-					if (self.rowConditions.length - (measures.length - 1) <= 0) { //si todas las conditions de la row son masures o se movieron al filtro
-						subTotalRowNumber = -1 //no hay subtotales que mostrar
-					}
-
-					for (var j = subTotalRowNumber; j >= 0; j--) {//subtotal rows
-						var item = ptrArray[j];
-						//last row's item		
-						var eleije = item.value;
-						var cond = self.conditions[self.rowConditions[item.depth]];
-
-						var subTotalMostrado = false;
-
-						var conditionNumber = item.conditionNumber;
-						var itemColumnNumber = self.rowConditions.indexOf(conditionNumber) + 1
-						var dimensionTotalColumns = self.rowConditions.length - measures.length + 1 //if dimensionTotalColumns > itemColumnNumber => item es measure //if dimesnionTotalColumns == itemColumnNumber => item es dimension, pero la ultima de las filas (no suma, su info siempre se colapsa en una linea) 
-						if ((item.offset + item.spanData - 1 == i) && ((columns.length < 2) || (self.colConditions.length != 0) || (j < columns.length - 1))
-							&& ((self.colConditions.length == 0) || (itemColumnNumber < dimensionTotalColumns))
-							&& ((!self.autoPaging) || (self.colConditions.length == 0))
-							//&& ((self.colConditions.length == 0) || (measures.length < 2) || (self.rowConditions.length - 1 < 2) || ((j < self.rowConditions.length - measures.length + 1) && ((self.rowConditions.length - measures.length)>= 3)) )//(j <= self.rowConditions.length - self.colConditions.length - 1) )
-						)
-						//index j, must be an item of the uppers row, valid to add as subtotal, only first position of array ptrArray
-						{
-							//decide where to add or not subTotal row 
-							var aPsums;
-							
-							var tr = OAT.Dom.create("tr");
-							var th = OAT.Dom.create("th", {}, "h2subtitle subtitleFirstLevel");
-
-							th.colSpan = colSpan - j;
-
-							if (item.value != "#NuN#") {
-								OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotalFor") + " " + self.dimensionPictureValue(item.value,conditionNumber))
-							} else {
-								OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotalFor") + " " + " ")
-							}
-							tr.appendChild(th);
-
-							if (!self.autoPaging) {
-								if (several_totals) {//here: the sum of subtotales except the last measure
-									for (var ind = 0; ind < measureslength - 1; ind++) {
-										if (self.colConditions.length === 0) {
-											var sub_td = false;
-											if (!(collapsedInfo[0] && !collapsedInfo[2] && (collapsedInfo[3] != item) && (j >= collapsedInfo[1]))) {
-												sub_td = td_collection_forCollapseInfo
-											}
-											if (ind > 0) {
-												self._drawRowSubtotalsForMeasures(tr, i, item, ind, j, undefined, sub_td)//td_collection_forCollapseInfo);
-												//j actual dimension
-											} else {
-												self._drawRowSubtotalsForMeasures(tr, i, item, ind, j, th, sub_td)//td_collection_forCollapseInfo);
-												//j actual dimension //only th, to add the event on click
-											}
-										}
-										var totals_ = 0;
-									}
-								}
-							}
-							grandtotalsmeasuresList = self.concatToGrandTotal(grandtotalsmeasuresList, subtotalsmeasuresList);
-							if (severalMeasures) {
-								subtotalsmeasuresList = []
-							}
-							if (measures.length > 0) {
-								if (self.autoPaging) {
-									if (aPsums)
-										self._drawRowSubtotalsAutoPaging(tr, aPsums);
-								} else {
-									var sub_td = td_temp_forCollapseInfo
-									if (collapsedInfo[0] && !collapsedInfo[2] && (collapsedInfo[3] != item) && (j >= collapsedInfo[1])) {
-										sub_td = false;
-									} else {
-										td_temp_forCollapseInfo = false;
-									}
-									if (sub_td) {
-										self._drawRowSubtotals(tr, i, item, subtotalsmeasuresList, sub_td, itemColumnNumber, td_temp_forTotalOfCollapseInfo);
-										td_temp_forTotalOfCollapseInfo = false;
-									} else {
-										if (severalMeasures) {
-											self._drawRowSubtotals(tr, i, item, grandtotalsmeasuresList, sub_td, itemColumnNumber, false);
-										} else {
-											self._drawRowSubtotals(tr, i, item, subtotalsmeasuresList, sub_td, itemColumnNumber, false);
-										}
-									}
-
-									/* add "regular" subtotals */
-								}
-							}
-							//subtotalsmeasuresList = [];
-							if ((!self.autoPaging) || (aPsums)) {
-								if (collapsedInfo[0] && !collapsedInfo[2] && (collapsedInfo[3] != item) && (j >= collapsedInfo[1])) {
-
-								} else {
-									if (cond.subtotals) {
-										self.appendRowToTable(tbody, tr, false);//tbody.appendChild(tr);
-									}
-								}
-							}
-						}
-					}
-
-					if ((subTotalRowNumber === -1)) {
-						grandtotalsmeasuresList = self.concatToGrandTotal(grandtotalsmeasuresList, subtotalsmeasuresList);
-						subtotalsmeasuresList = [];
-					} else if ((self.rowConditions.length - measures.length) == 0) { //cuando no se calulan los subtotales porque solo hay una dimension en las filas
-						//agrego para el gran total
-						grandtotalsmeasuresList = self.concatToGrandTotal(grandtotalsmeasuresList, subtotalsmeasuresList);
-						subtotalsmeasuresList = [];
-					}
-					
-					//if ((subtotalsmeasuresList.length > 0) && (self.rowConditions.length - 1 >= 2)) { //si no se calculan o muestran
-					//el (self.rowConditions.length - 1 >= 2) es por el caso 2dim 2measures n=> no borra, pero con 3dim o mas si
-					//grandtotalsmeasuresList = self.concatToGrandTotal(grandtotalsmeasuresList, subtotalsmeasuresList);
-					//subtotalsmeasuresList = [];
-					//}
-				} /* for each row */
-
-			} catch (ERROR) {
-				//alert(ERROR);
-			}
-
-			/* code for the last row, GRAND TOTAL ROW */
-			/* GRAND TOTAL ROW	*/
-			if ((measures.length > 0) && (self.GrandTotalVisibility.TotalForRows == "Yes") && ((!self.autoPaging) || (self.colConditions.length == 0))) {
-
-				if ((self.options.totals && self.rowConditions.length) && ((!self.autoPaging) || (self.TotalPagesPaging == self.actualPaginationPage) /*|| (self.FilterByTopFilter)*/)) {
-					var tr = OAT.Dom.create("tr");
-
-					if (colSpan != 0) {
-						var th = OAT.Dom.create("th", {}, "h2subtitle grandtotaltitle");
-						OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotal"))
-						th.colSpan = colSpan;
-						tr.appendChild(th);
-					}
-
-					var GrandTotals = new Array();
-					
-					if ((several_totals)) {// && (self.colConditions.length ===0)){
-						for (var ind = 0; ind < measures.length - 1; ind++) {
-							numCol = self.rowConditions.length - (measures.length - 1) + ind;
-
-							var td = OAT.Dom.create("td", {}, "gtotal grandtotalvalue");
-							var values_ = this.rowPointers[numCol];
-							var totals_ = 0;
-
-							var valuesToOperate = []
-							for (var i = 0; i < values_.length; i++) {
-								if (self.formulaInfo.measureFormula[ind].hasFormula) {
-									var ref = values_[i]
-									for (var t = 0; t < ind; t++) {
-										ref = ref.parent
-									}
-									valuesToOperate.push(self.getFormulaRowByCoord(ref, false, ind, "MeasureInRows"))
-								}
-								if (OATIsNotEmptyValue(values_[i].value)) {
-									totals_ = totals_ + parseFloat(values_[i].value);
-								}
-							}
-
-							if ((!self.autoPaging) /*|| (self.FilterByTopFilter)*/) {
-								if (self.formulaInfo.measureFormula[ind].hasFormula) {
-									totals_ = self.calculateFormulaTotal(valuesToOperate, ind, "MeasureInRows");
-									GrandTotals[ind] = totals_;
-								} else {
-									GrandTotals[ind] = totals_;
-								}
-							}
-
-							if (self.colConditions.length === 0) {
-								if ((self.autoPaging) /*&& (!self.FilterByTopFilter)*/) {
-									if (!isNaN(totals_)) {
-										OAT.addTextNode(td, self.defaultPictureValue(GrandTotals[ind].toString(), false, ind))
-										td = self.applyConditionalFormats(td, GrandTotals[ind].toString(), false, ind);
-									} else {
-										OAT.addTextNode(td, "")
-									}
-									tr.appendChild(td);
-								} else {
-									if (!isNaN(totals_)) {
-										OAT.addTextNode(td, self.defaultPictureValue(totals_.toString(), false, ind))
-										td = self.applyConditionalFormats(td, totals_.toString(), false, ind);
-										self.setClickEventHandlers(td, totals_.toString(), "MEASURE", ind, 'GrandTotal');
-										if (ind == 0) {
-											self.setClickEventHandlers(td, gx.getMessage("GXPL_QViewerJSTotal"), "DIMENSION", ind, 'GrandTotal');
-										}
-									} else {
-										OAT.addTextNode(td, "")
-									}
-									tr.appendChild(td);
-								}
-							}
-						}
-					}
-
-					self._drawRowTotals(tr, GrandTotals, grandtotalsmeasuresList, columnsDataHide);
-					self.appendRowToTable(tbody, tr, false);//tbody.appendChild(tr);
-				}
-
-				/* second connector */
-				if (self.rowConditions.length && self.options.headingAfter) {
-					self._drawRowConditionsHeadings(tbody);
-				}
-			}
-
-		} /* drawTable */
-
 
 		this.drawTableWhenServerPagination = function () {
 			OAT.Dom.clear(self.div);
@@ -26444,7 +24460,7 @@
 								if (self.GrandTotalVisibility.TotalForColumns == "Yes"){
 									if (i == 0) {
 										var th = OAT.Dom.create("th", {}, "h2subtitle");
-										OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotal"))
+										OAT.addTextNode(th, self.translations.GXPL_QViewerJSTotal/*gx.getMessage("GXPL_QViewerJSTotal")*/)
 										th.rowSpan = self.colConditions.length;
 										if (!self.ShowMeasuresAsRows) {
 											th.colSpan = measures.length;
@@ -26464,8 +24480,8 @@
 									var th = OAT.Dom.create("th", {}, "h2subtitle ");
 
 									var columnValue = (self.pageData.columnsHeaders[j].subHeaders.length > i) ? self.pageData.columnsHeaders[j].subHeaders[i].value : "";
-									OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotalFor") + " " + self.dimensionPictureValue(columnValue.trimpivot(), self.colConditions[i] ))
-									self.setClickEventHandlers(th, gx.getMessage("GXPL_QViewerJSTotalFor") + " " + self.dimensionPictureValue(columnValue.trimpivot(), self.colConditions[i] ),
+									OAT.addTextNode(th, self.translations.GXPL_QViewerJSTotalFor/*gx.getMessage("GXPL_QViewerJSTotalFor")*/ + " " + self.dimensionPictureValue(columnValue.trimpivot(), self.colConditions[i] ))
+									self.setClickEventHandlers(th, self.translations.GXPL_QViewerJSTotalFor/*gx.getMessage("GXPL_QViewerJSTotalFor")*/ + " " + self.dimensionPictureValue(columnValue.trimpivot(), self.colConditions[i] ),
 															 "DIMENSION", self.colConditions[i], ['PtrTotals', columnValue, "", h, "columns", i]);
 									th.rowSpan = self.colConditions.length - i;
 									if (!self.ShowMeasuresAsRows) {
@@ -26643,7 +24659,7 @@
 								skipRow = true
 							} else {	
 								var th = OAT.Dom.create("th", {}, "h2subtitle grandtotaltitle");
-								OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotal"))
+								OAT.addTextNode(th, self.translations.GXPL_QViewerJSTotal /*gx.getMessage("GXPL_QViewerJSTotal")*/)
 								th.colSpan = colSpan;
 								if (self.ShowMeasuresAsRows) {
 									if (row.rowSpan > 0) {
@@ -26676,11 +24692,11 @@
 							th.colSpan = colSpan - (row.headers.length - 1);
 							var value = row.headers[row.headers.length - 1].value.trimpivot()
 							if (value == "#NuN#") {
-								OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotalFor") + " " + self.defaultPicture.getAttribute("textForNullValues"))
+								OAT.addTextNode(th, self.translations.GXPL_QViewerJSTotalFor/*gx.getMessage("GXPL_QViewerJSTotalFor")*/ + " " + self.defaultPicture.getAttribute("textForNullValues"))
 							} else {
-								OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotalFor") + " " +  self.dimensionPictureValue( OAT.Dom.fromSafeXML(value), self.rowConditions[row.headers.length - 1] ) )
+								OAT.addTextNode(th, self.translations.GXPL_QViewerJSTotalFor/*gx.getMessage("GXPL_QViewerJSTotalFor")*/ + " " +  self.dimensionPictureValue( OAT.Dom.fromSafeXML(value), self.rowConditions[row.headers.length - 1] ) )
 							}
-							self.setClickEventHandlers(th, gx.getMessage("GXPL_QViewerJSTotalFor") + " " + item.value, "DIMENSION", getMeasureNumberByDataField(item.dataField, columns), ['PtrTotals', value, row, -1]);
+							self.setClickEventHandlers(th, self.translations.GXPL_QViewerJSTotalFor + " " + item.value, "DIMENSION", getMeasureNumberByDataField(item.dataField, columns), ['PtrTotals', value, row, -1]);
 							if (self.ShowMeasuresAsRows) {
 								if (row.rowSpan > 0) {
 									th.rowSpan = row.rowSpan
@@ -26870,7 +24886,7 @@
 					}
 					if ((self.options.totals && i == 0) && (self.GrandTotalVisibility.TotalForColumns == "Yes"))  {
 						var th = OAT.Dom.create("th", {}, "h2subtitle");
-						OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotal"))
+						OAT.addTextNode(th, self.translations.GXPL_QViewerJSTotal /*gx.getMessage("GXPL_QViewerJSTotal")*/)
 						//"TOTAL" gran total
 						th.rowSpan = self.colConditions.length;
 						if (self.colConditions.length > 0) {
@@ -27213,7 +25229,7 @@
 											var th = OAT.Dom.create("th", {}, "h2subtitle");
 											th.colSpan = (self.rowConditions.length - (measures.length - 1)) - relativeDim;
 											th.rowSpan = measures.length
-											OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotalFor") + " " + ptrArray[relativeDim].value)
+											OAT.addTextNode(th, self.translations.GXPL_QViewerJSTotalFor + " " + ptrArray[relativeDim].value)
 											tr.appendChild(th);
 										}
 
@@ -27341,7 +25357,7 @@
 
 							if ((colSpan != 0) && (m == 0)) { //add grandTotal title cell
 								var th = OAT.Dom.create("th", {}, "h2subtitle");
-								OAT.addTextNode(th, gx.getMessage("GXPL_QViewerJSTotal"))
+								OAT.addTextNode(th, self.translations.GXPL_QViewerJSTotal /*gx.getMessage("GXPL_QViewerJSTotal")*/)
 								th.colSpan = colSpan;
 								th.rowSpan = measures.length;
 								tr.appendChild(th);
@@ -29039,137 +27055,7 @@
 		}
 
 		
-		this.go = function (load, autorefreshflag) {
-
-			if (dataRows[0] != undefined) { //if data available
-
-				if (!load) {
-					self.gd.clearSources();
-					self.gd.clearTargets();
-					self.drawTitleDiv();
-					self.drawFilters();
-					try {
-						self.applyFilters();
-						self.createAggStructure();
-						self.fillAggStructure();
-						self.checkAggStructure();
-						self.count(); /* fill tabularData with values */
-					} catch (ERROR) {
-						//alert(ERROR)
-					}
-					if (((autorefreshflag === undefined) || (autorefreshflag === null) || (!autorefreshflag))) {
-						//something change, call QQ
-						var meta = self.createXMLMetadata();
-						var listennings = self.QueryViewerCollection[UcId];
-						if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
-							qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
-						}
-					}
-				}
-
-				/* get filtered selected values*/
-				var filterDivSelects = new Array();
-				for (var fiv = 0; fiv < self.filterDiv.selects.length; fiv++) {
-					filterDivSelects[fiv] = self.filterDiv.selects[fiv].value;
-				}
-
-				if (!self.firstTime) {
-
-					var state = {
-						query: self.query,
-						conditions: self.conditions,
-						colConditions: self.colConditions,
-						rowConditions: self.rowConditions,
-						filterIndexes: self.filterIndexes,
-						filterDivSelects: filterDivSelects,
-						rowsPerPage: self.rowsPerPage,
-						version: self.rememberLayoutStateVersion
-					};
-
-
-					if ((!self.deleteState)) {
-						self.saveState(state);
-					} else {
-						self.cleanState();
-					}
-
-					self.readState = true;
-				} else {
-					self.firstTime = false;
-				}
-
-				if (!self.ShowMeasuresAsRows) {
-					self.drawTable();
-					qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection])
-				} else {
-					self.drawTableWhenShowMeasuresAsRows()
-					qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection])
-				}
-
-
-				//add paging functionality
-				var actual_rowsPerPage = 0;
-				if (jQuery("#" + this.controlName + "_" + self.query + "tablePagination_rowsPerPage").length > 0) {
-					actual_rowsPerPage = parseInt(jQuery("#" + this.controlName + "_" + self.query + "tablePagination_rowsPerPage")[0].value);
-					if (!isNaN(actual_rowsPerPage)) {
-						pageSize = actual_rowsPerPage;
-					}
-				}
-
-
-
-				var options = {
-					currPage: 1,
-					ignoreRows: jQuery('tbody tr[title_row=true]', jQuery("#" + this.controlName + "_" + self.query)),
-					optionsForRows: [10, 15, 20],
-					rowsPerPage: self.rowsPerPage != 'undefined' ? self.rowsPerPage : 50,
-					topNav: false,
-					controlName: this.controlName + "_" + self.query
-				}
-				if (pageSize) {
-					OAT.tablePagination(jQuery("#" + this.controlName + "_" + self.query), options);
-					jQuery("#" + this.controlName + "_" + self.query).css("margin-bottom", "0px");
-				}
-
-
-				
-
-				if (!autoResize) {
-					var clientWdt = jQuery("#" + this.containerName)[0].clientWidth
-					jQuery("#" + this.controlName + "_" + self.query).css({ width: (clientWdt) + "px" })
-				}
-				var wd = jQuery("#" + this.controlName + "_" + self.query)[0].offsetWidth;
-				try {
-					if (jQuery("#MAINFORM")[0].className.indexOf("form-horizontal") > -1) {
-						wd = wd + 4;
-					}
-				} catch (Error) {
-				}
-				var wd2 = jQuery("#" + this.controlName + "_" + self.query)[0].offsetWidth - 1;
-				jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" });
-				jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" });
-				jQuery("#" + this.controlName + "_" + self.query + "_tablePagination").css({ width: wd2 + "px" });
-				if ((jQuery("#" + this.controlName + "_" + self.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + this.controlName + "_" + self.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
-					jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")
-				}
-				setInterval(function () {
-					//verificar que sea pivot
-					if ((jQuery("#" + self.controlName + "_" + self.query).length > 0) && (jQuery("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table")) {
-						if ((jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + self.controlName + "_" + self.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
-							jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")
-						}
-					}
-				},
-					150)
-
-				//end paging functionality
-				if (self.colConditions.length === 0) {
-					jQuery(".h2title > div").css({ width: "100%" });
-				}
-
-			}
-		}
-
+	
 		this.gridCache = []
 
 		this.cleanGridCache = function () {
@@ -29188,7 +27074,17 @@
 			}
 			return false;
 		}
-
+		
+		this.fireOnPageChange = function(move){
+			setTimeout( function() {
+				var paramobj = {"QueryviewerId": self.IdForQueryViewerCollection, "Navigation": move};
+				var evt = document.createEvent("Events")
+				evt.initEvent("PivotTableOnPageChangeEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		this.goWhenServerPagination = function (load, autorefreshflag) {
 
 			if (!self.getPageDataFromCache(self.pageData.ServerPageNumber)) { //add page data to cache
@@ -29198,13 +27094,21 @@
 			if (self.pageData.ServerPageNumber != self.pageData.PreviousPageNumber) {
 				self.QueryViewerCollection[self.IdForQueryViewerCollection].CurrentPage = self.pageData.ServerPageNumber;
 				if (self.pageData.ServerPageNumber == 1) {
-					if (typeof (self.QueryViewerCollection[self.IdForQueryViewerCollection].OnFirstPage) == 'function') self.QueryViewerCollection[self.IdForQueryViewerCollection].OnFirstPage()
+					if (typeof (self.QueryViewerCollection[self.IdForQueryViewerCollection].OnFirstPage) == 'function') 
+						//self.QueryViewerCollection[self.IdForQueryViewerCollection].OnFirstPage()
+						self.fireOnPageChange("OnFirstPage")
 				} else if (self.pageData.ServerPageNumber == self.pageData.ServerPageCount) {
-					if (typeof (self.QueryViewerCollection[self.IdForQueryViewerCollection].OnLastPage) == 'function') self.QueryViewerCollection[self.IdForQueryViewerCollection].OnLastPage()
+					if (typeof (self.QueryViewerCollection[self.IdForQueryViewerCollection].OnLastPage) == 'function') 
+						self.fireOnPageChange("OnLastPage")
+						//self.QueryViewerCollection[self.IdForQueryViewerCollection].OnLastPage()
 				} else if (self.pageData.ServerPageNumber < self.pageData.PreviousPageNumber) {
-					if (typeof (self.QueryViewerCollection[self.IdForQueryViewerCollection].OnPreviousPage) == 'function') self.QueryViewerCollection[self.IdForQueryViewerCollection].OnPreviousPage()
+					if (typeof (self.QueryViewerCollection[self.IdForQueryViewerCollection].OnPreviousPage) == 'function') 
+						//self.QueryViewerCollection[self.IdForQueryViewerCollection].OnPreviousPage()
+						self.fireOnPageChange("OnPreviousPage")
 				} else {
-					if (typeof (self.QueryViewerCollection[self.IdForQueryViewerCollection].OnNextPage) == 'function') self.QueryViewerCollection[self.IdForQueryViewerCollection].OnNextPage()
+					if (typeof (self.QueryViewerCollection[self.IdForQueryViewerCollection].OnNextPage) == 'function') 
+						//self.QueryViewerCollection[self.IdForQueryViewerCollection].OnNextPage()
+						self.fireOnPageChange("OnNextPage")
 				}
 				self.pageData.PreviousPageNumber = self.pageData.ServerPageNumber
 			}
@@ -29223,11 +27127,22 @@
 								meta = self.getMetadataXML();
 								meta = meta.replace(/\&amp;/g, "&");
 							
-							
-							var listennings = self.QueryViewerCollection[self.IdForQueryViewerCollection];
-							if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
-								qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
-							}
+							//	meta = qv.pivot.GetRuntimeMetadata(meta, listennings.RealType)
+							//var listennings = self.QueryViewerCollection[self.IdForQueryViewerCollection];
+							//if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
+								//qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
+								
+								setTimeout( function() {
+				
+									var paramobj = {  "QueryviewerId": self.IdForQueryViewerCollection, "Metadata": meta};
+									var evt = document.createEvent("Events")
+									evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
+									evt.parameter = paramobj;
+									document.dispatchEvent(evt);
+				
+								}, 50)
+								
+							//}
 						}
 					}
 				}
@@ -29286,6 +27201,7 @@
 					controlName: this.controlName + "_" + self.query,
 					cantPages: self.pageData.ServerPageCount,
 					controlUcId: UcId,
+					translations: self.translations,
 					control: self
 				}
 
@@ -30294,7 +28210,9 @@
 		var alreadyclicked = false;
 		var alreadyclickedTimeout;
 		this.onClickEventHandle = function (elemvalue, type, number, item) {
-			if (alreadyclicked) {
+			self.ClickHandle(elemvalue);
+			
+			/*if (alreadyclicked) {
 				//double click
 				alreadyclicked = false;
 				clearTimeout(alreadyclickedTimeout);
@@ -30314,7 +28232,7 @@
 					datastr = datastr.replace(/\&/g, '&amp;');
 					qv.pivot.onItemClickEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, false)
 				}, delay);
-			}
+			}*/
 		}
 
 		this.onClickExpandCollapse = function (elemvalue) {
@@ -30336,15 +28254,15 @@
 			}
 			
 			
-			self.go(false);
+			//self.go(false);
 			
 		}
 
-		this.onDblClickEventHandle = function (elemvalue) {
+		/*this.onDblClickEventHandle = function (elemvalue) {
 			var datastr = self.ClickHandle(elemvalue);
 			datastr = datastr.replace(/\&/g, '&amp;');
 			qv.pivot.onItemClickEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr, true);
-		}
+		}*/
 
 		this.cleanValueForNull = function (value) {
 			if (value == "#NuN#") {
@@ -30405,8 +28323,28 @@
 			self.SelectNodes(value, type, number, item);
 			
 		}
-
+		
+		this.requestDataSynForPivotTable = function(){
+			setTimeout( function() {
+				var paramobj = {"QueryviewerId": self.IdForQueryViewerCollection};
+				var evt = document.createEvent("Events")
+				evt.initEvent("RequestDataSynForPivotTable", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		this.ClickHandle = function (elemvalue) { 
+			
+			self.LastElemValue = elemvalue
+			
+			self.requestDataSynForPivotTable()
+		}
+		
+		this.setDataSynForPivotTable = function(serverData){
+			var elemvalue = self.LastElemValue
+			var temp = serverData
+			
 			var value = jQuery(elemvalue).data('itemValue');
 			var type = jQuery(elemvalue).data('typeMorD');
 			var number = jQuery(elemvalue).data('numberMorD');
@@ -30456,7 +28394,10 @@
 					//if (self.allRowsPivot == "vacio") {
 						self.allRowsPivot = []
 						self.allFullRowsPivot = []
-						var temp = self.QueryViewerCollection[self.IdForQueryViewerCollection].getPivottableDataSync();
+						
+						
+						
+						//var temp = self.QueryViewerCollection[self.IdForQueryViewerCollection].getPivottableDataSync();
 						var stringRecord = temp.split("<Record>")
 						for (var i = 1; i < stringRecord.length; i++) {
 							var recordData = [];
@@ -30946,7 +28887,7 @@
 					datastr = datastr + "<VALUES>"
 					datastr = datastr + "<VALUE>"
 					if (self.filterDiv.selects[i].value === "[all]") {
-						datastr = datastr + gx.getMessage("GXPL_QViewerJSAllOption");//"\"ALL\"";
+						datastr = datastr + self.translations.GXPL_QViewerJSAllOption;//gx.getMessage("GXPL_QViewerJSAllOption");//"\"ALL\"";
 					}
 					else {
 						datastr = datastr + self.cleanValueForNull(self.filterDiv.selects[i].value);
@@ -30962,10 +28903,20 @@
 			datastr = datastr + "</CONTEXT>";
 			datastr = datastr + "</DATA>"
 
-			return datastr;
+			
+			self.fireOnItemClickEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr)
+			//qv.pivot.onItemClickEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, false)
 		}
 
-
+		this.fireOnItemClickEvent = function(query, datastr){
+			setTimeout( function() {
+				var paramobj = {"QueryViewer": query, "Data": datastr, "QueryviewerId": self.IdForQueryViewerCollection};
+				var evt = document.createEvent("Events")
+				evt.initEvent("PivotTableOnItemClickEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
 
 		this.SelectNodes = function(SelectedValue, SelectedType, SelectedMorDNumber, SelectedItem, refresh, selectedItemNumber, conditions) {
 
@@ -31698,7 +29649,8 @@
 					datastr = datastr.replace(/\&/g, '&amp;');
 					//if (qv.util.isGeneXusPreview())
 					//window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
-					qv.pivot.onItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
+					//qv.pivot.onItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
+					self.fireOnItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
 					self.getDataForPivot(self.UcId, self.pageData.ServerPageNumber, self.rowsPerPage, true, "", "", "", "", true)
 				} else {
 					self.lastColumnNumber = number;
@@ -31707,57 +29659,7 @@
 					self.lastRequestAttributeValuesAction = action
 					self.requestAttributeValues(self.columns[number].getAttribute("dataField"), 1, 0, "")
 					
-					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
-						var data = JSON.parse(resJSON);
-						var columnNumber = self.lastColumnNumber
-
-						self.conditions[columnNumber].previousPage = data.PageNumber
-						self.conditions[columnNumber].totalPages = data.PagesCount
-						self.conditions[columnNumber].blocked = true
-
-						//null value?
-						if ((data.Null) && (!self.conditions[columnNumber].hasNull)) {
-							self.conditions[columnNumber].hasNull = true;
-							if (self.conditions[columnNumber].distinctValues.indexOf("#NuN#") == -1) {
-								self.conditions[columnNumber].distinctValues.push("#NuN#")
-							}
-							if (self.conditions[columnNumber].defaultAction == "Include") {
-								if (self.conditions[columnNumber].visibles.indexOf("#NuN#") == -1) {
-									self.conditions[columnNumber].visibles.push("#NuN#");
-								}
-							} else {
-								if (self.conditions[columnNumber].blackList.indexOf("#NuN#") == -1) {
-									self.conditions[columnNumber].blackList.push("#NuN#");
-								}
-							}
-						}
-
-						for (var i = 0; i < data.NotNullValues.length; i++) {
-							var val = data.NotNullValues[i]
-							if (self.conditions[columnNumber].distinctValues.indexOf(val) == -1) {
-								self.conditions[columnNumber].distinctValues.push(val)
-
-								if ((self.conditions[columnNumber].defaultAction == "Include")
-									&& (self.conditions[columnNumber].visibles.indexOf(val) == -1)) {
-									self.conditions[columnNumber].visibles.push(val)
-								}
-								if ((self.conditions[columnNumber].state == "Exclude")
-									&& (self.conditions[columnNumber].blackList.indexOf(val) == -1)) {
-									self.conditions[columnNumber].blackList.push(val)
-								}
-							}
-						}
-
-						var datastr = self.ExpandCollapseHandleWhenServerPaginationCreateXML(elemvalue, action)
-						datastr = datastr.replace(/\&/g, '&amp;');
-
-						self.getDataForPivot(self.UcId, self.pageData.ServerPageNumber, self.rowsPerPage, true, "", "", "", "", true);
-						setTimeout(function () {
-							//if (qv.util.isGeneXusPreview())
-							//window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
-							qv.pivot.onItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
-						}, 2000);
-					}).closure(this), [self.columns[number].getAttribute("dataField"), 1, 0, ""]);*/
+					
 				}
 			} else {
 				self.getDataForPivot(self.UcId, self.pageData.ServerPageNumber, self.rowsPerPage, true, "", "", "", "", true);
@@ -31799,36 +29701,11 @@
 
 			return datastr;
 		}
-
-		this.onFilteredChangedEventHandle = function (dimensionNumber) {
-			var datastr = "<DATA event=\"FilterChanged\" name=\"" + this.columns[dimensionNumber].getAttribute("name") + "\" displayName=\"" + this.columns[dimensionNumber].getAttribute("displayName") + "\">"
-			for (var i = 0; i < self.conditions[dimensionNumber].distinctValues.length; i++) {
-				var value = self.conditions[dimensionNumber].distinctValues[i];
-				var checked = ((self.conditions[dimensionNumber].blackList.indexOf(value) == -1) && self.valueIsShowed(value, dimensionNumber) || (/*(cond.distinctValues.find(value) == -1) &&*/ (self.conditions[dimensionNumber].blackList.indexOf(value) == -1)));
-				if (checked) {
-					datastr = datastr + '<VALUE>' + value + '</VALUE>';
-				}
-			}
-			datastr = datastr + "</DATA>"
-			if (qv.util.isGeneXusPreview())
-				window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
-			if (this.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged) {
-				datastr = datastr.replace(/\&/g, '&amp;');
-				var xml_doc = qv.util.dom.xmlDocument(datastr);
-				var Node = qv.util.dom.selectXPathNode(xml_doc, "/DATA");
-				this.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData = {}
-				this.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.Name = Node.getAttribute("name");
-				this.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.SelectedValues = [];
-				var valueIndex = -1;
-				for (var i = 0; i < Node.childNodes.length; i++)
-					if (Node.childNodes[i].nodeName == "VALUE") {
-						valueIndex++;
-						this.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
-					}
-				this.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged();
-			}
-		}
-
+	
+		
+		
+		
+		
 		this.onFilteredChangedEventHandleWhenServerPagination = function (dimensionNumber) {
 			if ((self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged) || (qv.util.isGeneXusPreview())) {
 				if (self.conditions[dimensionNumber].previousPage >= self.conditions[dimensionNumber].totalPages) {
@@ -31847,7 +29724,17 @@
 				}
 			}
 		}
-
+		
+		this.fireOnFilterChangedEvent = function(QueryviewerId, FilterChangedData){
+			setTimeout( function() {
+				var paramobj = {"QueryviewerId": QueryviewerId, "FilterChangedData": FilterChangedData};
+				var evt = document.createEvent("Events")
+				evt.initEvent("PivotTableOnFilterChangedEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		this.onFilteredChangedEventHandleWhenServerPaginationCreateXML = function (dimensionNumber, distinctValues, blackList) {
 			var datastr = "<DATA event=\"FilterChanged\" name=\"" + self.columns[dimensionNumber].getAttribute("name") + "\" displayName=\"" + self.columns[dimensionNumber].getAttribute("displayName") + "\">"
 			for (var i = 0; i < distinctValues.length; i++) {
@@ -31876,7 +29763,7 @@
 				datastr = datastr.replace(/\&/g, '&amp;');
 				var xml_doc = qv.util.dom.xmlDocument(datastr);
 				var Node = qv.util.dom.selectXPathNode(xml_doc, "/DATA");
-				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData = {}
+				/*self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData = {}
 				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.Name = Node.getAttribute("name");
 				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.SelectedValues = [];
 				var valueIndex = -1;
@@ -31886,50 +29773,39 @@
 						self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
 					}
 				}
-				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged();
+				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged();*/
+				var FilterChangedData = {}
+				FilterChangedData.Name = Node.getAttribute("name");
+				FilterChangedData.SelectedValues = [];
+				var valueIndex = -1;
+				for (var i = 0; i < Node.childNodes.length; i++) {
+					if (Node.childNodes[i].nodeName == "VALUE") {
+						valueIndex++;
+						FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
+					}
+				}
+				self.fireOnFilterChangedEvent(IdForQueryViewerCollection, FilterChangedData)
 			}
 		}
 
-		this.onDragUndDrop = function (dimensionNumber, distinctValues, blackList) {
-			var datastr = "<DATA name=\"" + self.columns[dimensionNumber].getAttribute("name") + "\" displayName=\"" + self.columns[dimensionNumber].getAttribute("displayName") + "\">"
-			for (var i = 0; i < distinctValues.length; i++) {
-				var value = distinctValues[i];
-				var checked = true;
-				if (self.conditions[dimensionNumber].state == "all") {
-					checked = true;
-				} else if (self.conditions[dimensionNumber].state == "none") {
-					checked = true;
-				} else if (self.conditions[dimensionNumber].defaultAction == "Exclude") {
-					checked = false;
-				}
-				if (checked) {
-					datastr = datastr + '<VALUE>' + value + '</VALUE>'
-				}
-			}
-			datastr = datastr + "</DATA>"
-
-			datastr = datastr.replace(/\&/g, '&amp;');
-			for (var i = 0; i < Node.children.length; i++) {
-				if (Node.childNodes[i].nodeName == "VALUE") {
-					valueIndex++;
-					self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.SelectedValues[valuesIndex] = Node.childNodes[i].firstChild.nodeValues;
-				}
-			}
-			datastr = datastr + "<VALUE>" + value + "</VALUE>"
-			self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged();
-		}
 
 		this.onDragundDropEventHandle = function (conditionIndex, axis, position) {
 			var datastr = "<DATA event=\"DragAndDrop\" name=\"" + this.columns[conditionIndex].getAttribute("name") + "\" displayName=\"" + this.columns[conditionIndex].getAttribute("displayName") 
 					+ "\" axis=\"" + axis + "\"  position=\"" + (position+1) + "\" />"
-
-
-			try {
 				datastr = datastr.replace(/\&/g, '&amp;');
-				qv.pivot.onOAT_PIVOTDragAndDropEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr);
-			} catch (Error) {
+				self.fireOnDragundDropEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr);
+				//qv.pivot.onOAT_PIVOTDragAndDropEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr);
 
-			}
+		}
+		
+		this.fireOnDragundDropEvent = function(query, datastr){
+			setTimeout( function() {
+				var paramobj = {"QueryViewer": query, "Data": datastr, "QueryviewerId": self.IdForQueryViewerCollection};
+				var evt = document.createEvent("Events")
+				evt.initEvent("PivotTableOnDragundDropEvent", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
 		}
 		
 		this.pivotStateChanged = function()
@@ -32113,8 +29989,6 @@
 
 
 	
-
-
 
 
 
@@ -33082,337 +30956,6 @@
 
 
 
-
-	OAT.tablePagination = function (container, settings) {
-		var defaults = {
-				rowsPerPage: 5,
-				currPage: 1,
-				jstype: "pivot",
-				optionsForRows: [5, 10, 25, 50, 100],
-				ignoreRows: [],
-				topNav: false
-		};
-		settings = jQuery.extend(defaults, settings);
-		return container.each(function () {
-				var table = jQuery(this)[0];
-				var totalPagesId, currPageId, rowsPerPageId, firstPageId, prevPageId, nextPageId, lastPageId;
-				totalPagesId = '#tablePagination_totalPages';
-				currPageId = '#tablePagination_currPage';
-				rowsPerPageId = '#' + settings.controlName + 'tablePagination_rowsPerPage';
-				firstPageId = '#tablePagination_firstPage';
-				prevPageId = '#tablePagination_prevPage';
-				nextPageId = '#tablePagination_nextPage';
-				lastPageId = '#tablePagination_lastPage';
-				var tblLocation = (defaults.topNav) ? "prev" : "next";
-
-				try {
-					defaults.rowsPerPage = parseInt(defaults.rowsPerPage);
-				} catch (ERROR) {
-					defaults.rowsPerPage = 10;
-				}
-
-				var possibleTableRows = jQuery.makeArray(jQuery('tbody tr', table));
-				var tableRows = jQuery.grep(possibleTableRows, function (value, index) {
-					return (jQuery.inArray(value, defaults.ignoreRows) == -1);
-				}, false)
-
-				var numRows = tableRows.length
-				var totalPages = resetTotalPages();
-				var currPageNumber = (defaults.currPage > totalPages) ? 1 : defaults.currPage;
-				if (jQuery.inArray(defaults.rowsPerPage, defaults.optionsForRows) == -1)
-					defaults.optionsForRows.push(defaults.rowsPerPage);
-
-				function hideOtherPages(pageNum) {
-					if (pageNum == 0 || pageNum > totalPages)
-						return;
-					var startIndex = (pageNum - 1) * defaults.rowsPerPage;
-					var endIndex = (startIndex + defaults.rowsPerPage - 1);
-					jQuery(tableRows).show(); //show all rows
-					var filteredRow = 0;
-					for (var i = 0; i < tableRows.length; i++) {
-						if (i < startIndex || i > endIndex) {
-							jQuery(tableRows[i]).hide() //hide row because of pagination
-						}
-						if (settings.jstype === "pivot") {
-							while (tableRows[i].childNodes[0].getAttribute('pivotCorrect') != null) {
-								tableRows[i].deleteCell(0);
-							}
-						}
-						if (tableRows[i].getAttribute("visibQ") == "tf") {
-							jQuery(tableRows[i]).hide() //hide row is filtered
-						}
-					}
-
-					if ((settings.jstype === "pivot") && (startIndex > 1)) /* if previuos rows have a inital span td */ {
-						if ((tableRows[startIndex].childNodes[0].getAttribute('spanCorrect') === null)
-							|| (tableRows[startIndex].childNodes[0].getAttribute('spanCorrect') === "0")) {
-							var previuos = tableRows[startIndex - 1];
-
-							for (var prw = 1; prw < startIndex + 1; prw++) {
-								if (startIndex - prw < 0) break;
-								var previuos = tableRows[startIndex - prw];
-
-								for (var itemtd = 0; itemtd < previuos.childNodes.length; itemtd++) { /*begin "for" for previous row*/
-
-									if ((previuos.childNodes[itemtd] != undefined) && (previuos.childNodes[itemtd].getAttribute('rowspan') != undefined) && (previuos.childNodes[itemtd].getAttribute('rowspan') > 1)) {
-										if ((previuos.childNodes[itemtd].getAttribute('rowspan') <= prw) || (previuos.childNodes[itemtd].getAttribute('hidden') != null)) {
-											break;
-										}
-
-										for (var posR = startIndex; posR < startIndex + (previuos.childNodes[itemtd].getAttribute('rowspan') - prw); posR++) {
-											var oldspan = 0;
-											var newcolspan = 0;
-											var plusspan = 0;
-											if ((tableRows[posR].childNodes[0].getAttribute('colspan') != undefined) && (tableRows[posR].childNodes[0].getAttribute('colspan') != null)) {
-												oldspan = parseInt(tableRows[posR].childNodes[0].getAttribute('colspan'));
-											} else {
-												oldspan = 1;
-											}
-											var plusspan;
-											if ((previuos.childNodes[itemtd].getAttribute('colspan') != undefined) && (previuos.childNodes[itemtd].getAttribute('colspan') != null)) {
-												plusspan = parseInt(previuos.childNodes[itemtd].getAttribute('colspan'));
-											} else {
-												plusspan = 1;
-											}
-
-											var newcolspan = plusspan + oldspan;
-											var newCell = tableRows[posR].insertCell(itemtd);
-											newCell.setAttribute('pivotCorrect', true);
-											newCell.setAttribute('colspan', plusspan);
-											newCell.setAttribute('class', 'pivotAdd');
-											newCell.setAttribute('style', previuos.childNodes[itemtd].style.cssText + 'border-bottom: none; border-top: none;');
-											if (posR === startIndex) {
-												newCell.innerHTML = previuos.childNodes[itemtd].innerHTML;
-												newCell.className = previuos.childNodes[itemtd].className + " pivotAdd";
-												var imgCollapse = newCell.childNodes[0];
-												newCell.removeChild(imgCollapse)
-											}
-											/*if the modified item has rowSpan > 1 then jump "rowSpan-1" rows*/
-											if ((tableRows[posR].childNodes[0].getAttribute('rowspan') != undefined) && (tableRows[posR].childNodes[0].getAttribute('rowspan') != null)) {
-												posR = posR + parseInt(tableRows[posR].childNodes[0].getAttribute('rowspan')) - 1;
-											}
-
-										}
-
-									}
-
-								}/*end for*/
-							}
-
-						}
-
-					}
-
-				}
-
-				function resetTotalPages() {
-					var preTotalPages = Math.round(numRows / defaults.rowsPerPage);
-					var totalPages = (preTotalPages * defaults.rowsPerPage < numRows) ? preTotalPages + 1 : preTotalPages;
-					if (jQuery(table)[tblLocation]().find(totalPagesId).length > 0)
-						jQuery(table)[tblLocation]().find(totalPagesId).html(totalPages);
-					return totalPages;
-				}
-
-				function resetCurrentPage(currPageNum) { //here sets the value of the current page
-					if (currPageNum < 1 || currPageNum > totalPages)
-						return;
-					currPageNumber = currPageNum;
-					hideOtherPages(currPageNumber);
-
-					(currPageNumber > 1) ? jQuery("#tablePagination_firstPage,#tablePagination_prevPage").removeClass("disabled_pivot_button") :
-						jQuery("#tablePagination_firstPage,#tablePagination_prevPage").addClass("disabled_pivot_button");
-
-					(currPageNumber != totalPages) ? jQuery("#tablePagination_nextPage,#tablePagination_lastPage").removeClass("disabled_pivot_button") :
-						jQuery("#tablePagination_nextPage,#tablePagination_lastPage").addClass("disabled_pivot_button");
-
-					jQuery(table)[tblLocation]().find(currPageId).val(currPageNumber)
-				}
-
-				function resetPerPageValues() {
-					var isRowsPerPageMatched = false;
-					var optsPerPage = defaults.optionsForRows;
-					optsPerPage.sort(function (a, b) { return a - b; });
-					var perPageDropdown = jQuery(table)[tblLocation]().find(rowsPerPageId)[0];
-					perPageDropdown.length = 0;
-					for (var i = 0; i < optsPerPage.length; i++) {
-						if (optsPerPage[i] == defaults.rowsPerPage) {
-							perPageDropdown.options[i] = new Option(optsPerPage[i], optsPerPage[i], true, true);
-							isRowsPerPageMatched = true;
-						}
-						else {
-							perPageDropdown.options[i] = new Option(optsPerPage[i], optsPerPage[i]);
-						}
-					}
-
-					if (tableRows.length <= defaults.rowsPerPage) {
-						jQuery('#' + settings.controlName + '_tablePagination').css('display', 'none');
-					} else {
-						jQuery('#' + settings.controlName + '_tablePagination').css('display', '');
-					}
-
-					if ((totalPages == 1) || (totalPages == 0)) {
-						jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', 'none');
-					} else {
-						jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', '');
-					}
-				}
-
-				function createPaginationElements() {
-					var size = 1;
-					try {
-						var mul = 100;
-						if (((gx.util.browser.webkit) /*|| gx.util.browser.isIE()*/) &&
-							(!(jQuery("#" + settings.controlName).closest(".gxwebcomponent").length > 0))) {
-							mul = mul * 100;
-						}
-
-						if (currPageNumber > mul * 10) {
-							if (jQuery("#" + settings.controlName).closest(".gxwebcomponent").length > 0) {
-								size = size + 2;
-							}
-
-							var d = currPageNumber / mul
-							while (d > 10) {
-								d = d / 10;
-								size++;
-							}
-						}
-					} catch (ERROR) { }
-
-
-					var prevButtonsClass = (currPageNumber == 1) ? " disabled_pivot_button" : ""
-					var postButtonsClass = (currPageNumber == totalPages) ? " disabled_pivot_button" : ""
-
-					var ua = navigator.userAgent.toLowerCase();
-					var isAndroid = ua.indexOf("android") > -1;
-					if (!((gx.util.browser.isIPad() || gx.util.browser.isIPhone() || isAndroid) || (false))) {
-						var htmlBuffer = [];
-						htmlBuffer.push("<div id='" + settings.controlName + "_tablePagination' class='pivot_pag_div'>");
-						htmlBuffer.push("<span id='tablePagination_perPage'>");
-
-						htmlBuffer.push("<select id='" + settings.controlName + "tablePagination_rowsPerPage'><option value='5'>5</option></select>");
-
-						htmlBuffer.push(" " + gx.getMessage("GXPL_QViewerJSPerPage") + " ");
-						htmlBuffer.push("</span>");
-						htmlBuffer.push("<span id='" + settings.controlName + "_tablePagination_paginater'>");
-							
-						htmlBuffer.push("<div class='pagefirst " + prevButtonsClass + "' id='tablePagination_firstPage' >");
-						htmlBuffer.push('<i class="material-icons">first_page</i>')
-						htmlBuffer.push("</div>")
-							
-						htmlBuffer.push("<div class='pageprev " + prevButtonsClass + "' id='tablePagination_prevPage' >");
-						htmlBuffer.push('<i class="material-icons">navigate_before</i>')
-						htmlBuffer.push("</div>")
-							
-						htmlBuffer.push("<span style=''>&nbsp;" + gx.getMessage("GXPL_QViewerJSPage") + "&nbsp;</span>");
-						htmlBuffer.push("<input id='tablePagination_currPage' type='input' value='" + currPageNumber + "' size='" + size + "'>");
-						htmlBuffer.push("<span>&nbsp;" + gx.getMessage("GXPL_QViewerJSOf") + "</span><span id='tablePagination_totalPages'>&nbsp;" + totalPages + "</span>");
-						
-						htmlBuffer.push("<div class='pagenext " + postButtonsClass + "' id='tablePagination_nextPage' >");
-						htmlBuffer.push('<i class="material-icons">navigate_next</i>')
-						htmlBuffer.push("</div>")
-						
-						htmlBuffer.push("<div class='pagelast " + postButtonsClass + "' id='tablePagination_lastPage'>");
-						htmlBuffer.push('<i class="material-icons">last_page</i>')
-						htmlBuffer.push("</div>")
-						
-						htmlBuffer.push("</span>");
-						htmlBuffer.push("</div>");
-						return htmlBuffer.join("").toString();
-					} else {
-						var htmlBuffer = [];
-						htmlBuffer.push("<div id='" + settings.controlName + "_tablePagination' class='pivot_pag_div pivot_pag_div_sd'>");
-						htmlBuffer.push("<span id='tablePagination_perPage'>");
-
-						htmlBuffer.push("<select id='" + settings.controlName + "tablePagination_rowsPerPage'><option value='5'>5</option></select>");
-
-						htmlBuffer.push(" " + gx.getMessage("GXPL_QViewerJSPerPage") + " ");
-						htmlBuffer.push("</span>");
-						htmlBuffer.push("<span id='" + settings.controlName + "_tablePagination_paginater'>");
-						
-						htmlBuffer.push("<div class='pagefirst " + prevButtonsClass + "' id='tablePagination_firstPage' >");
-						htmlBuffer.push('<i class="material-icons">first_page</i>')
-						htmlBuffer.push("</div>")
-						
-						htmlBuffer.push("<div class='pageprev " + prevButtonsClass + "' id='tablePagination_prevPage' >");
-						htmlBuffer.push('<i class="material-icons">navigate_before</i>')
-						htmlBuffer.push("</div>")
-						
-						
-						htmlBuffer.push("<span style=''>&nbsp;" + gx.getMessage("GXPL_QViewerJSPage") + "&nbsp;</span>");
-						htmlBuffer.push("<input id='tablePagination_currPage' type='input' value='" + currPageNumber + "' size='" + size + "'>");
-						htmlBuffer.push("<span>&nbsp;" + gx.getMessage("GXPL_QViewerJSOf") + "</span><span id='tablePagination_totalPages'>&nbsp;" + totalPages + "</span>");
-						
-						htmlBuffer.push("<div class='pagenext " + postButtonsClass + "' id='tablePagination_nextPage' >");
-						htmlBuffer.push('<i class="material-icons">navigate_next</i>')
-						htmlBuffer.push("</div>")
-						
-						htmlBuffer.push("<div class='pagelast " + postButtonsClass + "' id='tablePagination_lastPage'>");
-						htmlBuffer.push('<i class="material-icons">last_page</i>')
-						htmlBuffer.push("</div>")
-						
-						
-						htmlBuffer.push("</span>");
-						htmlBuffer.push("</div>");
-						return htmlBuffer.join("").toString();
-
-					}
-
-				}
-
-				if (jQuery(table)[tblLocation]().find(totalPagesId).length == 0) {
-					if (defaults.topNav) {
-						jQuery(this).before(createPaginationElements());
-					} else {
-						jQuery(this).after(createPaginationElements());
-						if (totalPages == 1) {
-							jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', 'none');
-						} else {
-							jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', '');
-						}
-					}
-				}
-				else {
-					jQuery(table)[tblLocation]().find(currPageId).val(currPageNumber);
-				}
-				resetPerPageValues();
-				hideOtherPages(currPageNumber);
-
-				jQuery(table)[tblLocation]().find(firstPageId).bind('click', function (e) {
-					resetCurrentPage(1)
-				});
-
-				jQuery(table)[tblLocation]().find(prevPageId).bind('click', function (e) {
-					resetCurrentPage(currPageNumber - 1)
-				});
-
-				jQuery(table)[tblLocation]().find(nextPageId).bind('click', function (e) {
-					resetCurrentPage(parseInt(currPageNumber) + 1)
-				});
-
-				jQuery(table)[tblLocation]().find(lastPageId).bind('click', function (e) {
-					resetCurrentPage(totalPages)
-				});
-
-				jQuery(table)[tblLocation]().find(currPageId).bind('change', function (e) {
-					resetCurrentPage(this.value)
-				});
-
-				jQuery(table)[tblLocation]().find(rowsPerPageId).bind('change', function (e) {
-					defaults.rowsPerPage = parseInt(this.value, 10);
-					totalPages = resetTotalPages();
-					resetCurrentPage(1)
-					if (totalPages == 1) {
-						jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', 'none');
-					} else {
-						jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', '');
-					}
-				});
-
-			})
-	}
-	
-
 	var currPageNumber = [];
 
 	OAT.partialTablePagination = function (container, settings) {
@@ -33520,7 +31063,7 @@
 					var size = 1;
 					try {
 						var mul = 100;
-						if (((gx.util.browser.webkit) /*|| gx.util.browser.isIE()*/) &&
+						if ( (OAT.isWebkit()) &&
 							(!(jQuery("#" + settings.controlName).closest(".gxwebcomponent").length > 0))) {
 							mul = mul * 100;
 						}
@@ -33545,14 +31088,14 @@
 
 					var ua = navigator.userAgent.toLowerCase();
 					var isAndroid = ua.indexOf("android") > -1;
-					if (!((gx.util.browser.isIPad() || gx.util.browser.isIPhone() || isAndroid) || (false))) {
+					if (!(OAT.isSD())) {
 						var htmlBuffer = [];
 						htmlBuffer.push("<div id='" + settings.controlName + "_tablePagination' class='pivot_pag_div'>");
 						htmlBuffer.push("<span id='tablePagination_perPage'>");
 
 						htmlBuffer.push("<select id='" + settings.controlName + "tablePagination_rowsPerPage'></select>");
 
-						htmlBuffer.push(" " + gx.getMessage("GXPL_QViewerJSPerPage") + " ");
+						htmlBuffer.push(" " + settings.translations.GXPL_QViewerJSPerPage + " ");
 						htmlBuffer.push("</span>");
 						htmlBuffer.push("<span id='" + settings.controlName + "_tablePagination_paginater'>");
 							
@@ -33564,9 +31107,9 @@
 						htmlBuffer.push('<i class="material-icons">navigate_before</i>')
 						htmlBuffer.push("</div>")
 							
-						htmlBuffer.push("<span style=''>&nbsp;" + gx.getMessage("GXPL_QViewerJSPage") + "&nbsp;</span>");
+						htmlBuffer.push("<span style=''>&nbsp;" + settings.translations.GXPL_QViewerJSPage + "&nbsp;</span>");
 						htmlBuffer.push("<input id='tablePagination_currPage' type='input' value='" + currPageNumber[settings.controlName] + "' size='" + size + "'>");
-						htmlBuffer.push("<span>&nbsp;" + gx.getMessage("GXPL_QViewerJSOf") + "</span><span id='tablePagination_totalPages'>&nbsp;" + totalPages + "</span>");
+						htmlBuffer.push("<span>&nbsp;" + settings.translations.GXPL_QViewerJSOf + "</span><span id='tablePagination_totalPages'>&nbsp;" + totalPages + "</span>");
 						
 						htmlBuffer.push("<div class='pagenext " + postButtonsClass + "' id='tablePagination_nextPage' >");
 						htmlBuffer.push('<i class="material-icons">navigate_next</i>')
@@ -33586,7 +31129,7 @@
 
 						htmlBuffer.push("<select id='" + settings.controlName + "tablePagination_rowsPerPage'><option value='5'>5</option></select>");
 
-						htmlBuffer.push(" " + gx.getMessage("GXPL_QViewerJSPerPage") + " ");
+						htmlBuffer.push(" " + settings.translations.GXPL_QViewerJSPerPage  + " ");
 						htmlBuffer.push("</span>");
 						htmlBuffer.push("<span id='" + settings.controlName + "_tablePagination_paginater'>");
 						
@@ -33599,9 +31142,9 @@
 						htmlBuffer.push("</div>")
 						
 						
-						htmlBuffer.push("<span style=''>&nbsp;" + gx.getMessage("GXPL_QViewerJSPage") + "&nbsp;</span>");
+						htmlBuffer.push("<span style=''>&nbsp;" + settings.translations.GXPL_QViewerJSPage + "&nbsp;</span>");
 						htmlBuffer.push("<input id='tablePagination_currPage' type='input' value='" + currPageNumber[settings.controlName] + "' size='" + size + "'>");
-						htmlBuffer.push("<span>&nbsp;" + gx.getMessage("GXPL_QViewerJSOf") + "</span><span id='tablePagination_totalPages'>&nbsp;" + totalPages + "</span>");
+						htmlBuffer.push("<span>&nbsp;" + settings.translations.GXPL_QViewerJSOf + "</span><span id='tablePagination_totalPages'>&nbsp;" + totalPages + "</span>");
 						
 						htmlBuffer.push("<div class='pagenext " + postButtonsClass + "' id='tablePagination_nextPage' >");
 						htmlBuffer.push('<i class="material-icons">navigate_next</i>')
@@ -33660,6 +31203,13 @@
 		
 		
 	}
+
+
+
+
+
+
+
 
 
 
