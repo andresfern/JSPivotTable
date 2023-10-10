@@ -1,9 +1,9 @@
 {
   "name": "jspivottable",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "componente tabla y pivot de uc queryviewer",
   "main": "oat_pivotTable.js",
-  "main": "oat_pivotTable.js",
+  "types": "oat_pivotTable.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
