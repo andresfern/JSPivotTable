@@ -1,7 +1,8 @@
 
-;(function() {
 
-	window.OAT = {};
+
+
+	var OAT = {};
 
 
 	/* global namespace */
@@ -613,7 +614,7 @@
 		},
 
 		radio: function (name) {
-			if (OAT.Browser.isIE) {
+			if (OAT.isIE()) {
 				var elm = document.createElement('<input type="radio" name="' + name + '" />');
 				return elm;
 			} else {
@@ -828,10 +829,10 @@
 		},
 
 		getViewport: function () {
-			if (OAT.Browser.isWebKit) {
+			if (OAT.isWebkit()) {
 				return [window.innerWidth, window.innerHeight];
 			}
-			if (OAT.Browser.isOpera || document.compatMode == "BackCompat") {
+			if ( (navigator.userAgent.match(/Opera/)) || document.compatMode == "BackCompat") {
 				return [document.body.clientWidth, document.body.clientHeight];
 			} else {
 				return [document.documentElement.clientWidth, document.documentElement.clientHeight];
@@ -854,12 +855,12 @@
 			*/
 			var x = c[0];
 			var y = c[1];
-			if (!OAT.Browser.isOpera || elm.scrollTop != elm.offsetTop || elm.scrollLeft != elm.offsetLeft) {
+			if (!(navigator.userAgent.match(/Opera/)) || elm.scrollTop != elm.offsetTop || elm.scrollLeft != elm.offsetLeft) {
 				x -= elm.scrollLeft;
 				y -= elm.scrollTop;
 			}
 
-			if (OAT.Browser.isWebKit && parent == document.body && OAT.Dom.style(elm, "position") == "absolute") { return [x, y]; }
+			if (OAT.isWebkit() && parent == document.body && OAT.Dom.style(elm, "position") == "absolute") { return [x, y]; }
 
 			x += parent_coords[0];
 			y += parent_coords[1];
@@ -896,7 +897,7 @@
 			var elm = OAT.$(something);
 			if (elm.style.width && !elm.style.width.match(/%/) && elm.style.width != "auto") {
 				curr_w = parseInt(elm.style.width);
-			} else if (OAT.Style.get(elm, "width") && !OAT.Browser.isIE) {
+			} else if (OAT.Style.get(elm, "width") && !OAT.isIE()) {
 				curr_w = Math.round(parseFloat(OAT.Style.get(elm, "width")));
 			} else {
 				curr_w = elm.offsetWidth;
@@ -905,7 +906,7 @@
 
 			if (elm.style.height && !elm.style.height.match(/%/) && elm.style.height != "auto") {
 				curr_h = parseInt(elm.style.height);
-			} else if (OAT.Style.get(elm, "height") && !OAT.Browser.isIE) {
+			} else if (OAT.Style.get(elm, "height") && !OAT.isIE()) {
 				curr_h = Math.round(parseFloat(OAT.Style.get(elm, "height")));
 			} else {
 				curr_h = elm.offsetHeight;
@@ -914,7 +915,7 @@
 
 			/* one more bonus - if we are getting height of document.body, take window size */
 			if (elm == document.body) {
-				curr_h = (OAT.Browser.isIE ? document.body.clientHeight : window.innerHeight);
+				curr_h = (OAT.isIE() ? document.body.clientHeight : window.innerHeight);
 			}
 			return [curr_w, curr_h];
 		},
@@ -987,7 +988,7 @@
 
 		removeSelection: function () {
 			var selObj = false;
-			if (document.getSelection && !OAT.Browser.isGecko) { selObj = document.getSelection(); }
+			if (document.getSelection && !(!OAT.Dom.isKHTML() && navigator.userAgent.match(/Gecko/i)) ) { selObj = document.getSelection(); }
 			if (window.getSelection) { selObj = window.getSelection(); }
 			if (document.selection) { selObj = document.selection; }
 			if (selObj) {
@@ -1128,7 +1129,7 @@
 		background: function (element, src) {
 			var elm = OAT.$(element);
 			var png = !!src.toLowerCase().match(/png$/);
-			if (png && OAT.Browser.isIE) {
+			if (png && OAT.isIE()) {
 				elm.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='" + src + "', sizingMethod='crop')";
 			} else {
 				elm.style.backgroundImage = "url(" + src + ")";
@@ -1144,7 +1145,7 @@
 		opacity: function (element, opacity) {
 			var o = Math.max(opacity, 0);
 			var elm = OAT.$(element);
-			if (OAT.Browser.isIE) {
+			if (OAT.isIE()) {
 				elm.style.filter = "alpha(opacity=" + Math.round(o * 100) + ")";
 			} else {
 				elm.style.opacity = o;
@@ -1154,19 +1155,19 @@
 	OAT.Dom.style = OAT.Style.get; /* backward compatibility */
 	OAT.Dom.applyStyle = OAT.Style.apply; /* backward compatibility */
 
-	OAT.Browser = { /* Browser helper */
-		isIE: OAT.Dom.isIE(),
+	//OAT.Browser = { /* Browser helper */
+		/*isIE: OAT.Dom.isIE(),
 		isIE6: OAT.Dom.isIE6(),
-		isIE7: OAT.Dom.isIE7(),
-		isGecko: OAT.Dom.isGecko(),
-		isOpera: OAT.Dom.isOpera(),
-		isKonqueror: OAT.Dom.isKonqueror(),
-		isKHTML: OAT.Dom.isKHTML(),
-		isWebKit: OAT.Dom.isWebKit(),
-		isMac: OAT.Dom.isMac(),
-		isLinux: OAT.Dom.isLinux(),
-		isWindows: OAT.Dom.isWindows()
-	}
+		isIE7: OAT.Dom.isIE7(),*/
+		//isGecko: OAT.Dom.isGecko(),
+		//isOpera: OAT.Dom.isOpera(),
+		//isKonqueror: OAT.Dom.isKonqueror(),
+		//isKHTML: OAT.Dom.isKHTML(),
+		//isWebKit: OAT.Dom.isWebKit(),
+		//isMac: OAT.Dom.isMac(),
+		//isLinux: OAT.Dom.isLinux(),
+		//isWindows: OAT.Dom.isWindows()
+	//}
 
 	OAT.Event = { /* Event helper */
 		attach: function (elm, event, callback) {
@@ -1278,11 +1279,13 @@
 
 	
 	
-
-	OAT.Event.attach(window, "load", function () {
-		OAT.Loader.loadOccurred = 1;
-		OAT.Loader.callListeners();
-	});
+	if (typeof window != "undefined"){
+		OAT.Event.attach(window, "load", function () {
+			OAT.Loader.loadOccurred = 1;
+			OAT.Loader.callListeners();
+		});
+	}
+	
 
 	
 	OAT.Loader.listeners = new Array();
@@ -1392,7 +1395,7 @@
 	//loadJS("QueryViewer/oatPivotTable/oat_statistic.src.js", false);
 	//loadJS("QueryViewer/oatPivotTable/oat_tablePagination.src.js", false);
 
-}.call(this));
+
 
 
 
@@ -4417,11 +4420,13 @@
 	  plusplus: true */
 
 	/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
-
+	
+	if (typeof window != "undefined"){
+		
 	var saveAs = saveAs
-		|| (navigator.msSaveBlob && navigator.msSaveBlob.bind(navigator))
+		//|| (navigator.msSaveBlob && navigator.msSaveBlob.bind(navigator))
 		|| (function (view) {
-			"use strict";
+			
 			var
 				doc = view.document
 				// only get URL when necessary in case BlobBuilder.js hasn't overridden it yet
@@ -4619,9 +4624,9 @@
 
 			view.addEventListener("unload", process_deletion_queue, false);
 			return saveAs;
-		}(self));
+		}(this));
 
-
+	}
 
 	/*
 	 Copyright (c) 2013 Gildas Lormeau. All rights reserved.
@@ -6685,7 +6690,7 @@
 	 * http://opensource.org/licenses/mit-license
 	 */
 
-	var fVoid = function (global, callback) {
+	/*var fVoid = function (global, callback) {
 		if (typeof module === 'object') {
 			module.exports = callback();
 		} else if (typeof define === 'function') {
@@ -6862,7 +6867,7 @@
 	});
 
 
-
+*/
 
 	var JSZip = function (data, options) { this.files = {}; this.root = ""; if (data) this.load(data, options); }
 	JSZip.signature = { LOCAL_FILE_HEADER: "\x50\x4b\x03\x04", CENTRAL_FILE_HEADER: "\x50\x4b\x01\x02", CENTRAL_DIRECTORY_END: "\x50\x4b\x05\x06", ZIP64_CENTRAL_DIRECTORY_LOCATOR: "\x50\x4b\x06\x07", ZIP64_CENTRAL_DIRECTORY_END: "\x50\x4b\x06\x06", DATA_DESCRIPTOR: "\x50\x4b\x07\x08" }; JSZip.defaults = { base64: false, binary: false, dir: false, date: null }; JSZip.prototype = (function () {
@@ -8483,9 +8488,9 @@
 	}
 
 	// NodeJs export
-	if (typeof exports === 'object' && typeof module === 'object') {
+	/*if (typeof exports === 'object' && typeof module === 'object') {
 		module.exports = xlsx;
-	}
+	}*/
 
 	OAT.GeneratePDFOutput = function (self, fileName) {
 		var totalColSpan = -1;
@@ -9063,7 +9068,7 @@
 
 	}
 
-	removeComas = function (value, self) { //TODO: also remove $ and none digital or . characters
+	var removeComas = function (value, self) { //TODO: also remove $ and none digital or . characters
 		var newValue = ""; actPos = 0;
 
 		var decimalSeparator = self.defaultPicture.getAttribute("decimalSeparator");
@@ -9095,7 +9100,7 @@
 	}
 	
 	
-	cleanDistinctValue = function (value, self, ind) {
+	var cleanDistinctValue = function (value, self, ind) {
 		if (value == "#NuN#") {
 			return " ";
 		} else {
@@ -9132,7 +9137,7 @@
 	}
 	
 	var headers = [];
-	getMeasureTitle = function(value, pos){
+	var getMeasureTitle = function(value, pos){
 		if (headers[pos] != undefined)
 		{
 			return headers[pos]
@@ -9143,7 +9148,7 @@
 		}
 	}
 	
-	createExcelROWITEMS = function (item, level, pfvi, lastRowLevel, originalLevel) {
+	var createExcelROWITEMS = function (item, level, pfvi, lastRowLevel, originalLevel) {
 		if (level === 0) {
 			var index = pfvi[lastRowLevel].indexOf(item.value);
 			var rs = ""
@@ -9167,7 +9172,7 @@
 		}
 	}
 
-	createExcelCOLITEMS = function (item, level, pfvi, lastRowLevel, originalLevel) {
+	var createExcelCOLITEMS = function (item, level, pfvi, lastRowLevel, originalLevel) {
 		if (level === 0) {
 			var index = pfvi[lastRowLevel].indexOf(item.value.trimpivot());
 			var rs = ""
@@ -10424,7 +10429,12 @@
 					} else c = function (a, b) { var c = OAT.Dom.getWH(e), d = OAT.Dom.getWH(e.parentNode), o = a + c[0], c = b + c[1]; return 0 > a || 0 > b || o > d[0] || c > d[1] }, OAT.Drag.create(e, e, { restrictionFunction: c })
 			}
 		}
-	}; OAT.Dom.attach(document, "mousemove", OAT.Drag.move); OAT.Dom.attach(document, "mouseup", OAT.Drag.up); try {
+	};
+	if(typeof document != "undefined"){
+	 OAT.Dom.attach(document, "mousemove", OAT.Drag.move); 
+	 OAT.Dom.attach(document, "mouseup", OAT.Drag.up); 
+	}
+	try {
 		OAT.Loader.featureLoaded("drag");
 	} catch (ERROR) {
 
@@ -10486,8 +10496,10 @@
 		this.clearTargets = function () { a.targets = [] };
 		this.startDrag = function (b, c, d, e, f) { OAT.GhostDragData.lock || (a.pending = 1, a.originalElement = b, a.callback = d, d = OAT.Dom.create("div", { position: "absolute" }), a.process = c, c = OAT.Dom.position(b), d.style.left = c[0] + "px", d.style.top = c[1] + "px", OAT.Style.opacity(d, 0.5), d.appendChild(b.cloneNode(!0)), d.mouse_x = e, d.mouse_y = f, d.object = a, OAT.GhostDragData.lock = d) }
 	};
+	if(typeof document != "undefined"){
 	OAT.Dom.attach(document, "mousemove", OAT.GhostDragData.move);
 	OAT.Dom.attach(document, "mouseup", OAT.GhostDragData.up);
+	};
 	try {
 		OAT.Loader.featureLoaded("ghostdrag");
 	} catch (ERROR) {
@@ -11219,7 +11231,7 @@
 			for (var i = 0; i < paramsList.length; i++) {
 				self.appendHeader(paramsList[i], fieldList[i]);
 			}
-			if (OAT.Browser.isIE) { self.ieFix(); }
+			if (OAT.isIE()) { self.ieFix(); }
 		} /* Grid::createHeader */
 
 		this.getHeaders = function (){
@@ -14774,10 +14786,24 @@
 		}
 		return -1;
 	}
+
+if (typeof exports != "undefined") {
 	
+	"use strict";
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.renderJSPivot = void 0;
+	exports.setPageDataForPivotTable = void 0;
+	exports.setAttributeValuesForPivotTable = void 0;
+	exports.setPivottableDataCalculation = void 0;
+	exports.setDataSynForPivotTable = void 0;
+	exports.setPageDataForTable = void 0;
+	exports.setAttributeForTable = void 0;
+	exports.setDataSynForTable = void 0;
+	exports.getDataXML = void 0;
+	exports.getFilteredDataXML = void 0;
+}
 	
-	
-	renderJSPivot = function (pivotParams, QueryViewerCollection, translations, queryself) {
+	function renderJSPivot(pivotParams, QueryViewerCollection, translations, qViewer) {
 		if (pivotParams.RealType != "Table") {
 			pivotParams.ServerPaging = false;
 		}
@@ -14790,18 +14816,18 @@
 		if ((pivotParams.RememberLayout) && (pivotParams.ServerPaging) && (pivotParams.RealType != "PivotTable")) {
 			var state = OAT.getStateWhenServingPaging(pivotParams.UcId + '_' + pivotParams.ObjectName.replace(/\./g, ""), pivotParams.ObjectName.replace(/\./g, ""))
 			if (!state) {
-				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, null, queryself)
+				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, null, qViewer)
 			} else {
 				var pageValue = 1;
 				if (state.pageSize == "") { state.pageSize = undefined; pageValue = 0; }
 				
 				pivotParams.previousDataFieldOrder = state.dataFieldOrder;
 				pivotParams.orderType = state.orderType;
-				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, state, queryself)
+				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, state, qViewer)
 			}
 		} else {
 			if (pivotParams.RealType != "Table") {
-				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, null, queryself)
+				renderJSPivotInter(pivotParams, QueryViewerCollection,translations, null, qViewer)
 			} else {
 
 				pivotParams.customFilterInfo = "";
@@ -14881,14 +14907,103 @@
 						renderJSPivotInter(pivotParams, QueryViewerCollection, null, queryself)
 					}).closure(this), [1, pivotParams.PageSize, true, dataFieldOrder, orderType, pivotParams.customFilterInfo, false]);
 				} else {*/
-					renderJSPivotInter(pivotParams, QueryViewerCollection, translations, null, queryself)
+					renderJSPivotInter(pivotParams, QueryViewerCollection, translations, null, qViewer)
 				//}
 
 			}
 		}
 	}
 
-	renderJSPivotInter = function (pivotParams, QueryViewerCollection, translations, state, queryself) {
+if (typeof exports != "undefined") {
+	exports.renderJSPivot = renderJSPivot;
+}
+
+
+//PIVOT TABLE
+	function setPageDataForPivotTable(oat_element, resXML){
+		oat_element.setPageDataForPivotTable(resXML)
+	}
+
+
+if (typeof exports != "undefined") {
+	exports.setPageDataForPivotTable = setPageDataForPivotTable;
+}
+
+function setAttributeValuesForPivotTable(oat_element, resJSON){
+		oat_element.setAttributeValuesForPivotTable(resJSON);
+	}
+
+if (typeof exports != "undefined") {
+	exports.setAttributeValuesForPivotTable = setAttributeValuesForPivotTable;
+}
+
+function setPivottableDataCalculation(oat_element, resText){
+		oat_element.setPivottableDataCalculation(resText)
+	}
+
+if (typeof exports != "undefined") {
+	exports.setPivottableDataCalculation = setPivottableDataCalculation;
+}
+
+function setDataSynForPivotTable(oat_element, result){
+		oat_element.setDataSynForPivotTable(result)
+	}
+
+if (typeof exports != "undefined") {
+	exports.setDataSynForPivotTable = setDataSynForPivotTable;
+}
+
+//TABLE
+	function setPageDataForTable(oat_element, resXML){
+		oat_element.setPageDataForTable(resXML)
+	}
+
+
+if (typeof exports != "undefined") {
+	exports.setPageDataForTable = setPageDataForTable;
+}
+
+
+	function setAttributeForTable(oat_element, resJSON){
+		oat_element.setAttributeForTable(resJSON)
+	}
+
+
+if (typeof exports != "undefined") {
+	exports.setAttributeForTable = setAttributeForTable;
+}
+
+
+	function setDataSynForTable(oat_element, result){
+		oat_element.setDataSynForTable(result)
+	}
+
+if (typeof exports != "undefined") {
+	exports.setDataSynForTable = setDataSynForTable;
+}
+
+//EVENTS
+	function getDataXML(oat_element, serverData){
+		result = oat_element.getDataXML(serverData)
+		return result;
+	}
+
+if (typeof exports != "undefined") {
+	exports.getDataXML = getDataXML;
+}
+
+	function getFilteredDataXML(oat_element, serverData){
+		result = oat_element.getFilteredDataXML(serverData)
+		return result;
+	}
+
+if (typeof exports != "undefined") {
+	exports.getFilteredDataXML = getFilteredDataXML;
+}
+
+
+
+	var renderJSPivotInter = function (pivotParams, QueryViewerCollection, translations, state, queryself) {
 		var type = pivotParams.RealType
 		var container = pivotParams.container
 		var page = pivotParams.page
@@ -17633,7 +17748,7 @@
 		return [data, fullData];
 	}
 
-	OATParseMetadata = function (metadata, hideDimension, hideMeasures, serverPaging, translations) {
+	var OATParseMetadata = function (metadata, hideDimension, hideMeasures, serverPaging, translations) {
 		//Parsear string metadata para remover measures ocultas
 		var orderFildsHidden = []; var hideDataFilds = []; var nameFildsHidden = [];
 
@@ -17732,7 +17847,7 @@
 	}
 
 
-	OATGetColumnsAndMeasureMeatadata = function (columns, measures, formulaInfo, OrderFildsHidden) {
+	var OATGetColumnsAndMeasureMeatadata = function (columns, measures, formulaInfo, OrderFildsHidden) {
 		var preHeader = []; var columnNames = []; var rowNames = []; var filterNames = [];
 		var formatValues = []; var conditionalFormatsColumns = []; var formatValuesMeasures = []; var conditionalFormats = [];
 		var orderFilds = []; var j = 0; var k = 0; var columnsDataType = []; var measureNames = [];
@@ -17954,7 +18069,7 @@
 	}
 
 
-	OATgetState = function (query, controlName) {
+	var OATgetState = function (query, controlName) {
 		if (typeof JSON.retrocycle !== 'function') {
 			JSON.retrocycle = function retrocycle($) {
 				'use strict';
@@ -18664,7 +18779,9 @@
 		if (typeof define === 'function' && define.amd && define.amd.jQuery) {
 			define(['jquery'], setup);
 		} else {
-			setup(jQuery);
+			if(typeof jQuery != "undefined"){
+				setup(jQuery);
+			}
 		}
 
 	})();
@@ -30423,7 +30540,11 @@
 				}); a.appendChild(b); OAT.Resize.create(b, a, OAT.Resize.TYPE_XY, e, f); OAT.Dom.hide(b); var c = function () { b._Resize_pending && OAT.Dom.hide(b) }; OAT.Dom.attach(a, "mouseover", function () { OAT.Dom.show(b); b._Resize_pending = 0 }); OAT.Dom.attach(a, "mouseout", function () { b._Resize_pending = 1; setTimeout(c, 2E3) })
 			}
 		}
-	}; OAT.Dom.attach(document, "mousemove", OAT.Resize.move); OAT.Dom.attach(document, "mouseup", OAT.Resize.up);
+	};
+	if(typeof document != "undefined") { 
+		OAT.Dom.attach(document, "mousemove", OAT.Resize.move);
+		OAT.Dom.attach(document, "mouseup", OAT.Resize.up);
+	}
 	try {
 		OAT.Loader.featureLoaded("resize");
 	} catch (ERROR) {
@@ -30810,8 +30931,8 @@
 			delay: b.options.delay,
 			startFunction: function (a) {
 				a.opacity = 1;
-				OAT.Browser.isGecko && (a.opacity = parseFloat(OAT.Dom.style(a.elm, "opacity")));
-				if (OAT.Browser.isIE) {
+				(!OAT.Dom.isKHTML() && navigator.userAgent.match(/Gecko/i)) && (a.opacity = parseFloat(OAT.Dom.style(a.elm, "opacity")));
+				if (OAT.isIE()) {
 					var c = OAT.Dom.style(a.elm, "filter").match(/alpha\(opacity=([^\)]+)\)/);
 					c && (a.opacity = parseFloat(c[1]) / 100)
 				}
