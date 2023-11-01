@@ -1,5 +1,4 @@
-
-	//FILE OAT.Layers
+//FILE OAT.Layers
 	OAT.Layers = function (f) {
 		var a = this;
 		this.baseOffset = f;
@@ -635,7 +634,9 @@
 		if (typeof define === 'function' && define.amd && define.amd.jQuery) {
 			define(['jquery'], setup);
 		} else {
-			setup(jQuery);
+			if(typeof jQuery != "undefined"){
+				setup(jQuery);
+			}
 		}
 
 	})();

@@ -431,7 +431,11 @@
 				}); a.appendChild(b); OAT.Resize.create(b, a, OAT.Resize.TYPE_XY, e, f); OAT.Dom.hide(b); var c = function () { b._Resize_pending && OAT.Dom.hide(b) }; OAT.Dom.attach(a, "mouseover", function () { OAT.Dom.show(b); b._Resize_pending = 0 }); OAT.Dom.attach(a, "mouseout", function () { b._Resize_pending = 1; setTimeout(c, 2E3) })
 			}
 		}
-	}; OAT.Dom.attach(document, "mousemove", OAT.Resize.move); OAT.Dom.attach(document, "mouseup", OAT.Resize.up);
+	};
+	if(typeof document != "undefined") { 
+		OAT.Dom.attach(document, "mousemove", OAT.Resize.move);
+		OAT.Dom.attach(document, "mouseup", OAT.Resize.up);
+	}
 	try {
 		OAT.Loader.featureLoaded("resize");
 	} catch (ERROR) {
@@ -818,8 +822,8 @@
 			delay: b.options.delay,
 			startFunction: function (a) {
 				a.opacity = 1;
-				OAT.Browser.isGecko && (a.opacity = parseFloat(OAT.Dom.style(a.elm, "opacity")));
-				if (OAT.Browser.isIE) {
+				(!OAT.Dom.isKHTML() && navigator.userAgent.match(/Gecko/i)) && (a.opacity = parseFloat(OAT.Dom.style(a.elm, "opacity")));
+				if (OAT.isIE()) {
 					var c = OAT.Dom.style(a.elm, "filter").match(/alpha\(opacity=([^\)]+)\)/);
 					c && (a.opacity = parseFloat(c[1]) / 100)
 				}
@@ -959,9 +963,5 @@
 		}
 		return data
 	}
-
-
-
-
 
 

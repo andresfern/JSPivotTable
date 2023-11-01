@@ -1,4 +1,3 @@
-
 //FILE oat_grid -----------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -175,7 +174,8 @@
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: qv.util.GetContainerControlClass(self.QueryViewerCollection[IdForQueryViewerCollection]) + " ExportPopup "
+				containerQuery: self.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " ExportPopup "
+				
 			});
 
 			var generatePair = function (index) {
@@ -669,7 +669,7 @@
 			for (var i = 0; i < paramsList.length; i++) {
 				self.appendHeader(paramsList[i], fieldList[i]);
 			}
-			if (OAT.Browser.isIE) { self.ieFix(); }
+			if (OAT.isIE()) { self.ieFix(); }
 		} /* Grid::createHeader */
 
 		this.getHeaders = function (){
@@ -1396,7 +1396,8 @@
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: qv.util.GetContainerControlClass(self.grid.QueryViewerCollection[IdForQueryViewerCollection]) + " FilterPopup "
+				containerQuery: self.grid.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " FilterPopup "
+				
 			});
 			var callback = function (event) {
 				var type = OAT.GridData.SORT_NONE;
@@ -1892,8 +1893,8 @@
 		var styleSplit = styleValues.split(";");
 		for (var j = 0; j < styleSplit.length; j++) {
 			var particularStyleSplit = styleSplit[j].split(":");
-			var property = qv.util.trim(particularStyleSplit[0]);
-			var value = qv.util.trim(particularStyleSplit[1]);
+			var property = particularStyleSplit[0].replace(/^[\s]+/, '').replace(/[\s]+$/, '').replace(/[\s]{2,}/, ' '); 
+			var value = particularStyleSplit[1].replace(/^[\s]+/, '').replace(/[\s]+$/, '').replace(/[\s]{2,}/, ' '); 
 
 			switch (property) {
 				case "color": if ((value[0] != undefined) && (value[0] === '#')) {
@@ -2151,7 +2152,7 @@
 				var previousSortValue = _self.grid.conditions[colNumber].sort;
 				_self.grid.sort(colNumber, OAT.GridData.SORT_ASC, _self.number);
 				var currentSortValue = _self.grid.conditions[colNumber].sort;
-				if (qv.util.isGeneXusPreview()) {
+				/*if (qv.util.isGeneXusPreview()) {
 					if (currentSortValue != previousSortValue && previousSortValue != OAT.GridData.SORT_NONE) {		// First ascending sort must not fire event
 						try {
 							var datastr = "<DATA event=\"OrderChanged\" name=\"" + _self.grid.columns[_self.number].getAttribute("name") + "\" displayName=\"" + _self.grid.columns[_self.number].getAttribute("displayName") + "\"  order=\"ascending\">"
@@ -2159,7 +2160,7 @@
 							window.external.SendText(qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].ControlName, datastr);
 						} catch (error) { }
 					}
-				}
+				}*/
 				
 					var origen = _self.container.parentNode.cellIndex; 
 					var dataFieldId;
@@ -2198,7 +2199,7 @@
 				var previousSortValue = _self.grid.conditions[colNumber].sort;
 				_self.grid.sort(colNumber, OAT.GridData.SORT_DESC, _self.number);
 				var currentSortValue = _self.grid.conditions[colNumber].sort;
-				if (qv.util.isGeneXusPreview()) {
+				/*if (qv.util.isGeneXusPreview()) {
 					if (currentSortValue != previousSortValue) {
 						try {
 							var datastr = "<DATA event=\"OrderChanged\" name=\"" + _self.grid.columns[_self.number].getAttribute("name") + "\" displayName=\"" + _self.grid.columns[_self.number].getAttribute("displayName") + "\"  order=\"descending\">"
@@ -2206,7 +2207,7 @@
 							window.external.SendText(qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].ControlName, datastr);
 						} catch (error) { }
 					}
-				}
+				}*/
 
 					var origen = _self.container.parentNode.cellIndex; 
 					var dataFieldId;
@@ -2809,36 +2810,10 @@
 	OAT.onClickEventHandle = function (self, elemvalue) {
 		var datastr = OAT.PreClickHandle(self, elemvalue);
 		
-		//qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false);
-		/*if (alreadyclicked) {
-			//double click
-			alreadyclicked = false;
-			clearTimeout(alreadyclickedTimeout);
-			var datastr = OAT.ClickHandle(self, elemvalue);
-			var spl = self.grid.IdForQueryViewerCollection
-			qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, true)
-		} else {
-			var delay = 300
-			if (self.grid.QueryViewerCollection[self.grid.IdForQueryViewerCollection].ItemDoubleClick == undefined) {
-				delay = 0
-			}
-			alreadyclicked = true;
-			alreadyclickedTimeout = setTimeout(function () {
-				alreadyclicked = false;
-				//single click
-				var datastr = OAT.ClickHandle(self, elemvalue);
-				var spl = self.grid.IdForQueryViewerCollection;
-				qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false);
-			}, delay);
-		}*/
+
 	}
 	
-	
-	/*OAT.onDblClickEventHandle = function (self, elemvalue) {
-		var datastr = OAT.ClickHandle(self, elemvalue);
-		var spl = self.grid.IdForQueryViewerCollection //self.grid.controlName.toUpperCase().split("_")[0] + "_" + self.grid.controlName.split("_")[0];
-		qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, true);
-	}*/
+
 
 	OAT.PreClickHandle = function (self, elemvalue) {
 		//if (self.grid.HideDataFilds.length) {
@@ -4081,7 +4056,7 @@
 
 		
 			xml = xml.replace(/\&/g, "&amp;");
-			if (((gx.util.browser.webkit) && (!gx.util.browser.chrome)) || (isSD)) { //for safari			
+			if ((OAT.isSafari()) || (isSD)) { //for safari			
 				window.open('data:text/xml,' + encodeURIComponent(xml));
 			} else {
 				var blob = new Blob([xml], { type: "text/xml" });
@@ -4208,11 +4183,3 @@
 	} catch (ERROR) {
 
 	}
-
-
-
-
-
-
-
-

@@ -655,7 +655,8 @@
 		this.requestPageDataForPivotTable = function(PageNumber, PageSize, ReturnTotPages, AxesInfo, DataInfo, Filters, ExpandCollapse, LayoutChange){
 			setTimeout( function() {
 				var paramobj = {  "PageNumber": PageNumber, "PageSize": PageSize,"ReturnTotPages":ReturnTotPages, "AxesInfo":AxesInfo, 
-					"DataInfo":DataInfo, "Filters":Filters, "ExpandCollapse":ExpandCollapse, "LayoutChange":LayoutChange, "QueryviewerId": self.IdForQueryViewerCollection};
+					"DataInfo":DataInfo, "Filters":Filters, "ExpandCollapse":ExpandCollapse, "LayoutChange":LayoutChange, "QueryviewerId": self.IdForQueryViewerCollection, 
+					"callback": self.setPageDataForPivotTable };
 				var evt = document.createEvent("Events")
 				evt.initEvent("RequestPageDataForPivotTable", true, true);
 				evt.parameter = paramobj;
@@ -666,7 +667,7 @@
 		this.setPageDataForPivotTable = function(resXML) {
 			switch(self.lastCallToQueryViewer) {
 				case "initWhenServerPagination":
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.preGoWhenServerPagination(true);
@@ -674,47 +675,48 @@
 						if (self.filterIndexes.length > 0) {
 							self.initValueRead(self, 0, self.stateLoad);
 						}
-
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+						
+						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+						//qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
 	
-					} else {
+					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					};
+					};*/
 					break;
 				case "callServiceWhenCustomeValues":
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.preGoWhenServerPagination(true);
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
 
-					} else {
+					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 					qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					}
+					}*/
 					break;
 				case "refreshPivot":
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.goWhenServerPagination(false, true);
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
 
-					} else {
+					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					}
+					}*/
 					break;
 				case "hiddenDimension":	
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.goWhenServerPagination(false, false);
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-					} else {
+						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					}
+					}*/
 					break;
 				case "DataForPivot":	
 					self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows, self.ExportTo);
@@ -744,7 +746,8 @@
 						}
 						self.cleanGridCache();
 					}
-					qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+					jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+					//qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
 					break;
 			  }
 		}
@@ -3003,7 +3006,7 @@
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) + " FilterPopup "
+				containerQuery: self.IdForQueryViewerCollection + "-pivottable" /*+qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) */+ " FilterPopup "
 			});
 
 			jQuery(contentDiv).data('anchorRef', anchorRef);
@@ -3092,8 +3095,8 @@
 					try {
 						var datastr = "<DATA event=\"OrderChanged\" name=\"" + self.columns[dimensionNumber].getAttribute("name") + "\" displayName=\"" + self.columns[dimensionNumber].getAttribute("displayName") + "\"  order=\"ascending\">"
 						datastr = datastr + "</DATA>"
-						if (qv.util.isGeneXusPreview())
-							window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
+						//if (qv.util.isGeneXusPreview())
+						//	window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
 					} catch (error) { }
 
 					
@@ -3129,8 +3132,8 @@
 					try {
 						var datastr = "<DATA event=\"OrderChanged\" name=\"" + self.columns[dimensionNumber].getAttribute("name") + "\" displayName=\"" + self.columns[dimensionNumber].getAttribute("displayName") + "\"  order=\"descending\">"
 						datastr = datastr + "</DATA>"
-						if (qv.util.isGeneXusPreview())
-							window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
+						//if (qv.util.isGeneXusPreview())
+						//	window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
 					} catch (error) { }
 
 
@@ -3194,8 +3197,8 @@
 					try {
 						var datastr = "<DATA event=\"SubtotalsChanged\" name=\"" + self.columns[dimensionNumber].getAttribute("name") + "\" displayName=\"" + self.columns[dimensionNumber].getAttribute("displayName") + "\"  subtotals=\"" + cond.subtotals + "\">"
 						datastr = datastr + "</DATA>"
-						if (qv.util.isGeneXusPreview())
-							window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
+						//if (qv.util.isGeneXusPreview())
+						//	window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
 					} catch (error) { }
 
 					
@@ -4245,7 +4248,7 @@
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) + " ExportPopup "
+				containerQuery: self.IdForQueryViewerCollection + "-pivottable" +/*qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) +*/ " ExportPopup "
 			});
 
 			var clickRef = function (event) {
@@ -5044,8 +5047,8 @@
 			var styleSplit = styleValues.split(";");
 			for (var j = 0; j < styleSplit.length; j++) {
 				var particularStyleSplit = styleSplit[j].split(":");
-				var property = qv.util.trim(particularStyleSplit[0]);
-				var value = qv.util.trim(particularStyleSplit[1]);
+				var property = particularStyleSplit[0].replace(/^[\s]+/, '').replace(/[\s]+$/, '').replace(/[\s]{2,}/, ' '); //qv.util.trim(particularStyleSplit[0]);
+				var value = particularStyleSplit[1].replace(/^[\s]+/, '').replace(/[\s]+$/, '').replace(/[\s]{2,}/, ' ');    //qv.util.trim(particularStyleSplit[1]);
 
 				switch (property) {
 					case "color": if ((value[0] != undefined) && (value[0] === '#')) {
@@ -7658,19 +7661,7 @@
 					self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
 
 					
-					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
-						if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
-
-							self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
-							self.goWhenServerPagination(false, true);
-							qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-
-						} else {
-							var errMsg = qv.util.getErrorFromText(resXML);
-							qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-						}
-
-					}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);*/
+					
 				
 			}
 		}
@@ -8083,16 +8074,7 @@
 				self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
 
 				
-				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
-						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
-						self.goWhenServerPagination(false, false);
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-					} else {
-						var errMsg = qv.util.getErrorFromText(resXML);
-						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					}
-				}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);*/
+				
 
 				if (clean) {
 					self.initValueRead(self, 0);
@@ -8438,10 +8420,6 @@
 								meta = self.getMetadataXML();
 								meta = meta.replace(/\&amp;/g, "&");
 							
-							//	meta = qv.pivot.GetRuntimeMetadata(meta, listennings.RealType)
-							//var listennings = self.QueryViewerCollection[self.IdForQueryViewerCollection];
-							//if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
-								//qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
 								
 								setTimeout( function() {
 				
@@ -8453,7 +8431,7 @@
 				
 								}, 50)
 								
-							//}
+							
 						}
 					}
 				}
@@ -8621,38 +8599,7 @@
 				self.requestPageDataForPivotTable(pageNumber, rowsPerPage, recalculateCantPages, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, layoutChange);
 
 				
-				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
-					self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows, self.ExportTo);
-					self.preGoWhenServerPagination(notAutorefresh);
-					if (self.ExportTo != "") {
-						var FileName = self.query
-						if (FileName == "") {
-							FileName = "Query"
-							try {
-								FileName = self.controlName.split("_")[0]
-							} catch (error) { }
-						}
-						if (self.ExportTo == "HTML") {
-							self.ExportToHTMLWhenServerPagination()
-						}
-						if (self.ExportTo == "PDF") {
-							OAT.GeneratePDFOutput(self, FileName)
-						}
-						if (self.ExportTo == "XLS") {
-							self.ExportToExcel(FileName);
-						}
-						if (self.ExportTo == "XML") {
-							self.ExportToXMLWhenServerPagination();
-						}
-						if (self.ExportTo == "XLSX") {
-							self.ExportToXLSXWhenServerPagination();
-						}
-						self.cleanGridCache();
-					}
-					qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-				}).closure(this), [pageNumber, rowsPerPage, recalculateCantPages, ParmAxisInfo, ParmDataInfo,
-						self.pageData.FilterInfo, self.pageData.CollapseInfo, layoutChange]);*/
-
+			
 			}
 
 		}
@@ -9522,28 +9469,7 @@
 		var alreadyclickedTimeout;
 		this.onClickEventHandle = function (elemvalue, type, number, item) {
 			self.ClickHandle(elemvalue);
-			
-			/*if (alreadyclicked) {
-				//double click
-				alreadyclicked = false;
-				clearTimeout(alreadyclickedTimeout);
-				var datastr = self.ClickHandle(elemvalue);
-				datastr = datastr.replace(/\&/g, '&amp;');
-				qv.pivot.onItemClickEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr, true);
-			} else {
-				alreadyclicked = true;
-				var delay = 300
-				if (self.QueryViewerCollection[IdForQueryViewerCollection].ItemDoubleClick == undefined) {
-					delay = 0
-				}
-				alreadyclickedTimeout = setTimeout(function () {
-					alreadyclicked = false;
-					//single click
-					var datastr = self.ClickHandle(elemvalue);
-					datastr = datastr.replace(/\&/g, '&amp;');
-					qv.pivot.onItemClickEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, false)
-				}, delay);
-			}*/
+
 		}
 
 		this.onClickExpandCollapse = function (elemvalue) {
@@ -9569,11 +9495,7 @@
 			
 		}
 
-		/*this.onDblClickEventHandle = function (elemvalue) {
-			var datastr = self.ClickHandle(elemvalue);
-			datastr = datastr.replace(/\&/g, '&amp;');
-			qv.pivot.onItemClickEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr, true);
-		}*/
+
 
 		this.cleanValueForNull = function (value) {
 			if (value == "#NuN#") {
@@ -10216,7 +10138,7 @@
 
 			
 			self.fireOnItemClickEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr)
-			//qv.pivot.onItemClickEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, false)
+
 		}
 
 		this.fireOnItemClickEvent = function(query, datastr){
@@ -10953,14 +10875,12 @@
 		}
 
 		this.ExpandCollapseHandleWhenServerPagination = function (elemvalue, action) {
-			if ((typeof (self.QueryViewerCollection[IdForQueryViewerCollection].ItemExpand) == 'function') || (qv.util.isGeneXusPreview())) {
+			if ((typeof (self.QueryViewerCollection[IdForQueryViewerCollection].ItemExpand) == 'function') /*|| (qv.util.isGeneXusPreview())*/) {
 				var number = jQuery(elemvalue).data('numberMorD');
 				if (self.conditions[number].previousPage >= self.conditions[number].totalPages) {
 					var datastr = self.ExpandCollapseHandleWhenServerPaginationCreateXML(elemvalue, action)
 					datastr = datastr.replace(/\&/g, '&amp;');
-					//if (qv.util.isGeneXusPreview())
-					//window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
-					//qv.pivot.onItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
+					
 					self.fireOnItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
 					self.getDataForPivot(self.UcId, self.pageData.ServerPageNumber, self.rowsPerPage, true, "", "", "", "", true)
 				} else {
@@ -11018,7 +10938,7 @@
 		
 		
 		this.onFilteredChangedEventHandleWhenServerPagination = function (dimensionNumber) {
-			if ((self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged) || (qv.util.isGeneXusPreview())) {
+			if ((self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged) /*|| (qv.util.isGeneXusPreview())*/) {
 				if (self.conditions[dimensionNumber].previousPage >= self.conditions[dimensionNumber].totalPages) {
 					self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(dimensionNumber, self.conditions[dimensionNumber].distinctValues, self.conditions[dimensionNumber].blackList);
 				} else {
@@ -11026,12 +10946,7 @@
 					self.lastRequestAttributeValues = "FilteredChanged"
 					self.requestAttributeValues(self.columns[dimensionNumber].getAttribute("dataField"), 1, 0, "")
 					
-					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
-						setTimeout(function () {
-							var data = JSON.parse(resJSON);
-							self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(self.lastColumnNumber, data.NotNullValues, self.conditions[dimensionNumber].blackList);
-						}, 200)
-					}).closure(this), [self.columns[dimensionNumber].getAttribute("dataField"), 1, 0, ""]);*/
+				
 				}
 			}
 		}
@@ -11068,23 +10983,31 @@
 			}
 			datastr = datastr + "</DATA>"
 
-			if (qv.util.isGeneXusPreview())
-				window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
+			//if (qv.util.isGeneXusPreview())
+			//	window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
 			if ((self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged)) {
 				datastr = datastr.replace(/\&/g, '&amp;');
-				var xml_doc = qv.util.dom.xmlDocument(datastr);
-				var Node = qv.util.dom.selectXPathNode(xml_doc, "/DATA");
-				/*self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData = {}
-				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.Name = Node.getAttribute("name");
-				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.SelectedValues = [];
-				var valueIndex = -1;
-				for (var i = 0; i < Node.childNodes.length; i++) {
-					if (Node.childNodes[i].nodeName == "VALUE") {
-						valueIndex++;
-						self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
+				
+				var iparser = new DOMParser();
+				var xml_doc = iparser.parseFromString(datastr, "text/xml");
+				
+				//var xml_doc = qv.util.dom.xmlDocument(datastr); ///***TODO
+				
+				var selectXPathNode = function (xmlDoc, xpath) {
+					var nodes;
+					var node;
+					if (xmlDoc.evaluate) { // Firefox, Chrome, Opera and Safari
+						nodes = xmlDoc.evaluate(xpath, xmlDoc, null, XPathResult.ANY_TYPE, null);
+						node = nodes.iterateNext();
+					} else {			// Internet Explorer
+						nodes = xmlDoc.selectNodes(xpath);
+						node = (nodes.length > 0 ? nodes[0] : null);
 					}
+					return node;
 				}
-				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged();*/
+				
+				var Node = selectXPathNode(xml_doc, "/DATA"); // qv.util.dom.selectXPathNode(xml_doc, "/DATA");
+				
 				var FilterChangedData = {}
 				FilterChangedData.Name = Node.getAttribute("name");
 				FilterChangedData.SelectedValues = [];
@@ -11105,7 +11028,6 @@
 					+ "\" axis=\"" + axis + "\"  position=\"" + (position+1) + "\" />"
 				datastr = datastr.replace(/\&/g, '&amp;');
 				self.fireOnDragundDropEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr);
-				//qv.pivot.onOAT_PIVOTDragAndDropEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr);
 
 		}
 		
@@ -11297,11 +11219,4 @@
 		//when is not in the measure list search in filterData
 		return filterData[rowNumber][filterData[0].length - cantMeasures + fg]
 	}
-
-
-	
-
-
-
-
 

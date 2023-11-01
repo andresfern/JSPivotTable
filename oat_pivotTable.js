@@ -1,8 +1,5 @@
 
-
-
-
-	var OAT = {};
+var OAT = {};
 
 
 	/* global namespace */
@@ -162,7 +159,10 @@
 					
 					if ((picture != undefined) && (picture != "")) {
 						
-						var newValue = qv.util.formatNumber(parseFloat(value), decimalPlaces, picture, false);
+						if (typeof qv == "undefined")
+							var newValue = parseFloat(value)
+						else
+							qv.util.formatNumber(parseFloat(value), decimalPlaces, picture, false);
 						
 					} else {
 						var valueSplit = value.split(".");
@@ -1381,28 +1381,8 @@
 	}
 
 
-
-
-
-	
-
-	//loadJS("QueryViewer/oatPivotTable/jsPDF_output.src.js", false);
-	//loadJS("QueryViewer/oatPivotTable/oat_dialog.src.js", false);
-	//loadJS("QueryViewer/oatPivotTable/oat_grid.src.js", false);
-	//loadJS("QueryViewer/oatPivotTable/oat_impl.src.js", false);
-	//loadJS("QueryViewer/oatPivotTable/oat_layers.src.js", false);
-	//loadJS("QueryViewer/oatPivotTable/oat_pivot.src.js", false);
-	//loadJS("QueryViewer/oatPivotTable/oat_statistic.src.js", false);
-	//loadJS("QueryViewer/oatPivotTable/oat_tablePagination.src.js", false);
-
-
-
-
-
-
-
-
-	var jsPDF = (function () {
+//jsPDF_output.src.js
+var jsPDF = (function () {
 		'use strict';
 		/*jslint browser:true, plusplus: true, bitwise: true, nomen: true */
 		/*global document: false, btoa, atob, zpipe, Uint8Array, ArrayBuffer, Blob, saveAs, adler32cs, Deflater */
@@ -10272,8 +10252,7 @@
 	}
 
 
-
-//FILE OAT.Dialof
+//FILE OAT.Dialog
 
 
 
@@ -10556,12 +10535,9 @@
 	} catch (ERROR) {
 
 	}
-
-
-
-
-
-//FILE oat_grid -----------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	//FILE oat_grid -----------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -10737,7 +10713,8 @@
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: qv.util.GetContainerControlClass(self.QueryViewerCollection[IdForQueryViewerCollection]) + " ExportPopup "
+				containerQuery: self.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " ExportPopup "
+				
 			});
 
 			var generatePair = function (index) {
@@ -11958,7 +11935,8 @@
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: qv.util.GetContainerControlClass(self.grid.QueryViewerCollection[IdForQueryViewerCollection]) + " FilterPopup "
+				containerQuery: self.grid.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " FilterPopup "
+				
 			});
 			var callback = function (event) {
 				var type = OAT.GridData.SORT_NONE;
@@ -12454,8 +12432,8 @@
 		var styleSplit = styleValues.split(";");
 		for (var j = 0; j < styleSplit.length; j++) {
 			var particularStyleSplit = styleSplit[j].split(":");
-			var property = qv.util.trim(particularStyleSplit[0]);
-			var value = qv.util.trim(particularStyleSplit[1]);
+			var property = particularStyleSplit[0].replace(/^[\s]+/, '').replace(/[\s]+$/, '').replace(/[\s]{2,}/, ' '); 
+			var value = particularStyleSplit[1].replace(/^[\s]+/, '').replace(/[\s]+$/, '').replace(/[\s]{2,}/, ' '); 
 
 			switch (property) {
 				case "color": if ((value[0] != undefined) && (value[0] === '#')) {
@@ -12713,7 +12691,7 @@
 				var previousSortValue = _self.grid.conditions[colNumber].sort;
 				_self.grid.sort(colNumber, OAT.GridData.SORT_ASC, _self.number);
 				var currentSortValue = _self.grid.conditions[colNumber].sort;
-				if (qv.util.isGeneXusPreview()) {
+				/*if (qv.util.isGeneXusPreview()) {
 					if (currentSortValue != previousSortValue && previousSortValue != OAT.GridData.SORT_NONE) {		// First ascending sort must not fire event
 						try {
 							var datastr = "<DATA event=\"OrderChanged\" name=\"" + _self.grid.columns[_self.number].getAttribute("name") + "\" displayName=\"" + _self.grid.columns[_self.number].getAttribute("displayName") + "\"  order=\"ascending\">"
@@ -12721,7 +12699,7 @@
 							window.external.SendText(qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].ControlName, datastr);
 						} catch (error) { }
 					}
-				}
+				}*/
 				
 					var origen = _self.container.parentNode.cellIndex; 
 					var dataFieldId;
@@ -12760,7 +12738,7 @@
 				var previousSortValue = _self.grid.conditions[colNumber].sort;
 				_self.grid.sort(colNumber, OAT.GridData.SORT_DESC, _self.number);
 				var currentSortValue = _self.grid.conditions[colNumber].sort;
-				if (qv.util.isGeneXusPreview()) {
+				/*if (qv.util.isGeneXusPreview()) {
 					if (currentSortValue != previousSortValue) {
 						try {
 							var datastr = "<DATA event=\"OrderChanged\" name=\"" + _self.grid.columns[_self.number].getAttribute("name") + "\" displayName=\"" + _self.grid.columns[_self.number].getAttribute("displayName") + "\"  order=\"descending\">"
@@ -12768,7 +12746,7 @@
 							window.external.SendText(qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].ControlName, datastr);
 						} catch (error) { }
 					}
-				}
+				}*/
 
 					var origen = _self.container.parentNode.cellIndex; 
 					var dataFieldId;
@@ -13371,36 +13349,10 @@
 	OAT.onClickEventHandle = function (self, elemvalue) {
 		var datastr = OAT.PreClickHandle(self, elemvalue);
 		
-		//qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false);
-		/*if (alreadyclicked) {
-			//double click
-			alreadyclicked = false;
-			clearTimeout(alreadyclickedTimeout);
-			var datastr = OAT.ClickHandle(self, elemvalue);
-			var spl = self.grid.IdForQueryViewerCollection
-			qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, true)
-		} else {
-			var delay = 300
-			if (self.grid.QueryViewerCollection[self.grid.IdForQueryViewerCollection].ItemDoubleClick == undefined) {
-				delay = 0
-			}
-			alreadyclicked = true;
-			alreadyclickedTimeout = setTimeout(function () {
-				alreadyclicked = false;
-				//single click
-				var datastr = OAT.ClickHandle(self, elemvalue);
-				var spl = self.grid.IdForQueryViewerCollection;
-				qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false);
-			}, delay);
-		}*/
+
 	}
 	
-	
-	/*OAT.onDblClickEventHandle = function (self, elemvalue) {
-		var datastr = OAT.ClickHandle(self, elemvalue);
-		var spl = self.grid.IdForQueryViewerCollection //self.grid.controlName.toUpperCase().split("_")[0] + "_" + self.grid.controlName.split("_")[0];
-		qv.pivot.onItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, true);
-	}*/
+
 
 	OAT.PreClickHandle = function (self, elemvalue) {
 		//if (self.grid.HideDataFilds.length) {
@@ -14770,12 +14722,10 @@
 	} catch (ERROR) {
 
 	}
-
-
-
-
-
-//OAT_IMPL file
+	
+	
+	
+	//OAT_IMPL file
 
 
 	this.contains = function (a, obj) {
@@ -14809,7 +14759,7 @@ if (typeof exports != "undefined") {
 		}
 		if (pivotParams.RealType == "Table") {
 			pivotParams.ServerPagingPivot = false;
-			if (qv.collection[pivotParams.UcId].AutoRefreshGroup == "") {
+			if (QueryViewerCollection.AutoRefreshGroup == "") {//if (qv.collection[pivotParams.UcId].AutoRefreshGroup == "") {
 				jQuery(".oat_winrect_container").remove()
 			}
 		}
@@ -15861,7 +15811,7 @@ if (typeof exports != "undefined") {
 				disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, _mthis.serverPaging, _mthis.HideDataFilds, _mthis.orderFildsHidden, _mthis.TableOrderFilds, _mthis.relativePath,
 				this.gridData[UcId].selection, _mthis.pivotParams.Title, _mthis.translations );
 			this.gridData[UcId].grid.oat_component = this;
-			
+			this.gridData[UcId].QueryViewerCollectionItem = QueryViewerCollection[IdForQueryViewerCollection];
 
 			//initialize 
 			this.gridData[UcId].columnDataField = []
@@ -16057,8 +16007,9 @@ if (typeof exports != "undefined") {
 				//OAT_JS.grid.initValueRead(UcId, 0)
 				this.gridData[UcId].endValueRead = false
 				//call OnFirstPage on load
-				qv.collection[this.gridData[UcId].IdForQueryViewerCollection].CurrentPage = 1;
-				if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') 
+				QueryViewerCollection[this.gridData[UcId].IdForQueryViewerCollection].CurrentPage = 1;//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].CurrentPage = 1;
+				//if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function')
+				if (typeof (QueryViewerCollection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') 
 					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
 					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage")
 			}
@@ -16157,27 +16108,27 @@ if (typeof exports != "undefined") {
 
 			//call navigational events
 			if (OAT_JS.grid.gridData[UcId].actualPageNumber != pageNumber) {
-				qv.collection[this.gridData[UcId].IdForQueryViewerCollection].CurrentPage = pageNumber;
+				this.gridData[UcId].QueryViewerCollectionItem.CurrentPage = pageNumber;//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].CurrentPage = pageNumber;
 				if (pageNumber == 1) {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') 
+					if (typeof (this.gridData[UcId].QueryViewerCollectionItem.OnFirstPage) == 'function') 
 					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
 					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage")
 				} else if (pageNumber == this.gridData[UcId].actualCantPages) {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage) == 'function') 
+					if (typeof (this.gridData[UcId].QueryViewerCollectionItem.OnLastPage) == 'function') 
 					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage()
 					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnLastPage")
 				} else if (pageNumber < OAT_JS.grid.gridData[UcId].actualPageNumber) {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage()
+					if (typeof (this.gridData[UcId].QueryViewerCollectionItem.OnPreviousPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage()
 					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnPreviousPage")
 				} else {
-					if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage()
+					if (typeof (this.gridData[UcId].QueryViewerCollectionItem.OnNextPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage()
 					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnNextPage")
 				}
 
 			}
 
 			//call autorefresh
-			if ((!fromExternalRefresh) && (qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].AutoRefreshGroup != "")) {
+			if ((!fromExternalRefresh) && (this.gridData[UcId].QueryViewerCollectionItem.AutoRefreshGroup != "")) {
 				
 				
 				OAT_JS.grid.initValueRead(UcId, 0)
@@ -16693,7 +16644,7 @@ if (typeof exports != "undefined") {
 				}
 				
 				var cantItems = 10;
-				if ((qv.collection[this.gridData[UcId].IdForQueryViewerCollection].AutoRefreshGroup != "")) {
+				if ((this.gridData[UcId].QueryViewerCollectionItem.AutoRefreshGroup != "")) {
 					cantItems = 0;
 				}
 				
@@ -16913,7 +16864,7 @@ if (typeof exports != "undefined") {
 				OAT_JS.grid.gridData[UcId].columnDataField)
 
 			//call autorefresh
-			if (qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].AutoRefreshGroup != "") {
+			if (this.gridData[UcId].QueryViewerCollectionItem.AutoRefreshGroup != "") {
 				
 				OAT_JS.grid.initValueRead(UcId, 0)
 				
@@ -16956,7 +16907,7 @@ if (typeof exports != "undefined") {
 			return finalRes;
 		},
 		setFilterChangedWhenServerPagination: function (UcId, oatDimension) {
-			if ((qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChanged) || (qv.util.isGeneXusPreview())) {
+			if ((this.gridData[UcId].QueryViewerCollectionItem.FilterChanged) /*|| (qv.util.isGeneXusPreview())*/) {
 				var df = oatDimension.getAttribute("dataField")
 
 				var difValues = OAT_JS.grid.gridData[UcId].differentValues[df];
@@ -16983,11 +16934,27 @@ if (typeof exports != "undefined") {
 					datastr = datastr + "</DATA>"
 
 
-					if (qv.util.isGeneXusPreview())
-						window.external.SendText(qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].ControlName, datastr);
+					/*if (qv.util.isGeneXusPreview())
+						window.external.SendText(qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].ControlName, datastr);*/
 
-					var xml_doc = qv.util.dom.xmlDocument(datastr);
-					var Node = qv.util.dom.selectXPathNode(xml_doc, "/DATA");
+					//var xml_doc = qv.util.dom.xmlDocument(datastr);
+					var iparser = new DOMParser();
+					var xml_doc = iparser.parseFromString(datastr, "text/xml");
+					
+					var selectXPathNode = function (xmlDoc, xpath) {
+						var nodes;
+						var node;
+						if (xmlDoc.evaluate) { // Firefox, Chrome, Opera and Safari
+							nodes = xmlDoc.evaluate(xpath, xmlDoc, null, XPathResult.ANY_TYPE, null);
+							node = nodes.iterateNext();
+						} else {			// Internet Explorer
+							nodes = xmlDoc.selectNodes(xpath);
+							node = (nodes.length > 0 ? nodes[0] : null);
+						}
+						return node;
+					}
+					
+					var Node = selectXPathNode(xml_doc, "/DATA");
 					/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData = {};
 					qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData.Name = Node.getAttribute("name");
 					qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChangedData.SelectedValues = [];
@@ -17174,7 +17141,7 @@ if (typeof exports != "undefined") {
 				this.gridData[UcId].columnDataField)
 
 			//call autorefresh
-			if (qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].AutoRefreshGroup != "") {
+			if (this.gridData[UcId].QueryViewerCollectionItem.AutoRefreshGroup != "") {
 				OAT_JS.grid.initValueRead(UcId, 0)
 				
 				var wait = function(){
@@ -18802,6 +18769,662 @@ if (typeof exports != "undefined") {
 
 	
 
+//FILE OAT.Layers
+	OAT.Layers = function (f) {
+		var a = this;
+		this.baseOffset = f;
+		this.layers = [];
+		this.currentIndex = 0;
+		this.raise = function (b) {
+			if (-1 != a.layers.indexOf(b)) {
+				for (var d = b.style.zIndex, c = 0; c < a.layers.length; c++) {
+					var e = a.layers[c];
+					e.style.zIndex > d && e.style.zIndex--
+				}
+				b.style.zIndex = a.currentIndex
+			}
+		};
+		this.addLayer = function (b, d) {
+			var c = OAT.$(b);
+			c && (a.currentIndex++ , c.style.zIndex = a.currentIndex, a.layers.push(c), OAT.Dom.attach(c, d ? d : "mousedown", function () {
+				a.raise(c)
+			}))
+		};
+		this.removeLayer = function (b) {
+			b = OAT.$(b);
+			b = a.layers.indexOf(b);
+			-1 != b && a.layers.splice(b, 1)
+		};
+		a.currentIndex = a.baseOffset
+	};
+
+
+
+
+
+
+	; (function () {
+		/*jshint eqeqeq:false curly:false latedef:false */
+		"use strict";
+
+		function setup($) {
+			$.fn._fadeIn = $.fn.fadeIn;
+
+			var noOp = $.noop || function () { };
+
+			// this bit is to ensure we don't call setExpression when we shouldn't (with extra muscle to handle
+			// confusing userAgent strings on Vista)
+			var msie = /MSIE/.test(navigator.userAgent);
+			var ie6 = /MSIE 6.0/.test(navigator.userAgent) && ! /MSIE 8.0/.test(navigator.userAgent);
+			var mode = document.documentMode || 0;
+			var setExpr = $.isFunction(document.createElement('div').style.setExpression);
+
+			// global $ methods for blocking/unblocking the entire page
+			$.blockUI = function (opts) { install(window, opts); };
+			$.unblockUI = function (opts) { remove(window, opts); };
+
+			// convenience method for quick growl-like notifications  (http://www.google.com/search?q=growl)
+			$.growlUI = function (title, message, timeout, onClose) {
+				var $m = $('<div class="growlUI"></div>');
+				if (title) $m.append('<h1>' + title + '</h1>');
+				if (message) $m.append('<h2>' + message + '</h2>');
+				if (timeout === undefined) timeout = 3000;
+
+				// Added by konapun: Set timeout to 30 seconds if this growl is moused over, like normal toast notifications
+				var callBlock = function (opts) {
+					opts = opts || {};
+
+					$.blockUI({
+						message: $m,
+						fadeIn: typeof opts.fadeIn !== 'undefined' ? opts.fadeIn : 700,
+						fadeOut: typeof opts.fadeOut !== 'undefined' ? opts.fadeOut : 1000,
+						timeout: typeof opts.timeout !== 'undefined' ? opts.timeout : timeout,
+						centerY: false,
+						showOverlay: false,
+						onUnblock: onClose,
+						css: $.blockUI.defaults.growlCSS
+					});
+				};
+
+				callBlock();
+				var nonmousedOpacity = $m.css('opacity');
+				$m.mouseover(function () {
+					callBlock({
+						fadeIn: 0,
+						timeout: 30000
+					});
+
+					var displayBlock = $('.blockMsg');
+					displayBlock.stop(); // cancel fadeout if it has started
+					displayBlock.fadeTo(300, 1); // make it easier to read the message by removing transparency
+				}).mouseout(function () {
+					$('.blockMsg').fadeOut(1000);
+				});
+				// End konapun additions
+			};
+
+			// plugin method for blocking element content
+			$.fn.block = function (opts) {
+				if (this[0] === window) {
+					$.blockUI(opts);
+					return this;
+				}
+				var fullOpts = $.extend({}, $.blockUI.defaults, opts || {});
+				this.each(function () {
+					var $el = $(this);
+					if (fullOpts.ignoreIfBlocked && $el.data('blockUI.isBlocked'))
+						return;
+					$el.unblock({ fadeOut: 0 });
+				});
+
+				return this.each(function () {
+					if ($.css(this, 'position') == 'static') {
+						this.style.position = 'relative';
+						$(this).data('blockUI.static', true);
+					}
+					this.style.zoom = 1; // force 'hasLayout' in ie
+					install(this, opts);
+				});
+			};
+
+			// plugin method for unblocking element content
+			$.fn.unblock = function (opts) {
+				if (this[0] === window) {
+					$.unblockUI(opts);
+					return this;
+				}
+				return this.each(function () {
+					remove(this, opts);
+				});
+			};
+
+			$.blockUI.version = 2.70; // 2nd generation blocking at no extra cost!
+
+			// override these in your code to change the default behavior and style
+			$.blockUI.defaults = {
+				// message displayed when blocking (use null for no message)
+				message: '<h1>Please wait...</h1>',
+
+				title: null,		// title string; only used when theme == true
+				draggable: true,	// only used when theme == true (requires jquery-ui.js to be loaded)
+
+				theme: false, // set to true to use with jQuery UI themes
+
+				// styles for the message when blocking; if you wish to disable
+				// these and use an external stylesheet then do this in your code:
+				// $.blockUI.defaults.css = {};
+				css: {
+					padding: 0,
+					margin: 0,
+					width: '30%',
+					top: '40%',
+					left: '35%',
+					textAlign: 'center',
+					color: '#000',
+					border: '3px solid #aaa',
+					backgroundColor: '#fff',
+					cursor: 'wait'
+				},
+
+				// minimal style set used when themes are used
+				themedCSS: {
+					width: '30%',
+					top: '40%',
+					left: '35%'
+				},
+
+				// styles for the overlay
+				overlayCSS: {
+					backgroundColor: '#000',
+					opacity: 0.1,
+					cursor: 'wait'
+				},
+
+				// style to replace wait cursor before unblocking to correct issue
+				// of lingering wait cursor
+				cursorReset: 'default',
+
+				// styles applied when using $.growlUI
+				growlCSS: {
+					width: '350px',
+					top: '10px',
+					left: '',
+					right: '10px',
+					border: 'none',
+					padding: '5px',
+					opacity: 0.6,
+					cursor: 'default',
+					color: '#fff',
+					backgroundColor: '#000',
+					'-webkit-border-radius': '10px',
+					'-moz-border-radius': '10px',
+					'border-radius': '10px'
+				},
+
+				// IE issues: 'about:blank' fails on HTTPS and javascript:false is s-l-o-w
+				// (hat tip to Jorge H. N. de Vasconcelos)
+				/*jshint scripturl:true */
+				iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank',
+
+				// force usage of iframe in non-IE browsers (handy for blocking applets)
+				forceIframe: false,
+
+				// z-index for the blocking overlay
+				baseZ: 1000,
+
+				// set these to true to have the message automatically centered
+				centerX: true, // <-- only effects element blocking (page block controlled via css above)
+				centerY: true,
+
+				// allow body element to be stetched in ie6; this makes blocking look better
+				// on "short" pages.  disable if you wish to prevent changes to the body height
+				allowBodyStretch: true,
+
+				// enable if you want key and mouse events to be disabled for content that is blocked
+				bindEvents: true,
+
+				// be default blockUI will supress tab navigation from leaving blocking content
+				// (if bindEvents is true)
+				constrainTabKey: true,
+
+				// fadeIn time in millis; set to 0 to disable fadeIn on block
+				fadeIn: 200,
+
+				// fadeOut time in millis; set to 0 to disable fadeOut on unblock
+				fadeOut: 400,
+
+				// time in millis to wait before auto-unblocking; set to 0 to disable auto-unblock
+				timeout: 0,
+
+				// disable if you don't want to show the overlay
+				showOverlay: true,
+
+				// if true, focus will be placed in the first available input field when
+				// page blocking
+				focusInput: true,
+
+				// elements that can receive focus
+				focusableElements: ':input:enabled:visible',
+
+				// suppresses the use of overlay styles on FF/Linux (due to performance issues with opacity)
+				// no longer needed in 2012
+				// applyPlatformOpacityRules: true,
+
+				// callback method invoked when fadeIn has completed and blocking message is visible
+				onBlock: null,
+
+				// callback method invoked when unblocking has completed; the callback is
+				// passed the element that has been unblocked (which is the window object for page
+				// blocks) and the options that were passed to the unblock call:
+				//	onUnblock(element, options)
+				onUnblock: null,
+
+				// callback method invoked when the overlay area is clicked.
+				// setting this will turn the cursor to a pointer, otherwise cursor defined in overlayCss will be used.
+				onOverlayClick: null,
+
+				// don't ask; if you really must know: http://groups.google.com/group/jquery-en/browse_thread/thread/36640a8730503595/2f6a79a77a78e493#2f6a79a77a78e493
+				quirksmodeOffsetHack: 4,
+
+				// class name of the message block
+				blockMsgClass: 'blockMsg',
+
+				// if it is already blocked, then ignore it (don't unblock and reblock)
+				ignoreIfBlocked: false
+			};
+
+			// private data and functions follow...
+
+			var pageBlock = null;
+			var pageBlockEls = [];
+
+			function install(el, opts) {
+				var css, themedCSS;
+				var full = (el == window);
+				var msg = (opts && opts.message !== undefined ? opts.message : undefined);
+				opts = $.extend({}, $.blockUI.defaults, opts || {});
+
+				if (opts.ignoreIfBlocked && $(el).data('blockUI.isBlocked'))
+					return;
+
+				opts.overlayCSS = $.extend({}, $.blockUI.defaults.overlayCSS, opts.overlayCSS || {});
+				css = $.extend({}, $.blockUI.defaults.css, opts.css || {});
+				if (opts.onOverlayClick)
+					opts.overlayCSS.cursor = 'pointer';
+
+				themedCSS = $.extend({}, $.blockUI.defaults.themedCSS, opts.themedCSS || {});
+				msg = msg === undefined ? opts.message : msg;
+
+				// remove the current block (if there is one)
+				if (full && pageBlock)
+					remove(window, { fadeOut: 0 });
+
+				// if an existing element is being used as the blocking content then we capture
+				// its current place in the DOM (and current display style) so we can restore
+				// it when we unblock
+				if (msg && typeof msg != 'string' && (msg.parentNode || msg.jquery)) {
+					var node = msg.jquery ? msg[0] : msg;
+					var data = {};
+					$(el).data('blockUI.history', data);
+					data.el = node;
+					data.parent = node.parentNode;
+					data.display = node.style.display;
+					data.position = node.style.position;
+					if (data.parent)
+						data.parent.removeChild(node);
+				}
+
+				$(el).data('blockUI.onUnblock', opts.onUnblock);
+				var z = opts.baseZ;
+
+				// blockUI uses 3 layers for blocking, for simplicity they are all used on every platform;
+				// layer1 is the iframe layer which is used to supress bleed through of underlying content
+				// layer2 is the overlay layer which has opacity and a wait cursor (by default)
+				// layer3 is the message content that is displayed while blocking
+				var lyr1, lyr2, lyr3, s;
+				if (msie || opts.forceIframe)
+					lyr1 = $('<iframe class="blockUI" style="z-index:' + (z++) + ';display:none;border:none;margin:0;padding:0;position:absolute;width:100%;height:100%;top:0;left:0" src="' + opts.iframeSrc + '"></iframe>');
+				else
+					lyr1 = $('<div class="blockUI" style="display:none"></div>');
+
+				if (opts.theme)
+					lyr2 = $('<div class="blockUI blockOverlay ui-widget-overlay" style="z-index:' + (z++) + ';display:none"></div>');
+				else
+					lyr2 = $('<div class="blockUI blockOverlay" style="z-index:' + (z++) + ';display:none;border:none;margin:0;padding:0;width:100%;height:100%;top:0;left:0"></div>');
+
+				if (opts.theme && full) {
+					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockPage ui-dialog ui-widget ui-corner-all" style="z-index:' + (z + 10) + ';display:none;position:fixed">';
+					if (opts.title) {
+						s += '<div class="ui-widget-header ui-dialog-titlebar ui-corner-all blockTitle">' + (opts.title || '&nbsp;') + '</div>';
+					}
+					s += '<div class="ui-widget-content ui-dialog-content"></div>';
+					s += '</div>';
+				}
+				else if (opts.theme) {
+					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockElement ui-dialog ui-widget ui-corner-all" style="z-index:' + (z + 10) + ';display:none;position:absolute">';
+					if (opts.title) {
+						s += '<div class="ui-widget-header ui-dialog-titlebar ui-corner-all blockTitle">' + (opts.title || '&nbsp;') + '</div>';
+					}
+					s += '<div class="ui-widget-content ui-dialog-content"></div>';
+					s += '</div>';
+				}
+				else if (full) {
+					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockPage" style="z-index:' + (z + 10) + ';display:none;position:fixed"></div>';
+				}
+				else {
+					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockElement" style="z-index:' + (z + 10) + ';display:none;position:absolute"></div>';
+				}
+				lyr3 = $(s);
+
+				// if we have a message, style it
+				if (msg) {
+					if (opts.theme) {
+						lyr3.css(themedCSS);
+						lyr3.addClass('ui-widget-content');
+					}
+					else
+						lyr3.css(css);
+				}
+
+				// style the overlay
+				if (!opts.theme /*&& (!opts.applyPlatformOpacityRules)*/)
+					lyr2.css(opts.overlayCSS);
+				lyr2.css('position', full ? 'fixed' : 'absolute');
+
+				// make iframe layer transparent in IE
+				if (msie || opts.forceIframe)
+					lyr1.css('opacity', 0.0);
+
+				//$([lyr1[0],lyr2[0],lyr3[0]]).appendTo(full ? 'body' : el);
+				var layers = [lyr1, lyr2, lyr3], $par = full ? $('body') : $(el);
+				$.each(layers, function () {
+					this.appendTo($par);
+				});
+
+				if (opts.theme && opts.draggable && $.fn.draggable) {
+					lyr3.draggable({
+						handle: '.ui-dialog-titlebar',
+						cancel: 'li'
+					});
+				}
+
+				// ie7 must use absolute positioning in quirks mode and to account for activex issues (when scrolling)
+				var expr = setExpr && (!$.support.boxModel || $('object,embed', full ? null : el).length > 0);
+				if (ie6 || expr) {
+					// give body 100% height
+					if (full && opts.allowBodyStretch && $.support.boxModel)
+						$('html,body').css('height', '100%');
+
+					// fix ie6 issue when blocked element has a border width
+					if ((ie6 || !$.support.boxModel) && !full) {
+						var t = sz(el, 'borderTopWidth'), l = sz(el, 'borderLeftWidth');
+						var fixT = t ? '(0 - ' + t + ')' : 0;
+						var fixL = l ? '(0 - ' + l + ')' : 0;
+					}
+
+					// simulate fixed position
+					$.each(layers, function (i, o) {
+						var s = o[0].style;
+						s.position = 'absolute';
+						if (i < 2) {
+							if (full)
+								s.setExpression('height', 'Math.max(document.body.scrollHeight, document.body.offsetHeight) - (jQuery.support.boxModel?0:' + opts.quirksmodeOffsetHack + ') + "px"');
+							else
+								s.setExpression('height', 'this.parentNode.offsetHeight + "px"');
+							if (full)
+								s.setExpression('width', 'jQuery.support.boxModel && document.documentElement.clientWidth || document.body.clientWidth + "px"');
+							else
+								s.setExpression('width', 'this.parentNode.offsetWidth + "px"');
+							if (fixL) s.setExpression('left', fixL);
+							if (fixT) s.setExpression('top', fixT);
+						}
+						else if (opts.centerY) {
+							if (full) s.setExpression('top', '(document.documentElement.clientHeight || document.body.clientHeight) / 2 - (this.offsetHeight / 2) + (blah = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + "px"');
+							s.marginTop = 0;
+						}
+						else if (!opts.centerY && full) {
+							var top = (opts.css && opts.css.top) ? parseInt(opts.css.top, 10) : 0;
+							var expression = '((document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + ' + top + ') + "px"';
+							s.setExpression('top', expression);
+						}
+					});
+				}
+
+				// show the message
+				if (msg) {
+					if (opts.theme)
+						lyr3.find('.ui-widget-content').append(msg);
+					else
+						lyr3.append(msg);
+					if (msg.jquery || msg.nodeType)
+						$(msg).show();
+				}
+
+				if ((msie || opts.forceIframe) && opts.showOverlay)
+					lyr1.show(); // opacity is zero
+				if (opts.fadeIn) {
+					var cb = opts.onBlock ? opts.onBlock : noOp;
+					var cb1 = (opts.showOverlay && !msg) ? cb : noOp;
+					var cb2 = msg ? cb : noOp;
+					if (opts.showOverlay)
+						lyr2._fadeIn(opts.fadeIn, cb1);
+					if (msg)
+						lyr3._fadeIn(opts.fadeIn, cb2);
+				}
+				else {
+					if (opts.showOverlay)
+						lyr2.show();
+					if (msg)
+						lyr3.show();
+					if (opts.onBlock)
+						opts.onBlock.bind(lyr3)();
+				}
+
+				// bind key and mouse events
+				bind(1, el, opts);
+
+				if (full) {
+					pageBlock = lyr3[0];
+					pageBlockEls = $(opts.focusableElements, pageBlock);
+					if (opts.focusInput)
+						setTimeout(focus, 20);
+				}
+				else
+					center(lyr3[0], opts.centerX, opts.centerY);
+
+				if (opts.timeout) {
+					// auto-unblock
+					var to = setTimeout(function () {
+						if (full)
+							$.unblockUI(opts);
+						else
+							$(el).unblock(opts);
+					}, opts.timeout);
+					$(el).data('blockUI.timeout', to);
+				}
+			}
+
+			// remove the block
+			function remove(el, opts) {
+				var count;
+				var full = (el == window);
+				var $el = $(el);
+				var data = $el.data('blockUI.history');
+				var to = $el.data('blockUI.timeout');
+				if (to) {
+					clearTimeout(to);
+					$el.removeData('blockUI.timeout');
+				}
+				opts = $.extend({}, $.blockUI.defaults, opts || {});
+				bind(0, el, opts); // unbind events
+
+				if (opts.onUnblock === null) {
+					opts.onUnblock = $el.data('blockUI.onUnblock');
+					$el.removeData('blockUI.onUnblock');
+				}
+
+				var els;
+				if (full) // crazy selector to handle odd field errors in ie6/7
+					els = $('body').children().filter('.blockUI').add('body > .blockUI');
+				else
+					els = $el.find('>.blockUI');
+
+				// fix cursor issue
+				if (opts.cursorReset) {
+					if (els.length > 1)
+						els[1].style.cursor = opts.cursorReset;
+					if (els.length > 2)
+						els[2].style.cursor = opts.cursorReset;
+				}
+
+				if (full)
+					pageBlock = pageBlockEls = null;
+
+				if (opts.fadeOut) {
+					count = els.length;
+					els.stop().fadeOut(opts.fadeOut, function () {
+						if (--count === 0)
+							reset(els, data, opts, el);
+					});
+				}
+				else
+					reset(els, data, opts, el);
+			}
+
+			// move blocking element back into the DOM where it started
+			function reset(els, data, opts, el) {
+				var $el = $(el);
+				if ($el.data('blockUI.isBlocked'))
+					return;
+
+				els.each(function (i, o) {
+					// remove via DOM calls so we don't lose event handlers
+					if (this.parentNode)
+						this.parentNode.removeChild(this);
+				});
+
+				if (data && data.el) {
+					data.el.style.display = data.display;
+					data.el.style.position = data.position;
+					data.el.style.cursor = 'default'; // #59
+					if (data.parent)
+						data.parent.appendChild(data.el);
+					$el.removeData('blockUI.history');
+				}
+
+				if ($el.data('blockUI.static')) {
+					$el.css('position', 'static'); // #22
+				}
+
+				if (typeof opts.onUnblock == 'function')
+					opts.onUnblock(el, opts);
+
+				// fix issue in Safari 6 where block artifacts remain until reflow
+				var body = $(document.body), w = body.width(), cssW = body[0].style.width;
+				body.width(w - 1).width(w);
+				body[0].style.width = cssW;
+			}
+
+			// bind/unbind the handler
+			function bind(b, el, opts) {
+				var full = el == window, $el = $(el);
+
+				// don't bother unbinding if there is nothing to unbind
+				if (!b && (full && !pageBlock || !full && !$el.data('blockUI.isBlocked')))
+					return;
+
+				$el.data('blockUI.isBlocked', b);
+
+				// don't bind events when overlay is not in use or if bindEvents is false
+				if (!full || !opts.bindEvents || (b && !opts.showOverlay))
+					return;
+
+				// bind anchors and inputs for mouse and key events
+				var events = 'mousedown mouseup keydown keypress keyup touchstart touchend touchmove';
+				if (b)
+					$(document).bind(events, opts, handler);
+				else
+					$(document).unbind(events, handler);
+
+				// former impl...
+				//		var $e = $('a,:input');
+				//		b ? $e.bind(events, opts, handler) : $e.unbind(events, handler);
+			}
+
+			// event handler to suppress keyboard/mouse events when blocking
+			function handler(e) {
+				// allow tab navigation (conditionally)
+				if (e.type === 'keydown' && e.keyCode && e.keyCode == 9) {
+					if (pageBlock && e.data.constrainTabKey) {
+						var els = pageBlockEls;
+						var fwd = !e.shiftKey && e.target === els[els.length - 1];
+						var back = e.shiftKey && e.target === els[0];
+						if (fwd || back) {
+							setTimeout(function () { focus(back); }, 10);
+							return false;
+						}
+					}
+				}
+				var opts = e.data;
+				var target = $(e.target);
+				if (target.hasClass('blockOverlay') && opts.onOverlayClick)
+					opts.onOverlayClick(e);
+
+				// allow events within the message content
+				if (target.parents('div.' + opts.blockMsgClass).length > 0)
+					return true;
+
+				// allow events for content that is not being blocked
+				return target.parents().children().filter('div.blockUI').length === 0;
+			}
+
+			function focus(back) {
+				if (!pageBlockEls)
+					return;
+				var e = pageBlockEls[back === true ? pageBlockEls.length - 1 : 0];
+				if (e)
+					e.focus();
+			}
+
+			function center(el, x, y) {
+				var p = el.parentNode, s = el.style;
+				var l = ((p.offsetWidth - el.offsetWidth) / 2) - sz(p, 'borderLeftWidth');
+				var t = ((p.offsetHeight - el.offsetHeight) / 2) - sz(p, 'borderTopWidth');
+				if (x) s.left = l > 0 ? (l + 'px') : '0';
+				if (y) s.top = t > 0 ? (t + 'px') : '0';
+			}
+
+			function sz(el, p) {
+				return parseInt($.css(el, p), 10) || 0;
+			}
+
+		}
+
+
+		/*global define:true */
+		if (typeof define === 'function' && define.amd && define.amd.jQuery) {
+			define(['jquery'], setup);
+		} else {
+			if(typeof jQuery != "undefined"){
+				setup(jQuery);
+			}
+		}
+
+	})();
+
+
+
+
+
+
+
+
+	try {
+		OAT.Loader.featureLoaded("layers");
+	} catch (ERROR) {
+
+	}
+
 
 
 //FILE oat_pivot -----------------------------------------------------------------------------------------------------------------------------------------------
@@ -19461,7 +20084,8 @@ if (typeof exports != "undefined") {
 		this.requestPageDataForPivotTable = function(PageNumber, PageSize, ReturnTotPages, AxesInfo, DataInfo, Filters, ExpandCollapse, LayoutChange){
 			setTimeout( function() {
 				var paramobj = {  "PageNumber": PageNumber, "PageSize": PageSize,"ReturnTotPages":ReturnTotPages, "AxesInfo":AxesInfo, 
-					"DataInfo":DataInfo, "Filters":Filters, "ExpandCollapse":ExpandCollapse, "LayoutChange":LayoutChange, "QueryviewerId": self.IdForQueryViewerCollection};
+					"DataInfo":DataInfo, "Filters":Filters, "ExpandCollapse":ExpandCollapse, "LayoutChange":LayoutChange, "QueryviewerId": self.IdForQueryViewerCollection, 
+					"callback": self.setPageDataForPivotTable };
 				var evt = document.createEvent("Events")
 				evt.initEvent("RequestPageDataForPivotTable", true, true);
 				evt.parameter = paramobj;
@@ -19472,7 +20096,7 @@ if (typeof exports != "undefined") {
 		this.setPageDataForPivotTable = function(resXML) {
 			switch(self.lastCallToQueryViewer) {
 				case "initWhenServerPagination":
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.preGoWhenServerPagination(true);
@@ -19480,47 +20104,48 @@ if (typeof exports != "undefined") {
 						if (self.filterIndexes.length > 0) {
 							self.initValueRead(self, 0, self.stateLoad);
 						}
-
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+						
+						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+						//qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
 	
-					} else {
+					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					};
+					};*/
 					break;
 				case "callServiceWhenCustomeValues":
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.preGoWhenServerPagination(true);
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
 
-					} else {
+					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 					qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					}
+					}*/
 					break;
 				case "refreshPivot":
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.goWhenServerPagination(false, true);
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
 
-					} else {
+					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					}
+					}*/
 					break;
 				case "hiddenDimension":	
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
+					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.goWhenServerPagination(false, false);
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-					} else {
+						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					}
+					}*/
 					break;
 				case "DataForPivot":	
 					self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows, self.ExportTo);
@@ -19550,7 +20175,8 @@ if (typeof exports != "undefined") {
 						}
 						self.cleanGridCache();
 					}
-					qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
+					jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+					//qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
 					break;
 			  }
 		}
@@ -21809,7 +22435,7 @@ if (typeof exports != "undefined") {
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) + " FilterPopup "
+				containerQuery: self.IdForQueryViewerCollection + "-pivottable" /*+qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) */+ " FilterPopup "
 			});
 
 			jQuery(contentDiv).data('anchorRef', anchorRef);
@@ -21898,8 +22524,8 @@ if (typeof exports != "undefined") {
 					try {
 						var datastr = "<DATA event=\"OrderChanged\" name=\"" + self.columns[dimensionNumber].getAttribute("name") + "\" displayName=\"" + self.columns[dimensionNumber].getAttribute("displayName") + "\"  order=\"ascending\">"
 						datastr = datastr + "</DATA>"
-						if (qv.util.isGeneXusPreview())
-							window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
+						//if (qv.util.isGeneXusPreview())
+						//	window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
 					} catch (error) { }
 
 					
@@ -21935,8 +22561,8 @@ if (typeof exports != "undefined") {
 					try {
 						var datastr = "<DATA event=\"OrderChanged\" name=\"" + self.columns[dimensionNumber].getAttribute("name") + "\" displayName=\"" + self.columns[dimensionNumber].getAttribute("displayName") + "\"  order=\"descending\">"
 						datastr = datastr + "</DATA>"
-						if (qv.util.isGeneXusPreview())
-							window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
+						//if (qv.util.isGeneXusPreview())
+						//	window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
 					} catch (error) { }
 
 
@@ -22000,8 +22626,8 @@ if (typeof exports != "undefined") {
 					try {
 						var datastr = "<DATA event=\"SubtotalsChanged\" name=\"" + self.columns[dimensionNumber].getAttribute("name") + "\" displayName=\"" + self.columns[dimensionNumber].getAttribute("displayName") + "\"  subtotals=\"" + cond.subtotals + "\">"
 						datastr = datastr + "</DATA>"
-						if (qv.util.isGeneXusPreview())
-							window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
+						//if (qv.util.isGeneXusPreview())
+						//	window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
 					} catch (error) { }
 
 					
@@ -23051,7 +23677,7 @@ if (typeof exports != "undefined") {
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) + " ExportPopup "
+				containerQuery: self.IdForQueryViewerCollection + "-pivottable" +/*qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) +*/ " ExportPopup "
 			});
 
 			var clickRef = function (event) {
@@ -23850,8 +24476,8 @@ if (typeof exports != "undefined") {
 			var styleSplit = styleValues.split(";");
 			for (var j = 0; j < styleSplit.length; j++) {
 				var particularStyleSplit = styleSplit[j].split(":");
-				var property = qv.util.trim(particularStyleSplit[0]);
-				var value = qv.util.trim(particularStyleSplit[1]);
+				var property = particularStyleSplit[0].replace(/^[\s]+/, '').replace(/[\s]+$/, '').replace(/[\s]{2,}/, ' '); //qv.util.trim(particularStyleSplit[0]);
+				var value = particularStyleSplit[1].replace(/^[\s]+/, '').replace(/[\s]+$/, '').replace(/[\s]{2,}/, ' ');    //qv.util.trim(particularStyleSplit[1]);
 
 				switch (property) {
 					case "color": if ((value[0] != undefined) && (value[0] === '#')) {
@@ -26464,19 +27090,7 @@ if (typeof exports != "undefined") {
 					self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
 
 					
-					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
-						if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
-
-							self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
-							self.goWhenServerPagination(false, true);
-							qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-
-						} else {
-							var errMsg = qv.util.getErrorFromText(resXML);
-							qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-						}
-
-					}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);*/
+					
 				
 			}
 		}
@@ -26889,16 +27503,7 @@ if (typeof exports != "undefined") {
 				self.requestPageDataForPivotTable(1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true);
 
 				
-				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
-					if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
-						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
-						self.goWhenServerPagination(false, false);
-						qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-					} else {
-						var errMsg = qv.util.getErrorFromText(resXML);
-						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
-					}
-				}).closure(this), [1, self.rowsPerPage, true, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, true]);*/
+				
 
 				if (clean) {
 					self.initValueRead(self, 0);
@@ -27244,10 +27849,6 @@ if (typeof exports != "undefined") {
 								meta = self.getMetadataXML();
 								meta = meta.replace(/\&amp;/g, "&");
 							
-							//	meta = qv.pivot.GetRuntimeMetadata(meta, listennings.RealType)
-							//var listennings = self.QueryViewerCollection[self.IdForQueryViewerCollection];
-							//if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
-								//qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
 								
 								setTimeout( function() {
 				
@@ -27259,7 +27860,7 @@ if (typeof exports != "undefined") {
 				
 								}, 50)
 								
-							//}
+							
 						}
 					}
 				}
@@ -27427,38 +28028,7 @@ if (typeof exports != "undefined") {
 				self.requestPageDataForPivotTable(pageNumber, rowsPerPage, recalculateCantPages, ParmAxisInfo, ParmDataInfo, self.pageData.FilterInfo, self.pageData.CollapseInfo, layoutChange);
 
 				
-				/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getPageDataForPivotTable((function (resXML) {
-					self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows, self.ExportTo);
-					self.preGoWhenServerPagination(notAutorefresh);
-					if (self.ExportTo != "") {
-						var FileName = self.query
-						if (FileName == "") {
-							FileName = "Query"
-							try {
-								FileName = self.controlName.split("_")[0]
-							} catch (error) { }
-						}
-						if (self.ExportTo == "HTML") {
-							self.ExportToHTMLWhenServerPagination()
-						}
-						if (self.ExportTo == "PDF") {
-							OAT.GeneratePDFOutput(self, FileName)
-						}
-						if (self.ExportTo == "XLS") {
-							self.ExportToExcel(FileName);
-						}
-						if (self.ExportTo == "XML") {
-							self.ExportToXMLWhenServerPagination();
-						}
-						if (self.ExportTo == "XLSX") {
-							self.ExportToXLSXWhenServerPagination();
-						}
-						self.cleanGridCache();
-					}
-					qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
-				}).closure(this), [pageNumber, rowsPerPage, recalculateCantPages, ParmAxisInfo, ParmDataInfo,
-						self.pageData.FilterInfo, self.pageData.CollapseInfo, layoutChange]);*/
-
+			
 			}
 
 		}
@@ -28328,28 +28898,7 @@ if (typeof exports != "undefined") {
 		var alreadyclickedTimeout;
 		this.onClickEventHandle = function (elemvalue, type, number, item) {
 			self.ClickHandle(elemvalue);
-			
-			/*if (alreadyclicked) {
-				//double click
-				alreadyclicked = false;
-				clearTimeout(alreadyclickedTimeout);
-				var datastr = self.ClickHandle(elemvalue);
-				datastr = datastr.replace(/\&/g, '&amp;');
-				qv.pivot.onItemClickEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr, true);
-			} else {
-				alreadyclicked = true;
-				var delay = 300
-				if (self.QueryViewerCollection[IdForQueryViewerCollection].ItemDoubleClick == undefined) {
-					delay = 0
-				}
-				alreadyclickedTimeout = setTimeout(function () {
-					alreadyclicked = false;
-					//single click
-					var datastr = self.ClickHandle(elemvalue);
-					datastr = datastr.replace(/\&/g, '&amp;');
-					qv.pivot.onItemClickEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, false)
-				}, delay);
-			}*/
+
 		}
 
 		this.onClickExpandCollapse = function (elemvalue) {
@@ -28375,11 +28924,7 @@ if (typeof exports != "undefined") {
 			
 		}
 
-		/*this.onDblClickEventHandle = function (elemvalue) {
-			var datastr = self.ClickHandle(elemvalue);
-			datastr = datastr.replace(/\&/g, '&amp;');
-			qv.pivot.onItemClickEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr, true);
-		}*/
+
 
 		this.cleanValueForNull = function (value) {
 			if (value == "#NuN#") {
@@ -29022,7 +29567,7 @@ if (typeof exports != "undefined") {
 
 			
 			self.fireOnItemClickEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr)
-			//qv.pivot.onItemClickEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, false)
+
 		}
 
 		this.fireOnItemClickEvent = function(query, datastr){
@@ -29759,14 +30304,12 @@ if (typeof exports != "undefined") {
 		}
 
 		this.ExpandCollapseHandleWhenServerPagination = function (elemvalue, action) {
-			if ((typeof (self.QueryViewerCollection[IdForQueryViewerCollection].ItemExpand) == 'function') || (qv.util.isGeneXusPreview())) {
+			if ((typeof (self.QueryViewerCollection[IdForQueryViewerCollection].ItemExpand) == 'function') /*|| (qv.util.isGeneXusPreview())*/) {
 				var number = jQuery(elemvalue).data('numberMorD');
 				if (self.conditions[number].previousPage >= self.conditions[number].totalPages) {
 					var datastr = self.ExpandCollapseHandleWhenServerPaginationCreateXML(elemvalue, action)
 					datastr = datastr.replace(/\&/g, '&amp;');
-					//if (qv.util.isGeneXusPreview())
-					//window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
-					//qv.pivot.onItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
+					
 					self.fireOnItemExpandCollapseEvent(self.QueryViewerCollection[IdForQueryViewerCollection], datastr, (action == "collapse"))
 					self.getDataForPivot(self.UcId, self.pageData.ServerPageNumber, self.rowsPerPage, true, "", "", "", "", true)
 				} else {
@@ -29824,7 +30367,7 @@ if (typeof exports != "undefined") {
 		
 		
 		this.onFilteredChangedEventHandleWhenServerPagination = function (dimensionNumber) {
-			if ((self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged) || (qv.util.isGeneXusPreview())) {
+			if ((self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged) /*|| (qv.util.isGeneXusPreview())*/) {
 				if (self.conditions[dimensionNumber].previousPage >= self.conditions[dimensionNumber].totalPages) {
 					self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(dimensionNumber, self.conditions[dimensionNumber].distinctValues, self.conditions[dimensionNumber].blackList);
 				} else {
@@ -29832,12 +30375,7 @@ if (typeof exports != "undefined") {
 					self.lastRequestAttributeValues = "FilteredChanged"
 					self.requestAttributeValues(self.columns[dimensionNumber].getAttribute("dataField"), 1, 0, "")
 					
-					/*self.QueryViewerCollection[self.IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
-						setTimeout(function () {
-							var data = JSON.parse(resJSON);
-							self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(self.lastColumnNumber, data.NotNullValues, self.conditions[dimensionNumber].blackList);
-						}, 200)
-					}).closure(this), [self.columns[dimensionNumber].getAttribute("dataField"), 1, 0, ""]);*/
+				
 				}
 			}
 		}
@@ -29874,23 +30412,31 @@ if (typeof exports != "undefined") {
 			}
 			datastr = datastr + "</DATA>"
 
-			if (qv.util.isGeneXusPreview())
-				window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
+			//if (qv.util.isGeneXusPreview())
+			//	window.external.SendText(self.QueryViewerCollection[self.IdForQueryViewerCollection].ControlName, datastr);
 			if ((self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged)) {
 				datastr = datastr.replace(/\&/g, '&amp;');
-				var xml_doc = qv.util.dom.xmlDocument(datastr);
-				var Node = qv.util.dom.selectXPathNode(xml_doc, "/DATA");
-				/*self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData = {}
-				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.Name = Node.getAttribute("name");
-				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.SelectedValues = [];
-				var valueIndex = -1;
-				for (var i = 0; i < Node.childNodes.length; i++) {
-					if (Node.childNodes[i].nodeName == "VALUE") {
-						valueIndex++;
-						self.QueryViewerCollection[IdForQueryViewerCollection].FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
+				
+				var iparser = new DOMParser();
+				var xml_doc = iparser.parseFromString(datastr, "text/xml");
+				
+				//var xml_doc = qv.util.dom.xmlDocument(datastr); ///***TODO
+				
+				var selectXPathNode = function (xmlDoc, xpath) {
+					var nodes;
+					var node;
+					if (xmlDoc.evaluate) { // Firefox, Chrome, Opera and Safari
+						nodes = xmlDoc.evaluate(xpath, xmlDoc, null, XPathResult.ANY_TYPE, null);
+						node = nodes.iterateNext();
+					} else {			// Internet Explorer
+						nodes = xmlDoc.selectNodes(xpath);
+						node = (nodes.length > 0 ? nodes[0] : null);
 					}
+					return node;
 				}
-				self.QueryViewerCollection[IdForQueryViewerCollection].FilterChanged();*/
+				
+				var Node = selectXPathNode(xml_doc, "/DATA"); // qv.util.dom.selectXPathNode(xml_doc, "/DATA");
+				
 				var FilterChangedData = {}
 				FilterChangedData.Name = Node.getAttribute("name");
 				FilterChangedData.SelectedValues = [];
@@ -29911,7 +30457,6 @@ if (typeof exports != "undefined") {
 					+ "\" axis=\"" + axis + "\"  position=\"" + (position+1) + "\" />"
 				datastr = datastr.replace(/\&/g, '&amp;');
 				self.fireOnDragundDropEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr);
-				//qv.pivot.onOAT_PIVOTDragAndDropEvent(this.QueryViewerCollection[IdForQueryViewerCollection], datastr);
 
 		}
 		
@@ -30105,7 +30650,6 @@ if (typeof exports != "undefined") {
 	}
 
 
-	
 
 
 
@@ -31072,8 +31616,6 @@ if (typeof exports != "undefined") {
 		}
 		return data
 	}
-
-
 
 
 

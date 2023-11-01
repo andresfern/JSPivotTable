@@ -154,7 +154,12 @@
 					} else c = function (a, b) { var c = OAT.Dom.getWH(e), d = OAT.Dom.getWH(e.parentNode), o = a + c[0], c = b + c[1]; return 0 > a || 0 > b || o > d[0] || c > d[1] }, OAT.Drag.create(e, e, { restrictionFunction: c })
 			}
 		}
-	}; OAT.Dom.attach(document, "mousemove", OAT.Drag.move); OAT.Dom.attach(document, "mouseup", OAT.Drag.up); try {
+	};
+	if(typeof document != "undefined"){
+	 OAT.Dom.attach(document, "mousemove", OAT.Drag.move); 
+	 OAT.Dom.attach(document, "mouseup", OAT.Drag.up); 
+	}
+	try {
 		OAT.Loader.featureLoaded("drag");
 	} catch (ERROR) {
 
@@ -216,8 +221,10 @@
 		this.clearTargets = function () { a.targets = [] };
 		this.startDrag = function (b, c, d, e, f) { OAT.GhostDragData.lock || (a.pending = 1, a.originalElement = b, a.callback = d, d = OAT.Dom.create("div", { position: "absolute" }), a.process = c, c = OAT.Dom.position(b), d.style.left = c[0] + "px", d.style.top = c[1] + "px", OAT.Style.opacity(d, 0.5), d.appendChild(b.cloneNode(!0)), d.mouse_x = e, d.mouse_y = f, d.object = a, OAT.GhostDragData.lock = d) }
 	};
+	if(typeof document != "undefined"){
 	OAT.Dom.attach(document, "mousemove", OAT.GhostDragData.move);
 	OAT.Dom.attach(document, "mouseup", OAT.GhostDragData.up);
+	};
 	try {
 		OAT.Loader.featureLoaded("ghostdrag");
 	} catch (ERROR) {
@@ -274,4 +281,3 @@
 	} catch (ERROR) {
 
 	}
-
