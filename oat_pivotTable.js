@@ -1,4 +1,16 @@
 
+const contains2 = function (a, obj) {
+	for (var i = 0; i < a.length; i++) {
+		if (a[i] === obj) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+var jQuery = require("jquery");
+
 var OAT = {};
 
 
@@ -584,9 +596,12 @@ var OAT = {};
 	OAT.Dom = { /* DOM common object */
 		create: function (tagName, styleObj, className) {
 			var elm = document.createElement(tagName);
-			if (styleObj) {
-				for (prop in styleObj) { elm.style[prop] = styleObj[prop]; }
-			}
+			 //console.log(Object.keys(styleObj).length > 0);
+			 if (styleObj && Object.keys(styleObj).length > 0) {
+		 	 for (var prop in styleObj) { 
+			 //		console.log(prop);
+			 		elm.style[prop] = styleObj[prop]; }
+		     }
 			if (className) { elm.className = className; }
 			return elm;
 		},
@@ -10473,7 +10488,26 @@ var jsPDF = (function () {
 		this.addTarget = function (b, c, d) { b = [OAT.$(b), c, d]; a.targets.length && a.targets[a.targets.length - 1][2] ? a.targets.splice(a.targets.length - 1, 0, b) : a.targets.push(b) };
 		this.delTarget = function (b) { for (var b = OAT.$(b), c = -1, d = 0; d < a.targets.length; d++)a.targets[d][0] == b && (c = d); -1 != c && a.targets.splice(c, 1) };
 		this.clearTargets = function () { a.targets = [] };
-		this.startDrag = function (b, c, d, e, f) { OAT.GhostDragData.lock || (a.pending = 1, a.originalElement = b, a.callback = d, d = OAT.Dom.create("div", { position: "absolute" }), a.process = c, c = OAT.Dom.position(b), d.style.left = c[0] + "px", d.style.top = c[1] + "px", OAT.Style.opacity(d, 0.5), d.appendChild(b.cloneNode(!0)), d.mouse_x = e, d.mouse_y = f, d.object = a, OAT.GhostDragData.lock = d) }
+		this.startDrag = function (b, c, d, e, f) {
+			var dragdiv;
+			OAT.GhostDragData.lock || (
+				a.pending = 1, 
+				a.originalElement = b, 
+				a.callback = d, 
+				dragdiv = OAT.Dom.create("div", { position: "absolute" }), 
+				a.process = c, 
+				c = OAT.Dom.position(b), 
+				dragdiv.style.position = "absolute",
+				dragdiv.style.left = c[0] + "px", 
+				dragdiv.style.top = c[1] + "px", 
+				OAT.Style.opacity(dragdiv, 0.5), 
+				dragdiv.appendChild(b.cloneNode(!0)), 
+				dragdiv.mouse_x = e, 
+				dragdiv.mouse_y = f, 
+				dragdiv.object = a, 
+				OAT.GhostDragData.lock = dragdiv
+			) 
+		}
 	};
 	if(typeof document != "undefined"){
 	OAT.Dom.attach(document, "mousemove", OAT.GhostDragData.move);
@@ -10674,17 +10708,16 @@ var jsPDF = (function () {
 				exportImg.setAttribute("class", "exportOptionsAnchor");
 			}
 			self.exportPage = OAT.Dom.create("div", { padding: "0px" });
-			
 			OAT.addImageNode(exportImg, "menu", "")
 
 			var checkToClose = function (b) {
-				source = OAT.Event.source(b);
+				OAT.Dom.source = OAT.Event.source(b);
 				var clean = false;
 				var closing = false;
 				var isInside = false
 				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
 					var obj = jQuery(".oat_winrect_container")[i];
-					if (!(source == obj) && !OAT.Dom.isChild(source, obj)) {
+					if (!(OAT.Dom.source == obj) && !OAT.Dom.isChild(OAT.Dom.source, obj)) {
 						clean = true;
 					} else {
 						clean = false; isInside = true; break;
@@ -10955,7 +10988,7 @@ var jsPDF = (function () {
 		
 		
 		this.setDataSynForTable = function(dataSync){
-			_self = self.oat_component.lastCallData.self
+			var _self = self.oat_component.lastCallData.self
 			
 			OAT.ClickHandle(_self, self.oat_component.lastCallData.elemvalue, dataSync)
 		}
@@ -11050,7 +11083,7 @@ var jsPDF = (function () {
 			str = str + "</BODY></HTML>";
 			
 			
-			isSD = OAT.isSD(); 
+			var isSD = OAT.isSD(); 
 			
 
 			if (OAT.isSafari() || (isSD)) { 
@@ -12362,7 +12395,7 @@ var jsPDF = (function () {
 					var cmpar = between[0].split("-");
 					var cmpar2 = between[1].split("-");
 					cmparElements = new Array(3);
-					cmparElements2 = new Array(3);
+					var cmparElements2 = new Array(3);
 					cmparElements[1] = parseInt(cmpar[1]);
 					cmparElements[2] = parseInt(cmpar[2]);
 					cmparElements[0] = parseInt(cmpar[0]);
@@ -14031,7 +14064,7 @@ var jsPDF = (function () {
 			}
 		}
 		
-		isSD = OAT.isSD();
+		var isSD = OAT.isSD();
 		
 		if (OAT.isSafari() || (isSD)) { //for safari
 			doc.output('dataurlnewwindow');
@@ -14143,7 +14176,7 @@ var jsPDF = (function () {
 
 
 
-		dataTable = [];
+		var dataTable = [];
 
 		var rowsToAdd = jQuery("#" + _self.grid.controlName + " tr").length;
 		if ((serverPagination != undefined) && (serverPagination)) {
@@ -14153,7 +14186,7 @@ var jsPDF = (function () {
 		var hiddenColumns = []
 
 		for (var i = 0; i < rowsToAdd; i++) {//for every row
-			dataRow = [];
+			var dataRow = [];
 
 			var tRow = jQuery("#" + _self.grid.controlName + " tr")[i];
 			for (var j = 0; j < tRow.children.length; j++) {//for every cell in the row
@@ -14223,7 +14256,7 @@ var jsPDF = (function () {
 
 		if ((serverPagination != undefined) && (serverPagination)) {
 			for (var i = 0; i < recordData.length; i++) {
-				dataRow = [];
+				var dataRow = [];
 				for (var j = 0; j < recordData[i].length; j++) {
 					if (hiddenColumns.indexOf(j) == -1) {
 						var childText = OAT.ApplyPictureValue(recordData[i][j], "", OAT_JS.grid.gridData[UcId].rowsMetadata.defaultPicture, OAT_JS.grid.gridData[UcId].rowsMetadata.forPivotCustomPicture[j]) /* Apply Picture */
@@ -14386,7 +14419,7 @@ var jsPDF = (function () {
 			}]
 		});
 		
-		isSD = OAT.isSD();
+		var isSD = OAT.isSD();
 				
 		if (OAT.isSafari() || (isSD)){ //for safari
 			window.location = sheet.href();
@@ -14406,7 +14439,7 @@ var jsPDF = (function () {
 	}
 
 	OAT.ExportToXML = function (self, fileName) {
-		var hiddenColumns = [];
+		var hiddenColumns = [], data;
 		for (var i = 0; i < 1; i++) {
 			var tRow = jQuery("#" + self.grid.controlName + " tr")[i];
 			for (var j = 0; j < tRow.children.length; j++) {
@@ -14751,6 +14784,7 @@ if (typeof exports != "undefined") {
 	exports.setDataSynForTable = void 0;
 	exports.getDataXML = void 0;
 	exports.getFilteredDataXML = void 0;
+	
 }
 	
 	function renderJSPivot(pivotParams, QueryViewerCollection, translations, qViewer) {
@@ -14934,7 +14968,7 @@ if (typeof exports != "undefined") {
 
 //EVENTS
 	function getDataXML(oat_element, serverData){
-		result = oat_element.getDataXML(serverData)
+		var result = oat_element.getDataXML(serverData)
 		return result;
 	}
 
@@ -14943,7 +14977,7 @@ if (typeof exports != "undefined") {
 }
 
 	function getFilteredDataXML(oat_element, serverData){
-		result = oat_element.getFilteredDataXML(serverData)
+		var result = oat_element.getFilteredDataXML(serverData)
 		return result;
 	}
 
@@ -14959,7 +14993,7 @@ if (typeof exports != "undefined") {
 		var page = pivotParams.page
 		var content = pivotParams.content
 		var metadata = pivotParams.metadata
-		this.dataString = pivotParams.data
+		renderJSPivotInter.dataString = pivotParams.data
 		var queryName = pivotParams.ObjectName
 		var controlName = pivotParams.ControlName
 		var pageSize = parseInt(pivotParams.PageSize)
@@ -14967,16 +15001,16 @@ if (typeof exports != "undefined") {
 		var DisableColumnSort = pivotParams.DisableColumnSort
 		var UcId = pivotParams.UcId
 		var rememberLayout = pivotParams.RememberLayout
-		this.pivotParams = pivotParams
-		this.serverPaging = pivotParams.ServerPaging
-		this.previousDataFieldOrder = pivotParams.previousDataFieldOrder;
-		this.previousOrderType = pivotParams.orderType;
-		this.previousFilters = (state) ? state.filters : undefined;
-		this.previousColumnVisible = (state) ? state.columnVisible : undefined; this.initialColumnVisible = []
-		this.previousState = state
-		this.customFilterInfo = pivotParams.customFilterInfo
-		this.gridCacheSize = pivotParams.ServerPagingCacheSize;
-		this.hasShowValuesAs = (pivotParams.metadata.indexOf("showValuesAs") > 0)
+		renderJSPivotInter.pivotParams = pivotParams
+		renderJSPivotInter.serverPaging = pivotParams.ServerPaging
+		renderJSPivotInter.previousDataFieldOrder = pivotParams.previousDataFieldOrder;
+		renderJSPivotInter.previousOrderType = pivotParams.orderType;
+		renderJSPivotInter.previousFilters = (state) ? state.filters : undefined;
+		renderJSPivotInter.previousColumnVisible = (state) ? state.columnVisible : undefined; renderJSPivotInter.initialColumnVisible = []
+		renderJSPivotInter.previousState = state
+		renderJSPivotInter.customFilterInfo = pivotParams.customFilterInfo
+		renderJSPivotInter.gridCacheSize = pivotParams.ServerPagingCacheSize;
+		renderJSPivotInter.hasShowValuesAs = (pivotParams.metadata.indexOf("showValuesAs") > 0)
 
 		//replace OLAPMeasure for OLAPDimensions
 		if (pivotParams.RealType == "Table"){
@@ -15055,15 +15089,14 @@ if (typeof exports != "undefined") {
 		} catch (ERROR) {
 
 		}
-
 		var fullXmlData = jQuery.parseXML(metadata); //metada for formulas and hide columns
-		this.InitMetadata = {};
-		this.InitMetadata.Metadata = metadata
-		this.InitMetadata.DataString = dataString;
-		this.InitMetadata.Dimensions = []
-		this.InitMetadata.Conditions = []
-		this.InitMetadata.DataFields = []
-		this.InitMetadata.RowsPerPage = pageSize
+		renderJSPivotInter.InitMetadata = {};
+		renderJSPivotInter.InitMetadata.Metadata = metadata
+		renderJSPivotInter.InitMetadata.DataString = renderJSPivotInter.dataString;
+		renderJSPivotInter.InitMetadata.Dimensions = []
+		renderJSPivotInter.InitMetadata.Conditions = []
+		renderJSPivotInter.InitMetadata.DataFields = []
+		renderJSPivotInter.InitMetadata.RowsPerPage = pageSize
 		var initColumns = fullXmlData.getElementsByTagName("OLAPDimension");
 		for (var i = 0; i < initColumns.length; i++) {
 			var objectColumn = {}
@@ -15094,11 +15127,11 @@ if (typeof exports != "undefined") {
 			}
 			
 			objectColumn.validPosition = validPositions
-			this.InitMetadata.Dimensions.push(objectColumn)
-			this.InitMetadata.Conditions.push("")
-			this.InitMetadata.DataFields.push(objectColumn.dataField)
+			renderJSPivotInter.InitMetadata.Dimensions.push(objectColumn)
+			renderJSPivotInter.InitMetadata.Conditions.push("")
+			renderJSPivotInter.InitMetadata.DataFields.push(objectColumn.dataField)
 		}
-		this.InitMetadata.Measures = []
+		renderJSPivotInter.InitMetadata.Measures = []
 		var initMeasures = fullXmlData.getElementsByTagName("OLAPMeasure");
 		for (var i = 0; i < initMeasures.length; i++) {
 			var measureObject = {}
@@ -15118,12 +15151,12 @@ if (typeof exports != "undefined") {
 			}
 			
 			//measureObject.Visible = measureObject.defaultPosition != "hidden"
-			this.InitMetadata.Measures.push(measureObject)
+			renderJSPivotInter.InitMetadata.Measures.push(measureObject)
 		}
-		this.InitMetadata.DimensionPosition = []
+		renderJSPivotInter.InitMetadata.DimensionPosition = []
 
 		//parse metadata
-		this.HideDataFilds = []
+		renderJSPivotInter.HideDataFilds = []
 
 		var result;
 		var previousState = OATgetState(queryName, UcId.replace(/,/g, "").replace(/\./g, ""))
@@ -15141,28 +15174,28 @@ if (typeof exports != "undefined") {
 				}
 			}
 
-			this.InitMetadata.Measures = previousState.Measures
-			this.InitMetadata.Dimensions = previousState.Dimensions
-			this.InitMetadata.DataFields = previousState.DataFields
-			this.InitMetadata.DimensionPosition = previousState.DimensionPosition
+			renderJSPivotInter.InitMetadata.Measures = previousState.Measures
+			renderJSPivotInter.InitMetadata.Dimensions = previousState.Dimensions
+			renderJSPivotInter.InitMetadata.DataFields = previousState.DataFields
+			renderJSPivotInter.InitMetadata.DimensionPosition = previousState.DimensionPosition
 
 			if (pivotParams.ServerPagingPivot) {
-				this.InitMetadata.Conditions = previousState.Conditions
+				renderJSPivotInter.InitMetadata.Conditions = previousState.Conditions
 			}
 
 			result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot, translations)
 		} else {
 			var hideDimension = [];
-			for (var i = 0; i < this.InitMetadata.Dimensions.length; i++) {
-				if (!this.InitMetadata.Dimensions[i].Visible) {
-					hideDimension.push(this.InitMetadata.Dimensions[i].dataField)
+			for (var i = 0; i < renderJSPivotInter.InitMetadata.Dimensions.length; i++) {
+				if (!renderJSPivotInter.InitMetadata.Dimensions[i].Visible) {
+					hideDimension.push(renderJSPivotInter.InitMetadata.Dimensions[i].dataField)
 				}
 			}
 
 			var hideMeasures = [];
-			for (var i = 0; i < this.InitMetadata.Measures.length; i++) {
-				if (!this.InitMetadata.Measures[i].Visible) {
-					hideMeasures.push(this.InitMetadata.Measures[i].dataField)
+			for (var i = 0; i < renderJSPivotInter.InitMetadata.Measures.length; i++) {
+				if (!renderJSPivotInter.InitMetadata.Measures[i].Visible) {
+					hideMeasures.push(renderJSPivotInter.InitMetadata.Measures[i].dataField)
 				}
 			}
 			if ((pivotParams.RealType == "Table")) {
@@ -15172,40 +15205,40 @@ if (typeof exports != "undefined") {
 			}
 		}
 		
-		this.InitMetadata.GrandTotalVisibility = { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns }
+		renderJSPivotInter.InitMetadata.GrandTotalVisibility = { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns }
 		
 
-		metadata = result[0]; var orderFildsHidden = result[1]; var nameFildsHidden = result[3]; this.HideDataFilds = result[2];
+		metadata = result[0]; var orderFildsHidden = result[1]; var nameFildsHidden = result[3]; renderJSPivotInter.HideDataFilds = result[2];
 
 
 		var xmlDoc = jQuery.parseXML(metadata);
 
 		var defaultPicture = xmlDoc.childNodes[0];
 
-		this.IdForQueryViewerCollection = UcId;
+		renderJSPivotInter.IdForQueryViewerCollection = UcId;
 		UcId = UcId.replace(/,/g, "").replace(/\./g, "")
-		this.UcId = UcId;
-		this.pivotDiv = container.id;
-		this.query = queryName;
-		this.control = controlName;
-		this.pageSize = pageSize;
-		this.autoResize = autoResize;
-		this.disableColumnSort = DisableColumnSort;
-		this.header = [];
-		this.data = [];
-		this.columnNumbers = [];
-		this.rowNumbers = [];
-		this.filterNumbers = [];
-		this.cols = 0;
-		this.conditionalFormats = [];
-		this.conditionalFormatsColumns = []; //conditional format for columns - needed?
-		this.formatValues = [];
-		this.formatValuesMeasures = [];
+		renderJSPivotInter.UcId = UcId;
+		renderJSPivotInter.pivotDiv = container.id;
+		renderJSPivotInter.query = queryName;
+		renderJSPivotInter.control = controlName;
+		renderJSPivotInter.pageSize = pageSize;
+		renderJSPivotInter.autoResize = autoResize;
+		renderJSPivotInter.disableColumnSort = DisableColumnSort;
+		renderJSPivotInter.header = [];
+		renderJSPivotInter.data = [];
+		renderJSPivotInter.columnNumbers = [];
+		renderJSPivotInter.rowNumbers = [];
+		renderJSPivotInter.filterNumbers = [];
+		renderJSPivotInter.cols = 0;
+		renderJSPivotInter.conditionalFormats = [];
+		renderJSPivotInter.conditionalFormatsColumns = []; //conditional format for columns - needed?
+		renderJSPivotInter.formatValues = [];
+		renderJSPivotInter.formatValuesMeasures = [];
 
-		this.forPivotFormatValues = [];
-		this.forPivotFormats = [];
-		this.forPivotCustomPicture = [];
-		this.forPivotCustomFormat = [];
+		renderJSPivotInter.forPivotFormatValues = [];
+		renderJSPivotInter.forPivotFormats = [];
+		renderJSPivotInter.forPivotCustomPicture = [];
+		renderJSPivotInter.forPivotCustomFormat = [];
 
 
 		//Columns and measures names
@@ -15213,7 +15246,8 @@ if (typeof exports != "undefined") {
 		var columnNames = [];
 		var rowNames = [];
 		var filterNames = [];
-		this.measures = xmlDoc.getElementsByTagName("OLAPMeasure");
+		renderJSPivotInter.measures = xmlDoc.getElementsByTagName("OLAPMeasure");
+
 		var columnsDataType = [];
 		var measureNames = []; var measuresNamesWidthHidden = [];
 		var j = 0;
@@ -15229,9 +15263,9 @@ if (typeof exports != "undefined") {
 
 		if ((pivotParams.RealType == "Table")) {
 			for (var i = 0; i < columns.length; i++) {
-				this.initialColumnVisible[i] = true
+				renderJSPivotInter.initialColumnVisible[i] = true
 				if (columns[i].attributes.getNamedItem("visible").nodeValue != "Yes") {
-					this.initialColumnVisible[i] = false
+					renderJSPivotInter.initialColumnVisible[i] = false
 				}
 			}
 		}
@@ -15240,7 +15274,7 @@ if (typeof exports != "undefined") {
 		for (var i = 0; i < columns.length; i++) {
 
 			if ((columns[i].attributes.getNamedItem("axis").nodeValue == "Rows")
-				|| (pivotParams.RealType == "Table") || (this.InitMetadata.Dimensions[i].validPosition == "")) {
+				|| (pivotParams.RealType == "Table") || (renderJSPivotInter.InitMetadata.Dimensions[i].validPosition == "")) {
 				columnNames[j] = columns[i].attributes.getNamedItem("displayName").nodeValue;
 				preHeader[i] = columnNames[j];
 				j++;
@@ -15256,9 +15290,9 @@ if (typeof exports != "undefined") {
 				k++;
 			}
 			if (pivotParams.ServerPagingPivot && (columns[i].attributes.getNamedItem("axis").nodeValue == "")) {
-				for (var t = 0; t < this.InitMetadata.Dimensions.length; t++) {
-					if (this.InitMetadata.Dimensions[t].dataField == columns[i].attributes.getNamedItem("dataField").nodeValue) {
-						if (this.InitMetadata.Dimensions[t].Visible) {
+				for (var t = 0; t < renderJSPivotInter.InitMetadata.Dimensions.length; t++) {
+					if (renderJSPivotInter.InitMetadata.Dimensions[t].dataField == columns[i].attributes.getNamedItem("dataField").nodeValue) {
+						if (renderJSPivotInter.InitMetadata.Dimensions[t].Visible) {
 							columnNames[j] = columns[i].attributes.getNamedItem("displayName").nodeValue;
 							j++;
 							preHeader[i] = columns[i].attributes.getNamedItem("displayName").nodeValue;
@@ -15281,7 +15315,7 @@ if (typeof exports != "undefined") {
 									var crude = columns[i].childNodes[m].childNodes[n].textContent;
 									value.value = crude.replace(/^\s+|\s+$/g, '');
 									value.columnNumber = i;
-									this.formatValues.push(value);
+									renderJSPivotInter.formatValues.push(value);
 								}
 							}
 						}
@@ -15303,7 +15337,7 @@ if (typeof exports != "undefined") {
 										format.value2 = columns[i].childNodes[m].childNodes[n].attributes.getNamedItem("value2").nodeValue;
 									}
 									format.columnNumber = i;
-									this.conditionalFormatsColumns.push(format);
+									renderJSPivotInter.conditionalFormatsColumns.push(format);
 								}
 							}
 						}
@@ -15325,30 +15359,30 @@ if (typeof exports != "undefined") {
 				}
 
 			}
-			this.forPivotCustomPicture.push(columns[i].attributes.getNamedItem("picture").nodeValue);
-			this.forPivotCustomFormat.push(columns[i].attributes.getNamedItem("format").nodeValue);
+			renderJSPivotInter.forPivotCustomPicture.push(columns[i].attributes.getNamedItem("picture").nodeValue);
+			renderJSPivotInter.forPivotCustomFormat.push(columns[i].attributes.getNamedItem("format").nodeValue);
 			orderFilds.push(columns[i].attributes.getNamedItem("dataField").nodeValue);
 
 		}
 
 		//var measures;
-		for (var i = 0; i < this.measures.length; i++) {
+		for (var i = 0; i < renderJSPivotInter.measures.length; i++) {
 
-			measureNames[i] = this.measures[i].attributes.getNamedItem("displayName").nodeValue;
+			measureNames[i] = renderJSPivotInter.measures[i].attributes.getNamedItem("displayName").nodeValue;
 			//manage format values
-			if (measures[i].childNodes.length > 0) {
-				if (measures[i].childNodes != null) {
-					for (var m = 0; m < measures[i].childNodes.length; m++) {
-						if (measures[i].childNodes[m].localName == "formatValues") {
-							for (var n = 0; n < measures[i].childNodes[m].childNodes.length; n++) {
-								if (measures[i].childNodes[m].childNodes[n].localName == "value") {
+			if (renderJSPivotInter.measures[i].childNodes.length > 0) {
+				if (renderJSPivotInter.measures[i].childNodes != null) {
+					for (var m = 0; m < renderJSPivotInter.measures[i].childNodes.length; m++) {
+						if (renderJSPivotInter.measures[i].childNodes[m].localName == "formatValues") {
+							for (var n = 0; n < renderJSPivotInter.measures[i].childNodes[m].childNodes.length; n++) {
+								if (renderJSPivotInter.measures[i].childNodes[m].childNodes[n].localName == "value") {
 									var value = {};
-									value.format = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("format").nodeValue;
-									value.recursive = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("recursive").nodeValue;
-									var crude = measures[i].childNodes[m].childNodes[n].textContent;
+									value.format = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("format").nodeValue;
+									value.recursive = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("recursive").nodeValue;
+									var crude = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].textContent;
 									value.value = crude.replace(/^\s+|\s+$/g, '');
 									value.columnNumber = i;
-									this.formatValuesMeasures.push(value);
+									formatValuesMeasures.push(value);
 								}
 							}
 						}
@@ -15357,22 +15391,22 @@ if (typeof exports != "undefined") {
 				}
 			}
 			//manage conditional formats
-			if (measures[i].childNodes.length > 0) {
-				if (measures[i].childNodes != null) {
-					for (var m = 0; m < measures[i].childNodes.length; m++) {
-						if (measures[i].childNodes[m].localName == "conditionalFormats") {
-							for (var n = 0; n < measures[i].childNodes[m].childNodes.length; n++) {
-								if (measures[i].childNodes[m].childNodes[n].localName == "rule") {
+			if (renderJSPivotInter.measures[i].childNodes.length > 0) {
+				if (renderJSPivotInter.measures[i].childNodes != null) {
+					for (var m = 0; m < renderJSPivotInter.measures[i].childNodes.length; m++) {
+						if (renderJSPivotInter.measures[i].childNodes[m].localName == "conditionalFormats") {
+							for (var n = 0; n < renderJSPivotInter.measures[i].childNodes[m].childNodes.length; n++) {
+								if (renderJSPivotInter.measures[i].childNodes[m].childNodes[n].localName == "rule") {
 									var format = {};
-									format.format = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("format").nodeValue;
-									format.operation1 = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op1").nodeValue;
-									format.value1 = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("value1").nodeValue;
-									if (measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op2") != null) {
-										format.operation2 = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op2").nodeValue;
-										format.value2 = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("value2").nodeValue;
+									format.format = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("format").nodeValue;
+									format.operation1 = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op1").nodeValue;
+									format.value1 = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("value1").nodeValue;
+									if (renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op2") != null) {
+										format.operation2 = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op2").nodeValue;
+										format.value2 = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("value2").nodeValue;
 									}
 									format.columnNumber = i; //+ columns.length; Only the measure number
-									this.conditionalFormats.push(format);
+									conditionalFormats.push(format);
 								}
 							}
 						}
@@ -15381,46 +15415,42 @@ if (typeof exports != "undefined") {
 			}
 
 			//manage pictures
-			if (measures[i].attributes.getNamedItem("picture").nodeValue != "") {
-				if (measures[i].attributes.getNamedItem("dataType").nodeValue == "date") {
-					datePictures.push(measures[i].attributes.getNamedItem("picture").nodeValue);
-					dateFields.push(measures[i].attributes.getNamedItem("dataField").nodeValue);
+			if (renderJSPivotInter.measures[i].attributes.getNamedItem("picture").nodeValue != "") {
+				if (renderJSPivotInter.measures[i].attributes.getNamedItem("dataType").nodeValue == "date") {
+					datePictures.push(renderJSPivotInter.measures[i].attributes.getNamedItem("picture").nodeValue);
+					dateFields.push(renderJSPivotInter.measures[i].attributes.getNamedItem("dataField").nodeValue);
 				}
-				if (measures[i].attributes.getNamedItem("dataType").nodeValue == "integer" || measures[i].attributes.getNamedItem("dataType").nodeValue == "real") {
-					intPictures.push(measures[i].attributes.getNamedItem("picture").nodeValue);
-					intFields.push(measures[i].attributes.getNamedItem("dataField").nodeValue);/* */
+				if (renderJSPivotInter.measures[i].attributes.getNamedItem("dataType").nodeValue == "integer" || renderJSPivotInter.measures[i].attributes.getNamedItem("dataType").nodeValue == "real") {
+					intPictures.push(renderJSPivotInter.measures[i].attributes.getNamedItem("picture").nodeValue);
+					intFields.push(renderJSPivotInter.measures[i].attributes.getNamedItem("dataField").nodeValue);/* */
 				}
 			}
 
 			//manage formula
-			if ((measures[i].attributes.getNamedItem("formula") != undefined) && (measures[i].attributes.getNamedItem("formula").nodeValue != "")) {
-				formulaInfo.measureFormula.push({ hasFormula: true, textFormula: measures[i].attributes.getNamedItem("formula").nodeValue })
+			if ((renderJSPivotInter.measures[i].attributes.getNamedItem("formula") != undefined) && (renderJSPivotInter.measures[i].attributes.getNamedItem("formula").nodeValue != "")) {
+				formulaInfo.measureFormula.push({ hasFormula: true, textFormula: renderJSPivotInter.measures[i].attributes.getNamedItem("formula").nodeValue })
 			} else {
 				formulaInfo.measureFormula.push({ hasFormula: false })
 			}
 
-			this.forPivotCustomPicture.push(measures[i].attributes.getNamedItem("picture").nodeValue);
-			orderFilds.push(measures[i].attributes.getNamedItem("dataField").nodeValue);
+			renderJSPivotInter.forPivotCustomPicture.push(renderJSPivotInter.measures[i].attributes.getNamedItem("picture").nodeValue);
+			orderFilds.push(renderJSPivotInter.measures[i].attributes.getNamedItem("dataField").nodeValue);
 		}
 
 
-		this.header = preHeader.concat(measureNames);
+		renderJSPivotInter.header = preHeader.concat(measureNames);
 
-		this.getDataFromXML = function (dataString, tableOrderField){
+		renderJSPivotInter.getDataFromXML = function (dataString, tableOrderField){
 			var stringRecord = dataString.split("<Record>")
 
 			//get server pagination info
-			if (this.serverPaging) {
-				this.ServerRecordCount = parseToIntRegisterValue(stringRecord[0], "RecordCount")
-				this.ServerPageCount = parseToIntRegisterValue(stringRecord[0], "PageCount")
-				this.ServerPageNumber = parseToIntRegisterValue(stringRecord[0], "PageNumber")
+			if (renderJSPivotInter.serverPaging) {
+				renderJSPivotInter.ServerRecordCount = parseToIntRegisterValue(stringRecord[0], "RecordCount")
+				renderJSPivotInter.ServerPageCount = parseToIntRegisterValue(stringRecord[0], "PageCount")
+				renderJSPivotInter.ServerPageNumber = parseToIntRegisterValue(stringRecord[0], "PageNumber")
 			}
 			//get records of the table
-			/*var filds = orderFilds;
-			if (this.TableOrderFilds != undefined) {
-				filds = this.TableOrderFilds;
-			}*/
-			filds = tableOrderField;
+			var filds = tableOrderField;
 			
 			for (var i = 1; i < stringRecord.length; i++) {
 				var recordData = [];
@@ -15442,42 +15472,43 @@ if (typeof exports != "undefined") {
 
 					}
 				}
-				this.data.push(recordData);
+				renderJSPivotInter.data.push(recordData);
 
 				var pos_init = filds.length;
-				for (var j = 0; j < this.HideDataFilds.length; j++) {
+				for (var j = 0; j < renderJSPivotInter.HideDataFilds.length; j++) {
 					fullRecordData[pos_init + j] = undefined
-					var dt = stringRecord[i].split("<" + this.HideDataFilds[j] + ">")
+					var dt = stringRecord[i].split("<" + renderJSPivotInter.HideDataFilds[j] + ">")
 					if (dt.length > 1) {
-						var at = dt[1].split("</" + this.HideDataFilds[j] + ">")
+						var at = dt[1].split("</" + renderJSPivotInter.HideDataFilds[j] + ">")
 						fullRecordData[pos_init + j] = at[0]
 					}
 				}
-				this.fullRecord.push(fullRecordData);
-				if (fullRecordData.length > this.maxLengthRecord) this.maxLengthRecord = fullRecordData.length;
+				renderJSPivotInter.fullRecord.push(fullRecordData);
+				if (fullRecordData.length > renderJSPivotInter.maxLengthRecord) renderJSPivotInter.maxLengthRecord = fullRecordData.length;
 			}
 		}
 
-		this.maxLengthRecord = 0;
-		this.data = []
-		this.fullRecord = []  //array to store extra data for formulas
-		this.orderFildsHidden = orderFildsHidden
-		this.TableOrderFilds = orderFilds;
+		renderJSPivotInter.maxLengthRecord = 0;
+		renderJSPivotInter.data = []
+		renderJSPivotInter.fullRecord = []  //array to store extra data for formulas
+		renderJSPivotInter.orderFildsHidden = orderFildsHidden
+		renderJSPivotInter.TableOrderFilds = orderFilds;
 		if (!pivotParams.ServerPagingPivot) {
-			this.getDataFromXML(pivotParams.data, this.TableOrderFilds);
+			renderJSPivotInter.getDataFromXML(pivotParams.data, renderJSPivotInter.TableOrderFilds);
 		} else {
-			ShowMeasuresAsRows = ((ShowMeasuresAsRows) && (measures.length > 1))
-			this.pagingData = {}//OATGetDataFromXMLForPivot(this.dataString, ShowMeasuresAsRows);
-			this.pagingData.dataFields = orderFilds;
+			
+			ShowMeasuresAsRows = ((ShowMeasuresAsRows) && (renderJSPivotInter.measures.length > 1))
+			renderJSPivotInter.pagingData = {}//OATGetDataFromXMLForPivot(renderJSPivotInter.dataString, ShowMeasuresAsRows);
+			renderJSPivotInter.pagingData.dataFields = orderFilds;
 		}
 
 		var furmulaIndex = {}
 		for (var j = 0; j < orderFildsHidden.length; j++) {
 			furmulaIndex[orderFildsHidden[j]] = orderFilds.length + j
 		}
-		this.orderFildsHidden = nameFildsHidden
+		renderJSPivotInter.orderFildsHidden = nameFildsHidden
 		formulaInfo.itemPosition = furmulaIndex
-		formulaInfo.recordDataLength = this.maxLengthRecord;
+		formulaInfo.recordDataLength = renderJSPivotInter.maxLengthRecord;
 		formulaInfo.cantFormulaMeasures = 0;
 
 		for (var n = 0; n < formulaInfo.measureFormula.length; n++) {
@@ -15529,16 +15560,16 @@ if (typeof exports != "undefined") {
 		var m = 0;
 		var d = 0;
 		for (var i = 0; i < preHeader.length; i++) {
-			if (this.contains(columnNames, preHeader[i]) != -1) {
-				this.columnNumbers[l] = i;
+			if (contains2(columnNames, preHeader[i]) != -1) {
+				renderJSPivotInter.columnNumbers[l] = i;
 				l++;
 			}
-			if (this.contains(rowNames, preHeader[i]) != -1) {
-				this.rowNumbers[m] = i;
+			if (contains2(rowNames, preHeader[i]) != -1) {
+				renderJSPivotInter.rowNumbers[m] = i;
 				m++;
 			}
-			if (this.contains(filterNames, preHeader[i]) != -1) {
-				this.filterNumbers[d] = i;
+			if (contains2(filterNames, preHeader[i]) != -1) {
+				renderJSPivotInter.filterNumbers[d] = i;
 				d++;
 			}
 		}
@@ -15565,9 +15596,9 @@ if (typeof exports != "undefined") {
 		}
 
 		var relativePath = urlRelative.substring(0, urlRelative.indexOf("QueryViewer/oatPivot"));
-		this.relativePath = relativePath
+		renderJSPivotInter.relativePath = relativePath
 	
-		this.fireOnPageChangeTable = function(UcId, move){
+		renderJSPivotInter.fireOnPageChangeTable = function(UcId, move){
 			setTimeout( function() {
 				var paramobj = {"QueryviewerId": UcId, "Navigation": move};
 				var evt = document.createEvent("Events")
@@ -15580,83 +15611,83 @@ if (typeof exports != "undefined") {
 		var pivot;
 
 		queryName = queryName.replace(/\./g, "")
-		this.query = queryName
-		this.translations = translations
+		renderJSPivotInter.query = queryName
+		renderJSPivotInter.translations = translations
 		if (type == "PivotTable") {
-			pivot = OAT_JS.pivot.cb(this, this.pivotDiv, page, content, defaultPicture, QueryViewerCollection, colms,
-				this.formatValues, this.conditionalFormatsColumns, this.formatValuesMeasures, this.autoResize, this.disableColumnSort, this.UcId, this.IdForQueryViewerCollection,
-				rememberLayout, ShowMeasuresAsRows, formulaInfo, this.fullRecord,
-				pivotParams.ServerPagingPivot, this.pagingData, this.HideDataFilds, this.orderFildsHidden, this.InitMetadata, this.relativePath,
-			    this.pivotParams );
+			pivot = OAT_JS.pivot.cb(renderJSPivotInter, renderJSPivotInter.pivotDiv, page, content, defaultPicture, QueryViewerCollection, colms,
+				renderJSPivotInter.formatValues, renderJSPivotInter.conditionalFormatsColumns, renderJSPivotInter.formatValuesMeasures, renderJSPivotInter.autoResize, renderJSPivotInter.disableColumnSort, renderJSPivotInter.UcId, renderJSPivotInter.IdForQueryViewerCollection,
+				rememberLayout, ShowMeasuresAsRows, formulaInfo, renderJSPivotInter.fullRecord,
+				pivotParams.ServerPagingPivot, renderJSPivotInter.pagingData, renderJSPivotInter.HideDataFilds, renderJSPivotInter.orderFildsHidden, renderJSPivotInter.InitMetadata, renderJSPivotInter.relativePath,
+			    renderJSPivotInter.pivotParams );
 			if (pivot == 'error') {
 				return;
 			}
 		} else {
 			if (type == "Table") {
-				pivot = OAT_JS.grid.cb(this.pivotDiv, this.UcId + '_' + queryName, columnsDataType, defaultPicture, this.forPivotCustomPicture, this.conditionalFormatsColumns,
-					this.formatValues, this.forPivotCustomFormat, colms, columns, QueryViewerCollection, this.pageSize, this.disableColumnSort, this.UcId, this.IdForQueryViewerCollection,
-					rememberLayout, this);
+				pivot = OAT_JS.grid.cb(renderJSPivotInter.pivotDiv, renderJSPivotInter.UcId + '_' + queryName, columnsDataType, defaultPicture, renderJSPivotInter.forPivotCustomPicture, renderJSPivotInter.conditionalFormatsColumns,
+					renderJSPivotInter.formatValues, renderJSPivotInter.forPivotCustomFormat, colms, columns, QueryViewerCollection, renderJSPivotInter.pageSize, renderJSPivotInter.disableColumnSort, renderJSPivotInter.UcId, renderJSPivotInter.IdForQueryViewerCollection,
+					rememberLayout, renderJSPivotInter);
 			}
 		}
 		//add pagination functionality
 		if (type == "Table") {
-			this.pageSize = (this.previousState) ? this.previousState.pageSize : pageSize;
+			renderJSPivotInter.pageSize = (renderJSPivotInter.previousState) ? renderJSPivotInter.previousState.pageSize : pageSize;
 
-			var rowNum = this.pageSize;
+			var rowNum = renderJSPivotInter.pageSize;
 			if ((pivot.rowsPerPage != undefined) && (pivot.rowsPerPage != "")) {
 				rowNum = pivot.rowsPerPage;
 			}
 
-			if (QueryViewerCollection[this.UcId]._ControlRenderedTo) {
-				jQuery("#"+this.UcId + "_" + this.query + "_tablePagination").remove(); //jQuery(".pivot_pag_div").remove()
+			if (QueryViewerCollection[renderJSPivotInter.UcId]._ControlRenderedTo) {
+				jQuery("#"+renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").remove(); //jQuery(".pivot_pag_div").remove()
 			}
 
-			if (this.pageSize) {
+			if (renderJSPivotInter.pageSize) {
 				
 					var options = {
-						currPage: this.ServerPageNumber,
-						ignoreRows: jQuery('tbody tr[visibQ=tf]', jQuery("#" + this.UcId + "_" + this.query)),
-						optionsForRows: OAT.AddItemToList([10, 15, 20], this.InitMetadata.RowsPerPage),
+						currPage: renderJSPivotInter.ServerPageNumber,
+						ignoreRows: jQuery('tbody tr[visibQ=tf]', jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)),
+						optionsForRows: OAT.AddItemToList([10, 15, 20], renderJSPivotInter.InitMetadata.RowsPerPage),
 						rowsPerPage: rowNum != 'undefined' ? rowNum : 10,
 						jstype: "table",
 						topNav: false,
-						controlName: this.UcId + "_" + this.query,
-						cantPages: this.ServerPageCount,
-						controlUcId: this.UcId,
+						controlName: renderJSPivotInter.UcId + "_" + renderJSPivotInter.query,
+						cantPages: renderJSPivotInter.ServerPageCount,
+						controlUcId: renderJSPivotInter.UcId,
 						translations: translations,
-						control: this
+						control: renderJSPivotInter
 					}
-					OAT.partialTablePagination(jQuery("#" + this.UcId + "_" + this.query),options);
-					var wd2 = jQuery("#" + this.UcId + "_" + this.query)[0].clientWidth - 1;
-					jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ width: wd2 + "px" });
-					if (jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css('display') === 'none') {
-						jQuery("#" + this.UcId + "_" + this.query).css({ marginBottom: "0px" });
+					OAT.partialTablePagination(jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query),options);
+					var wd2 = jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].clientWidth - 1;
+					jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ width: wd2 + "px" });
+					if (jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css('display') === 'none') {
+						jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css({ marginBottom: "0px" });
 					} else {
-						jQuery("#" + this.UcId + "_" + this.query).css("margin-bottom", "0px");
+						jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css("margin-bottom", "0px");
 					}
 
-					if ((jQuery("#" + this.UcId + "_" + this.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + this.UcId + "_" + this.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + this.UcId + "_" + this.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
-						jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ marginBottom: "0px" })
+					if ((jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
+						jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ marginBottom: "0px" })
 					}
-					var wd = jQuery("#" + this.UcId + "_" + this.query)[0].offsetWidth - 4;
-					jQuery("#" + this.UcId + "_" + this.query + "_grid_top_div").css({ width: wd + "px" });
+					var wd = jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
+					jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
 
-					if ((this.serverPaging) && ((this.pageSize == 10) || (this.ServerRecordCount < 10))) {
-						if (this.ServerPageCount <= 1) { //hide pagiantion
-							jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ display: "none" });
+					if ((renderJSPivotInter.serverPaging) && ((renderJSPivotInter.pageSize == 10) || (renderJSPivotInter.ServerRecordCount < 10))) {
+						if (renderJSPivotInter.ServerPageCount <= 1) { //hide pagiantion
+							jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ display: "none" });
 						}
 					}
 				
 
 			}
-			var wd = jQuery("#" + this.UcId + "_" + this.query)[0].offsetWidth - 4;
+			var wd = jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
 			try {
 				if (jQuery("#MAINFORM")[0].className.indexOf("form-horizontal") > -1) {
 					wd = wd + 4;
 				}
 			} catch (Error) {
 			}
-			jQuery("#" + this.UcId + "_" + this.query + "_grid_top_div").css({ width: wd + "px" });
+			jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
 
 			//set interval for handler values infinite scroll
 			if (self.serverPaging) {
@@ -15683,15 +15714,15 @@ if (typeof exports != "undefined") {
 		}
 
 		if (!pivotParams.ServerPagingPivot) {
-			if (this.autoResize) {
-				jQuery("#" + this.UcId + "_" + this.query).css({ minWidth: "10px" });
+			if (renderJSPivotInter.autoResize) {
+				jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css({ minWidth: "10px" });
 			}
 		}
 
-		this.getDataForTable = function (UcId, pageNumber, rowsPerPage, recalculateCantPages, DataFieldOrder, OrderType, DataFieldFilter, DataFieldBlackList, restoreDefaultView, fromExternalRefresh) {
+		renderJSPivotInter.getDataForTable = function (UcId, pageNumber, rowsPerPage, recalculateCantPages, DataFieldOrder, OrderType, DataFieldFilter, DataFieldBlackList, restoreDefaultView, fromExternalRefresh) {
 			var layoutChanged = false;
 			if ((recalculateCantPages) || (DataFieldOrder != "") || (DataFieldFilter != "")) {
-				OAT_JS.grid.cleanCache(this, UcId);
+				OAT_JS.grid.cleanCache(renderJSPivotInter, UcId);
 				layoutChanged = true;
 			}
 			if (DataFieldOrder != "") OAT_JS.grid.gridData[UcId].dataFieldOrder = DataFieldOrder;
@@ -15710,20 +15741,20 @@ if (typeof exports != "undefined") {
 			if (!OAT_JS.grid.pageInCache(UcId, pageNumber)) {
 				
 				OAT_JS.grid.lastCallToQueryViewer = "getDataForTable"
-				OAT_JS.grid.lastCallData = { "self": this, "UcId": OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, "RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, "PageNumber": pageNumber, "fromExternalRefresh": fromExternalRefresh}
-				this.requestPageDataForTable(pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection)
+				OAT_JS.grid.lastCallData = { "self": renderJSPivotInter, "UcId": OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, "RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, "PageNumber": pageNumber, "fromExternalRefresh": fromExternalRefresh}
+				renderJSPivotInter.requestPageDataForTable(pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection)
 				
 				/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTable((function (resXML) {
 					if (pageNumber == 0) { pageNumber = 1, recalculateCantPages = false; }
-					OAT_JS.grid.redraw(this, UcId, resXML, recalculateCantPages, DataFieldOrder != "", pageNumber, fromExternalRefresh)
-				}).closure(this), [pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged]);*/
+					OAT_JS.grid.redraw(renderJSPivotInter, UcId, resXML, recalculateCantPages, DataFieldOrder != "", pageNumber, fromExternalRefresh)
+				}).closure(renderJSPivotInter), [pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged]);*/
 			} else {
-				OAT_JS.grid.redraw(this, UcId, OAT_JS.grid.pageInCache(UcId, pageNumber), false, false, pageNumber, true)
+				OAT_JS.grid.redraw(renderJSPivotInter, UcId, OAT_JS.grid.pageInCache(UcId, pageNumber), false, false, pageNumber, true)
 			}
 		}
 		
 		
-		this.requestPageDataForTable = function(PageNumber, PageSize, recalculateCantPages, DataFieldOrder, OrderType, Filters, LayoutChange, IdForQueryViewerCollection){
+		renderJSPivotInter.requestPageDataForTable = function(PageNumber, PageSize, recalculateCantPages, DataFieldOrder, OrderType, Filters, LayoutChange, IdForQueryViewerCollection){
 			setTimeout( function() {
 				var paramobj = {  "PageNumber": PageNumber, "PageSize": PageSize,"RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, 
 					"OrderType":OrderType, "Filters":Filters, "LayoutChange":LayoutChange, "QueryviewerId": IdForQueryViewerCollection};
@@ -15737,30 +15768,30 @@ if (typeof exports != "undefined") {
 		
 		
 		
-		this.getActualCantPages = function(UcId){  
+		renderJSPivotInter.getActualCantPages = function(UcId){  
 		 	return OAT_JS.grid.gridData[UcId].actualCantPages
 		}
 		
-		this.getValuesForColumn = function (UcId, columnNumber, filterValue) {
+		renderJSPivotInter.getValuesForColumn = function (UcId, columnNumber, filterValue) {
 			var dataField = OAT_JS.grid.gridData[UcId].columnDataField[columnNumber]
 			if (filterValue != "") {
 				var page = 1;
 				
 				OAT_JS.grid.lastCallToQueryViewer = "getValuesForColumn"
-				OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": filterValue, "dataField": dataField }
+				OAT_JS.grid.lastCallData = { "self": renderJSPivotInter, "UcId": UcId, "columnNumber": columnNumber, "filterValue": filterValue, "dataField": dataField }
 				
-				this.requestAttributeForTable(UcId, dataField, page, filterValue, 10)
+				renderJSPivotInter.requestAttributeForTable(UcId, dataField, page, filterValue, 10)
 				/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 					var res = JSON.parse(resJSON);
 					OAT_JS.grid.changeValues(UcId, dataField, columnNumber, res, filterValue);
-				}).closure(this), [dataField, page, 10, filterValue]);*/
+				}).closure(renderJSPivotInter), [dataField, page, 10, filterValue]);*/
 			} else {
 				OAT_JS.grid.resetScrollValue(UcId, dataField, columnNumber)
 			}
 		}
 		
 		
-		this.requestAttributeForTable = function(UcId, dataField, page, filterValue, pageSize){
+		renderJSPivotInter.requestAttributeForTable = function(UcId, dataField, page, filterValue, pageSize){
 			setTimeout( function() {
 				var paramobj = {  "Page": page, "PageSize": pageSize, "DataField": dataField, "Filters":filterValue, "QueryviewerId": UcId};
 				var evt = document.createEvent("Events")
@@ -15771,7 +15802,7 @@ if (typeof exports != "undefined") {
 		}
 		
 		
-		this.fireOnFilterChanged = function(UcId, FilterChangedData){
+		renderJSPivotInter.fireOnFilterChanged = function(UcId, FilterChangedData){
 			setTimeout( function() {
 				var paramobj = {"QueryViewerd": UcId, "FilterChangedData": FilterChangedData};
 				var evt = document.createEvent("Events")
@@ -16436,7 +16467,7 @@ if (typeof exports != "undefined") {
 			}
 			if ((!filterExist) && (!noFilterNeeded)) {
 				var notNullValues = { Included: included, Excluded: excluded, DefaultAction: this.gridData[UcId].blackLists[DataFieldFilter].defaultAction }
-				filter = { DataField: DataFieldFilter, NullIncluded: nullIncluded, NotNullValues: notNullValues }
+				var filter = { DataField: DataFieldFilter, NullIncluded: nullIncluded, NotNullValues: notNullValues }
 				this.gridData[UcId].filterInfo.push(filter);
 			}
 		},
@@ -17239,27 +17270,27 @@ if (typeof exports != "undefined") {
 			formatValueMeasures, autoResize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, ShowMeasuresAsRows,
 			formulaInfo, fullRecord, serverPagination, pagingData, HideDataFilds, OrderFildsHidden, initMetadata, relativePath, pivotParams) {
 			this.div = pivotdiv;
-			var cols = columnNumbers.length + rowNumbers.length + filterNumbers.length;
-			if (measures.length > 1) {
+			var cols = _mthis.columnNumbers.length + _mthis.rowNumbers.length + _mthis.filterNumbers.length;
+			if (_mthis.measures.length > 1) {
 				var prevCol = cols;
-				cols = cols + measures.length - 1;
+				cols = cols + _mthis.measures.length - 1;
 				for (var i = prevCol; i < cols; i++) {
-					columnNumbers.push(i);
+					_mthis.columnNumbers.push(i);
 				}
 			} else {
-				for (var i = 0; i < data.length; i++) {
-					data[i].push("0");
+				for (var i = 0; i < _mthis.data.length; i++) {
+					_mthis.data[i].push("0");
 				}
 			}
 			var pivot;
-			try {
-				pivot = new OAT.Pivot(_mthis, content, page, header, data, columnNumbers, rowNumbers, filterNumbers, cols, query, conditionalFormats, UcId, pageSize, defaultPicture, QueryViewerCollection, colms, pivotdiv,
-					formatValue, conditionalFormatsColumns, formatValueMeasures, measures, autoResize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout,
+			// try {
+				pivot = new OAT.Pivot(_mthis, content, page, _mthis.header, _mthis.data, _mthis.columnNumbers, _mthis.rowNumbers, _mthis.filterNumbers, cols, _mthis.query, _mthis.conditionalFormats, UcId, _mthis.pageSize, defaultPicture, QueryViewerCollection, colms, pivotdiv,
+					formatValue, conditionalFormatsColumns, formatValueMeasures, _mthis.measures, autoResize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout,
 					ShowMeasuresAsRows, formulaInfo, fullRecord, serverPagination, pagingData, HideDataFilds, OrderFildsHidden, initMetadata, relativePath,
 					{ Allow: pivotParams.AllowSelection, EntireLine: pivotParams.SelectLine}, { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns } , pivotParams.Title );
-			} catch (Error) {
-				//alert(Error)
-			}
+			// } catch (Error) {
+				// alert(Error)
+			// }
 			return pivot;
 		}
 	}
@@ -20203,8 +20234,8 @@ if (typeof exports != "undefined") {
 					var data = JSON.parse(resJSON);
 					
 					var columnNumber = self.lastRequestAttributeColumnNumber
-					allData = self.lastRequestAttributeAllData 
-					requestDataField = self.lastRequestAttributeRequestDataField
+					var allData = self.lastRequestAttributeAllData 
+					var requestDataField = self.lastRequestAttributeRequestDataField
 					
 					self.conditions[columnNumber].previousPage = data.PageNumber
 					self.conditions[columnNumber].totalPages = data.PagesCount
@@ -20688,8 +20719,8 @@ if (typeof exports != "undefined") {
 		
 		this.getFilteredDataXML = function (serverData) {
 			
-				//var temp = self.QueryViewerCollection[self.IdForQueryViewerCollection].getPivottableDataSync();
-				temp = serverData.replace(/\&amp;/g, '&').replace(/\&lt;/g, '<').replace(/\&gt;/g, '>').replace(/\&apos;/g, '\'').replace(/\&quot/g, '\"');
+				
+				var temp = serverData.replace(/\&amp;/g, '&').replace(/\&lt;/g, '<').replace(/\&gt;/g, '>').replace(/\&apos;/g, '\'').replace(/\&quot/g, '\"');
 				var stringRecord = temp.split("<Record>")
 
 				var tempData = [];
@@ -20766,7 +20797,7 @@ if (typeof exports != "undefined") {
 		}
 
 		this.getMetadataXML = function () {
-			xml = '<OLAPCube format="' + this.defaultPicture.getAttribute("format") + '" thousandsSeparator="' + this.defaultPicture.getAttribute("thousandsSeparator") + '" decimalSeparator="' + this.defaultPicture.getAttribute("decimalSeparator") + '" dateFormat="' + this.defaultPicture.getAttribute("dateFormat") + '">'
+			var xml = '<OLAPCube format="' + this.defaultPicture.getAttribute("format") + '" thousandsSeparator="' + this.defaultPicture.getAttribute("thousandsSeparator") + '" decimalSeparator="' + this.defaultPicture.getAttribute("decimalSeparator") + '" dateFormat="' + this.defaultPicture.getAttribute("dateFormat") + '">'
 
 			var forMetadatacolumns = this.columns;
 			if (self.initMetadata.Metadata) {
@@ -21757,7 +21788,7 @@ if (typeof exports != "undefined") {
 			//restore save conditions
 			try {
 				if (rememberLayout) {
-					mState = self.getState();
+					var mState = self.getState();
 					if ((mState != undefined) && (mState.version != undefined) && (mState.version === self.rememberLayoutStateVersion)) { //check version
 						if ((mState.query == self.query) && (self.conditions.length == mState.conditions.length)) {
 							self.conditions[index].subtotals = mState.conditions[index].subtotals;
@@ -23614,7 +23645,7 @@ if (typeof exports != "undefined") {
 
 
 			var checkToClose = function (b) {
-				source = OAT.Event.source(b);
+				var source = OAT.Event.source(b);
 				var clean = false;
 				var closing = false;
 				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
@@ -23641,7 +23672,7 @@ if (typeof exports != "undefined") {
 			};
 
 			var checkInfoFilters = function (b) {
-				source = OAT.Event.source(b);
+				var source = OAT.Event.source(b);
 				var clean = false;
 				var closing = false;
 				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
@@ -23896,7 +23927,7 @@ if (typeof exports != "undefined") {
 					exportXMLButton = OAT.Dom.create("div");
 					
 
-					exportXMLButtonSub = self.createExportButton(exportXMLButton)
+					var exportXMLButtonSub = self.createExportButton(exportXMLButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXml/*gx.getMessage("GXPL_QViewerContextMenuExportXml")*/)
@@ -23987,7 +24018,7 @@ if (typeof exports != "undefined") {
 					var exportHTMLButton = OAT.Dom.create("div");
 					// exportHTMLButton.style.marginBottom = "10px"
 
-					exportButtonSub = self.createExportButton(exportHTMLButton)
+					var exportButtonSub = self.createExportButton(exportHTMLButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportHtml/*gx.getMessage("GXPL_QViewerContextMenuExportHtml")*/)
@@ -24021,7 +24052,7 @@ if (typeof exports != "undefined") {
 				
 					var exportPdfButton = OAT.Dom.create("div");
 
-					exportButtonSub = self.createExportButton(exportPdfButton)
+					var exportButtonSub = self.createExportButton(exportPdfButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportPdf /*gx.getMessage("GXPL_QViewerContextMenuExportPdf")*/)
@@ -24056,7 +24087,7 @@ if (typeof exports != "undefined") {
 				
 					var exportXLSButton = OAT.Dom.create("div");
 
-					exportButtonSub = self.createExportButton(exportXLSButton)
+					var exportButtonSub = self.createExportButton(exportXLSButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl,self.translations.GXPL_QViewerContextMenuExportXls2003 /*gx.getMessage("GXPL_QViewerContextMenuExportXls2003")*/)
@@ -24103,7 +24134,7 @@ if (typeof exports != "undefined") {
 				
 					var exportXLSButton = OAT.Dom.create("div");
 
-					exportButtonSub = self.createExportButton(exportXLSButton)
+					var exportButtonSub = self.createExportButton(exportXLSButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXlsx /*gx.getMessage("GXPL_QViewerContextMenuExportXlsx")*/)
@@ -24682,9 +24713,9 @@ if (typeof exports != "undefined") {
 			if (measureDataType === "date") {
 				th.style.textAlign = "right";
 				var dates = value.split("-");
-				if ((self.defaultPicture.getAttribute("dateFormat") != undefined) && (self.defaultPicture.getAttribute("dateFormat") != null)) {
-					picture = self.defaultPicture.getAttribute("dateFormat").split("");
-				}
+				/*if ((self.defaultPicture.getAttribute("dateFormat") != undefined) && (self.defaultPicture.getAttribute("dateFormat") != null)) {
+					var picture = self.defaultPicture.getAttribute("dateFormat").split("");
+				}*/
 				var dateElements = new Array(3);
 				dateElements[0] = parseInt(dates[0]);
 				dateElements[1] = parseInt(dates[1]);
@@ -24708,7 +24739,7 @@ if (typeof exports != "undefined") {
 
 				if ((lessThan[0] != undefined)) {
 					var cmpar = lessThan[0].split("-");
-					cmparElements = new Array(3);
+					var cmparElements = new Array(3);
 					cmparElements[1] = parseInt(cmpar[1]);
 					cmparElements[2] = parseInt(cmpar[2]);
 					cmparElements[0] = parseInt(cmpar[0]);
@@ -24723,8 +24754,8 @@ if (typeof exports != "undefined") {
 				if ((between[0] != undefined) && (between[1] != undefined)) {
 					var cmpar = between[0].split("-");
 					var cmpar2 = between[1].split("-");
-					cmparElements = new Array(3);
-					cmparElements2 = new Array(3);
+					var cmparElements = new Array(3);
+					var cmparElements2 = new Array(3);
 					cmparElements[1] = parseInt(cmpar[1]);
 					cmparElements[2] = parseInt(cmpar[2]);
 					cmparElements[0] = parseInt(cmpar[0]);
@@ -24894,9 +24925,9 @@ if (typeof exports != "undefined") {
 
 				if (measureDataType === "date") {
 					var dates = value.split("-");
-					if ((self.defaultPicture.getAttribute("dateFormat") != undefined) && (self.defaultPicture.getAttribute("dateFormat") != null)) {
+					/*if ((self.defaultPicture.getAttribute("dateFormat") != undefined) && (self.defaultPicture.getAttribute("dateFormat") != null)) {
 						picture = self.defaultPicture.getAttribute("dateFormat").split("");
-					}
+					}*/
 					var dateElements = new Array(3);
 					dateElements[0] = parseInt(dates[0]);
 					dateElements[1] = parseInt(dates[1]);
@@ -25638,7 +25669,7 @@ if (typeof exports != "undefined") {
 						} else {
 							_mtotalSpan = _mtotalSpan + self.colConditions.length
 						}
-						totalSpan = self.colConditions.length
+						//totalSpan = self.colConditions.length
 						tr.appendChild(th);
 					}
 					if (self.options.headingAfter) {// column headings after
@@ -25917,7 +25948,7 @@ if (typeof exports != "undefined") {
 					//add lateral total
 					if ((self.options.totals && self.colConditions.length) && (self.GrandTotalVisibility.TotalForColumns == "Yes")) {
 						var td = OAT.Dom.create("td", {}, "total");
-						total_ = 0
+						var total_ = 0
 						if (lateralMeasureList.length > 0) {
 							if (self.formulaInfo.measureFormula[getMeasureNumberByName(measureTitle, measures)].hasFormula) {
 								total_ = self.calculateFormulaTotal(lateralMeasureList, getMeasureNumberByName(measureTitle, measures), "MeasureInRows")
@@ -27447,6 +27478,8 @@ if (typeof exports != "undefined") {
 
 			var xmlDoc = jQuery.parseXML(newMetadata);
 			measures = xmlDoc.getElementsByTagName("OLAPMeasure");
+			console.log("Imprimo el measures");
+			console.log(measures);
 			self.columns = xmlDoc.getElementsByTagName("OLAPDimension");
 
 			var result = OATGetColumnsAndMeasureMeatadata(self.columns, measures, self.formulaInfo, self.OrderFildsHidden)
@@ -28147,7 +28180,7 @@ if (typeof exports != "undefined") {
 							rowPos = position
 							
 							var posincol = self.rowConditions.indexOf(pos)
-							var cont = 0; var noterminar = true;
+							var cont = 0, noterminar = true, dataFieldRC, positionDF;
 							for (var iterRC = posincol+1; iterRC < self.rowConditions.length && noterminar; iterRC++) //buscar dimensiones desplazadas
 							{	
 								cont++
@@ -28164,15 +28197,7 @@ if (typeof exports != "undefined") {
 									rowPos = position
 									noterminar = false
 								}
-							}
-							
-							/*if ((self.rowConditions.length > posincol+1) && (self.rowConditions[posincol+1] < pos)){
-								position = AxisInfo[self.rowConditions[posincol+1]].Axis.Position - 1
-								rowPos = position	
-							} else {
-								position = self.rowConditions.indexOf(pos) + 1 + cantRowHidden
-								rowPos = position
-							}*/
+							}							
 						} else {
 							position = self.rowConditions.indexOf(pos) + 1 + cantRowHidden
 							rowPos = position
@@ -28281,7 +28306,7 @@ if (typeof exports != "undefined") {
 		}
 
 		this.createFilterInfo = function (NewFilter, isFromMetadata) {
-			DataFieldFilter = self.conditions[NewFilter.dim].dataField
+			var DataFieldFilter = self.conditions[NewFilter.dim].dataField
 			if ((NewFilter.op == "all") || ((NewFilter.op == "pagefilter") && (NewFilter.values == "[all]"))) {
 				//remove filter from filterInof
 				var pos = -1;
@@ -28514,7 +28539,7 @@ if (typeof exports != "undefined") {
 			}
 			if ((!filterExist) && (!noFilterNeeded)) {
 				var notNullValues = { Included: included, Excluded: excluded, DefaultAction: self.conditions[NewFilter.dim].defaultAction }
-				filter = { DataField: DataFieldFilter, NullIncluded: nullIncluded, NotNullValues: notNullValues }
+				var filter = { DataField: DataFieldFilter, NullIncluded: nullIncluded, NotNullValues: notNullValues }
 				self.pageData.FilterInfo.push(filter);
 			}
 
@@ -29585,7 +29610,7 @@ if (typeof exports != "undefined") {
 			var found = false;
 
 			var dataField = (SelectedType == "DIMENSION") ? self.columns[SelectedMorDNumber].getAttribute("dataField") : measures[SelectedMorDNumber].getAttribute("dataField");
-
+			var selectedCellOffset, selectedRowOffset;
 			for (var i = 0; i < jQuery("#" + self.controlName + "_" + self.query + " tr").length && (!found); i++) {//search selected cell in every row
 				var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
 				for (var j = 0; j < tRow.children.length && (!found); j++) {
@@ -30332,7 +30357,7 @@ if (typeof exports != "undefined") {
 			var number = jQuery(elemvalue).data('numberMorD');
 			var item = jQuery(elemvalue).data('itemInfo');
 
-			actionName = 'event="ItemExpand"'
+			var actionName = 'event="ItemExpand"'
 			if (action == "collapse") {
 				actionName = 'event="ItemCollapse"'
 			}
@@ -31864,9 +31889,10 @@ if (typeof exports != "undefined") {
 
 			})
 		
-		
+			
 	}
 
+	exports.OAT = OAT;
 
 
 
