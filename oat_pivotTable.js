@@ -10615,7 +10615,7 @@ var jsPDF = (function () {
 		self.isSD = OAT.isSD() 
 
 		self.conditions = new Array(columnsDataType.length);
-		for (iC = 0; iC < columnsDataType.length; iC++) {
+		for (var iC = 0; iC < columnsDataType.length; iC++) {
 			self.conditions[iC] = {
 				blackList: [],
 				sort: 1
@@ -10728,7 +10728,7 @@ var jsPDF = (function () {
 						closing = true;
 					}
 				}
-				if (((source.getAttribute("class") == "oat_winrect_close_b") || (!OAT.Dom.isChild(source, obj))) &&
+				if (((OAT.Dom.source.getAttribute("class") == "oat_winrect_close_b") || (!OAT.Dom.isChild(OAT.Dom.source, obj))) &&
 					(closing)) {
 					self.oat_component.resetAllScrollValue(self.UcId);
 				}
@@ -11968,7 +11968,7 @@ var jsPDF = (function () {
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: self.grid.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " FilterPopup "
+				containerQuery: self.grid.QueryViewerCollection[self.grid.IdForQueryViewerCollection].ControlName + "-table" + " FilterPopup "
 				
 			});
 			var callback = function (event) {
@@ -12132,7 +12132,7 @@ var jsPDF = (function () {
 		}
 
 		var params = (typeof (params_) == "object" ? params_ : { value: params_ });
-		for (p in params) { self.options[p] = params[p]; }
+		for (var p in params) { self.options[p] = params[p]; }
 
 		this.html = OAT.Dom.create("td");
 		this.container = OAT.Dom.create("div");
@@ -12740,7 +12740,7 @@ var jsPDF = (function () {
 						dataFieldId = _self.dataField
 					else
 					    dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[origen];
-					self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Ascending", "", "")
+					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Ascending", "", "")
 				
 				var idI = "i_" + this.getAttribute("id");
 				var inputAsc = document.getElementById(idI);
@@ -12757,7 +12757,7 @@ var jsPDF = (function () {
 			
 			var IStyle = OAT.isIE() ? "top:-10px;" : ""; 
 			OAT.addImageNode(alabel, (_self.grid.conditions[colNumber].sort === 2)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+ascForId);
-			OAT.addTextNode(alabel, self.translations.GXPL_QViewerJSAscending); //gx.getMessage("GXPL_QViewerJSAscending"))
+			OAT.addTextNode(alabel, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSAscending); //gx.getMessage("GXPL_QViewerJSAscending"))
 			div_order.appendChild(alabel);
 			div_order.appendChild(OAT.Dom.create("br"));
 			
@@ -12787,7 +12787,7 @@ var jsPDF = (function () {
 						dataFieldId = _self.dataField
 					else
 					    dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[origen]; //_self.grid.columns[colNumber].getAttribute("dataField"); 
-					self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Descending", "", "");
+					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Descending", "", "");
 				
 				var idI = "i_" + this.getAttribute("id");
 				var inputDsc = document.getElementById(idI);
@@ -12800,14 +12800,14 @@ var jsPDF = (function () {
 			dlabel.className = "first_div_label";
 			dlabel.htmlFor = dscForId;
 			OAT.addImageNode(dlabel, (_self.grid.conditions[colNumber].sort === 3)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+dscForId);
-			OAT.addTextNode(dlabel, self.translations.GXPL_QViewerJSDescending); //gx.getMessage("GXPL_QViewerJSDescending"))
+			OAT.addTextNode(dlabel, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSDescending); //gx.getMessage("GXPL_QViewerJSDescending"))
 
 			div_order.appendChild(desc);
 			div_order.appendChild(dlabel);
 
 			toAppend.push(div_order);
 
-			if (self.header.length > 1) {
+			if (_self.grid.header.cells.length.length > 1) {
 				var hr4 = OAT.Dom.create("hr", {});
 				//begin drag options
 				toAppend.push(hr4);
@@ -12867,7 +12867,7 @@ var jsPDF = (function () {
 			});
 
 			var draglabel = OAT.Dom.create("label");
-			OAT.addTextNode(draglabel, self.translations.GXPL_QViewerJSMoveColumnToLeft); //gx.getMessage("GXPL_QViewerJSMoveColumnToLeft"))
+			OAT.addTextNode(draglabel, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSMoveColumnToLeft); //gx.getMessage("GXPL_QViewerJSMoveColumnToLeft"))
 			draglabel.htmlFor = "move_column_to_left" + cached;
 			dragDiv_L_sel_div.appendChild(draglabel);
 
@@ -12942,7 +12942,7 @@ var jsPDF = (function () {
 
 
 			var draglabelR = OAT.Dom.create("label");
-			OAT.addTextNode(draglabelR, self.translations.GXPL_QViewerJSMoveColumnToRight)//gx.getMessage("GXPL_QViewerJSMoveColumnToRight"))
+			OAT.addTextNode(draglabelR, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSMoveColumnToRight)//gx.getMessage("GXPL_QViewerJSMoveColumnToRight"))
 			draglabelR.htmlFor = "move_column_to_right" + cached;
 			dragDiv_R_sel_div.appendChild(draglabelR);
 			OAT.Dom.append([dragDiv, dragDiv_R_sel_div]);
@@ -12956,12 +12956,12 @@ var jsPDF = (function () {
 			var restoreview_sel_div = document.createElement("div");
 
 			OAT.Dom.attach(restoreview_sel_div, "click", function () {
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
+				OAT_JS.grid.gridData[UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
 				refresh()
 			});
 
 			var rl = OAT.Dom.create("label");
-			OAT.addTextNode(rl, self.translations.GXPL_QViewerJSRestoreDefaultView);//gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
+			OAT.addTextNode(rl, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSRestoreDefaultView);//gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
 			rl.htmlFor = "pivot_checkbox_restoreview";
 			restoreview_sel_div.appendChild(rl);
 			OAT.Dom.append([restoreview, restoreview_sel_div]);
@@ -13078,7 +13078,7 @@ var jsPDF = (function () {
 
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];//_self.grid.columns[colNumber].getAttribute("dataField")
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: oper, values: value })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: oper, values: value })
 			
 
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
@@ -13088,7 +13088,7 @@ var jsPDF = (function () {
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];
 				//_self.grid.conditions[colNumber].blackList = [];
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "all", values: [] })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "all", values: [] })
 			
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
 			OAT.distinctDivs(_self, div);
@@ -13097,7 +13097,7 @@ var jsPDF = (function () {
 		var noneRef = function () {
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "none", values: [] })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "none", values: [] })
 			
 
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
@@ -13107,7 +13107,7 @@ var jsPDF = (function () {
 		var reverseRef = function () {
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "reverse", values: [] })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "reverse", values: [] })
 			
 
 			OAT.distinctDivs(_self, div);
@@ -13115,7 +13115,7 @@ var jsPDF = (function () {
 		}
 
 		var searchFilterClick = function () {
-			self.getValuesForColumn(_self.grid.UcId, colNumber, this.value)
+			OAT_JS.grid.gridData[_self.grid.UcId].Events.getValuesForColumn(_self.grid.UcId, colNumber, this.value)
 		}
 
 		OAT.Dom.clear(div);
@@ -13123,17 +13123,17 @@ var jsPDF = (function () {
 		d.setAttribute("class", "div_buttons_popup");
 
 		var all = document.createElement("button");
-		all.textContent = self.translations.GXPL_QViewerJSAll; //gx.getMessage("GXPL_QViewerJSAll");
+		all.textContent = OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSAll; //gx.getMessage("GXPL_QViewerJSAll");
 		all.setAttribute("class", "btn");
 		jQuery(all).click(allRef);
 
 		var none = document.createElement("button");
-		none.textContent = self.translations.GXPL_QViewerJSNone; //gx.getMessage("GXPL_QViewerJSNone");
+		none.textContent = OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSNone; //gx.getMessage("GXPL_QViewerJSNone");
 		none.setAttribute("class", "btn");
 		jQuery(none).click(noneRef);
 
 		var reverse = document.createElement("button");
-		reverse.textContent = self.translations.GXPL_QViewerJSReverse; //gx.getMessage("GXPL_QViewerJSReverse");
+		reverse.textContent = OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSReverse; //gx.getMessage("GXPL_QViewerJSReverse");
 		reverse.setAttribute("class", "btn");
 		jQuery(reverse).click(reverseRef);
 
@@ -13148,9 +13148,9 @@ var jsPDF = (function () {
 			searchInput.textContent = "none";
 			searchInput.setAttribute("class", "search_input");
 			searchInput.setAttribute("type", "text");
-			searchInput.setAttribute("label", self.translations.GXPL_QViewerSearch); //gx.getMessage("GXPL_QViewerSearch"));
-			searchInput.setAttribute("title", self.translations.GXPL_QViewerSearch);  
-			searchInput.setAttribute("placeholder", self.translations.GXPL_QViewerSearch); 
+			searchInput.setAttribute("label", OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerSearch); //gx.getMessage("GXPL_QViewerSearch"));
+			searchInput.setAttribute("title", OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerSearch);  
+			searchInput.setAttribute("placeholder", OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerSearch); 
 			searchInput.setAttribute("id", _self.grid.UcId + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]);
 			jQuery(searchInput).keyup(searchFilterClick);
 
@@ -13250,7 +13250,7 @@ var jsPDF = (function () {
 				oper = "push";
 			}
 			var filteredValues = _self.grid.conditions[colNumber].blackList
-			self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataField, { op: oper, values: value })
+			OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataField, { op: oper, values: value })
 
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
 		}
@@ -15838,12 +15838,13 @@ if (typeof exports != "undefined") {
 			this.gridData[UcId].autoResize = _mthis.autoResize;
 			this.gridData[UcId].selection = {Allow: _mthis.pivotParams.AllowSelection, EntireLine: _mthis.pivotParams.SelectLine, SelectedNode: []};
 			
-			this.gridData[UcId].grid = new OAT.Grid(content, controlName, query, columnsDataType, colms, QueryViewerCollection, this.gridData[UcId].rowsPerPage,
+			this.gridData[UcId].grid = new OAT.Grid(content, controlName, _mthis.query, columnsDataType, colms, QueryViewerCollection, this.gridData[UcId].rowsPerPage,
 				disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, _mthis.serverPaging, _mthis.HideDataFilds, _mthis.orderFildsHidden, _mthis.TableOrderFilds, _mthis.relativePath,
 				this.gridData[UcId].selection, _mthis.pivotParams.Title, _mthis.translations );
 			this.gridData[UcId].grid.oat_component = this;
 			this.gridData[UcId].QueryViewerCollectionItem = QueryViewerCollection[IdForQueryViewerCollection];
-
+			this.gridData[UcId].Events = _mthis;
+			this.gridData[UcId].translations = _mthis.translations;
 			//initialize 
 			this.gridData[UcId].columnDataField = []
 			if ((_mthis.previousState) && (_mthis.previousState.columnDataField)){
@@ -15971,8 +15972,8 @@ if (typeof exports != "undefined") {
 			this.gridData[UcId].customOrderValues = [];
 			for (var index = 0; index < columns.length; index++) {
 				if ((columns[index].getAttribute("order") != undefined) && (columns[index].getAttribute("order") === "custom")) {
-					result = this.gridData[UcId].grid.applyCustomSort(index, columns[index], data);
-					data = result[0]
+					result = this.gridData[UcId].grid.applyCustomSort(index, columns[index], _mthis.data);
+					_mthis.data = result[0]
 					this.gridData[UcId].customOrderValues[index] = result[1]
 				} else {
 					this.gridData[UcId].customOrderValues[index] = false
@@ -15981,10 +15982,10 @@ if (typeof exports != "undefined") {
 
 			this.gridData[UcId].rowsMetadata = {
 				columnsDataType: columnsDataType, defaultPicture: defaultPicture, forPivotCustomPicture: forPivotCustomPicture,
-				conditionalFormatsColumns: conditionalFormatsColumns, formatValues: formatValues, forPivotCustomFormat: forPivotCustomFormat, columns: columns
+				conditionalFormatsColumns: conditionalFormatsColumns, formatValues: formatValues, forPivotCustomFormat: _mthis.forPivotCustomFormat, columns: columns
 			}
-			this.gridData[UcId].rowsData = data;
-			for (var i = 0; i < data.length; i++) {
+			this.gridData[UcId].rowsData = _mthis.data;
+			for (var i = 0; i < _mthis.data.length; i++) {
 				OAT.CreateGridRow(_mthis.data[i], this.gridData[UcId])
 			}
 
@@ -16052,7 +16053,7 @@ if (typeof exports != "undefined") {
 			if (_mthis.previousState) {
 				var __mthis = this
 				setTimeout( function() {
-					self.getDataForTable(UcId, 1, __mthis.gridData[UcId].rowsPerPage, true, __mthis.gridData[UcId].dataFieldOrder, __mthis.gridData[UcId].orderType, "", "", "", false);
+					this.gridData[UcId].Events.getDataForTable(UcId, 1, __mthis.gridData[UcId].rowsPerPage, true, __mthis.gridData[UcId].dataFieldOrder, __mthis.gridData[UcId].orderType, "", "", "", false);
 				} , 0)
 			}
 
@@ -16485,7 +16486,7 @@ if (typeof exports != "undefined") {
 					OAT_JS.grid.lastCallToQueryViewer = "readScrollValue"
 					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": "", "dataField": dataField }
 				
-					self.requestAttributeForTable(UcId, dataField, page, "", 10)
+					this.gridData[UcId].Events.requestAttributeForTable(UcId, dataField, page, "", 10)
 					/*qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						OAT_JS.grid.appendNewValueData(UcId, res)
@@ -16499,7 +16500,7 @@ if (typeof exports != "undefined") {
 					OAT_JS.grid.lastCallToQueryViewer = "readScrollValueFilter"
 					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "posColumnNumber": posColumnNumber, "filterValue": filterText, "dataField": dataField, "filterText": filterText }
 				
-					self.requestAttributeForTable(UcId, dataField, page, filterText, 10)
+					this.gridData[UcId].Events.requestAttributeForTable(UcId, dataField, page, filterText, 10)
 					/*qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						OAT_JS.grid.appendNewFilteredValueData(UcId, res, posColumnNumber, filterText)
@@ -16683,7 +16684,7 @@ if (typeof exports != "undefined") {
 				OAT_JS.grid.lastCallToQueryViewer = "initValueRead"
 				OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": "", "dataField": requestDataField }
 				
-				self.requestAttributeForTable(UcId, this.gridData[UcId].grid.lastRequestValue, 1, "", cantItems)
+				this.gridData[UcId].Events.requestAttributeForTable(UcId, this.gridData[UcId].grid.lastRequestValue, 1, "", cantItems)
 				
 				
 				
@@ -16767,7 +16768,7 @@ if (typeof exports != "undefined") {
 		},
 		initValueLoad: function (data, UcId, requestDataField){
 			//load data
-			dataField = this.gridData[UcId].grid.lastRequestValue
+			var dataField = this.gridData[UcId].grid.lastRequestValue
 			this.gridData[UcId].differentValuesPaginationInfo[dataField].previousPage = data.PageNumber
 			this.gridData[UcId].differentValuesPaginationInfo[dataField].totalPages = data.PagesCount
 
@@ -17019,7 +17020,7 @@ if (typeof exports != "undefined") {
 					OAT_JS.grid.lastCallToQueryViewer = "filterChange"
 					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId,  "filterValue": "", "dataField": df, "oatDimension": oatDimension }
 				
-					self.requestAttributeForTable(UcId, df, page, "", 0)
+					OAT_JS.grid.gridData[UcId].Events.requestAttributeForTable(UcId, df, page, "", 0)
 				
 					/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
