@@ -1,5 +1,3 @@
-
-
 	OAT.Statistics = {
 		list: [{
 			longDesc: "Count",
@@ -963,5 +961,3 @@
 		}
 		return data
 	}
-
-

@@ -28760,10 +28760,13 @@ if (typeof exports != "undefined") {
 
 		this.resetAllScrollValue = function (UcId) { //when closing the filter popup
 			for (var id = 0; id < self.conditions.length; id++) {
-				self.conditions[id].filtered = false;
-				self.conditions[id].blocked = true;
-				if (self.conditions[id].previousPage < self.conditions[id].totalPages)
-					self.conditions[id].blocked = false;
+				if (self.conditions[id])
+				{
+					self.conditions[id].filtered = false;
+					self.conditions[id].blocked = true;
+					if (self.conditions[id].previousPage < self.conditions[id].totalPages)
+						self.conditions[id].blocked = false;
+				}
 			}
 		}
 

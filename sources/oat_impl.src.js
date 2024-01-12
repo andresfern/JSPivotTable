@@ -1,4 +1,4 @@
-//OAT_IMPL file
+	//OAT_IMPL file
 
 
 	this.contains = function (a, obj) {
@@ -24,6 +24,7 @@ if (typeof exports != "undefined") {
 	exports.setDataSynForTable = void 0;
 	exports.getDataXML = void 0;
 	exports.getFilteredDataXML = void 0;
+	
 }
 	
 	function renderJSPivot(pivotParams, QueryViewerCollection, translations, qViewer) {
@@ -207,7 +208,7 @@ if (typeof exports != "undefined") {
 
 //EVENTS
 	function getDataXML(oat_element, serverData){
-		result = oat_element.getDataXML(serverData)
+		var result = oat_element.getDataXML(serverData)
 		return result;
 	}
 
@@ -216,7 +217,7 @@ if (typeof exports != "undefined") {
 }
 
 	function getFilteredDataXML(oat_element, serverData){
-		result = oat_element.getFilteredDataXML(serverData)
+		var result = oat_element.getFilteredDataXML(serverData)
 		return result;
 	}
 
@@ -232,7 +233,7 @@ if (typeof exports != "undefined") {
 		var page = pivotParams.page
 		var content = pivotParams.content
 		var metadata = pivotParams.metadata
-		this.dataString = pivotParams.data
+		renderJSPivotInter.dataString = pivotParams.data
 		var queryName = pivotParams.ObjectName
 		var controlName = pivotParams.ControlName
 		var pageSize = parseInt(pivotParams.PageSize)
@@ -240,16 +241,16 @@ if (typeof exports != "undefined") {
 		var DisableColumnSort = pivotParams.DisableColumnSort
 		var UcId = pivotParams.UcId
 		var rememberLayout = pivotParams.RememberLayout
-		this.pivotParams = pivotParams
-		this.serverPaging = pivotParams.ServerPaging
-		this.previousDataFieldOrder = pivotParams.previousDataFieldOrder;
-		this.previousOrderType = pivotParams.orderType;
-		this.previousFilters = (state) ? state.filters : undefined;
-		this.previousColumnVisible = (state) ? state.columnVisible : undefined; this.initialColumnVisible = []
-		this.previousState = state
-		this.customFilterInfo = pivotParams.customFilterInfo
-		this.gridCacheSize = pivotParams.ServerPagingCacheSize;
-		this.hasShowValuesAs = (pivotParams.metadata.indexOf("showValuesAs") > 0)
+		renderJSPivotInter.pivotParams = pivotParams
+		renderJSPivotInter.serverPaging = pivotParams.ServerPaging
+		renderJSPivotInter.previousDataFieldOrder = pivotParams.previousDataFieldOrder;
+		renderJSPivotInter.previousOrderType = pivotParams.orderType;
+		renderJSPivotInter.previousFilters = (state) ? state.filters : undefined;
+		renderJSPivotInter.previousColumnVisible = (state) ? state.columnVisible : undefined; renderJSPivotInter.initialColumnVisible = []
+		renderJSPivotInter.previousState = state
+		renderJSPivotInter.customFilterInfo = pivotParams.customFilterInfo
+		renderJSPivotInter.gridCacheSize = pivotParams.ServerPagingCacheSize;
+		renderJSPivotInter.hasShowValuesAs = (pivotParams.metadata.indexOf("showValuesAs") > 0)
 
 		//replace OLAPMeasure for OLAPDimensions
 		if (pivotParams.RealType == "Table"){
@@ -328,15 +329,14 @@ if (typeof exports != "undefined") {
 		} catch (ERROR) {
 
 		}
-
 		var fullXmlData = jQuery.parseXML(metadata); //metada for formulas and hide columns
-		this.InitMetadata = {};
-		this.InitMetadata.Metadata = metadata
-		this.InitMetadata.DataString = dataString;
-		this.InitMetadata.Dimensions = []
-		this.InitMetadata.Conditions = []
-		this.InitMetadata.DataFields = []
-		this.InitMetadata.RowsPerPage = pageSize
+		renderJSPivotInter.InitMetadata = {};
+		renderJSPivotInter.InitMetadata.Metadata = metadata
+		renderJSPivotInter.InitMetadata.DataString = renderJSPivotInter.dataString;
+		renderJSPivotInter.InitMetadata.Dimensions = []
+		renderJSPivotInter.InitMetadata.Conditions = []
+		renderJSPivotInter.InitMetadata.DataFields = []
+		renderJSPivotInter.InitMetadata.RowsPerPage = pageSize
 		var initColumns = fullXmlData.getElementsByTagName("OLAPDimension");
 		for (var i = 0; i < initColumns.length; i++) {
 			var objectColumn = {}
@@ -367,11 +367,11 @@ if (typeof exports != "undefined") {
 			}
 			
 			objectColumn.validPosition = validPositions
-			this.InitMetadata.Dimensions.push(objectColumn)
-			this.InitMetadata.Conditions.push("")
-			this.InitMetadata.DataFields.push(objectColumn.dataField)
+			renderJSPivotInter.InitMetadata.Dimensions.push(objectColumn)
+			renderJSPivotInter.InitMetadata.Conditions.push("")
+			renderJSPivotInter.InitMetadata.DataFields.push(objectColumn.dataField)
 		}
-		this.InitMetadata.Measures = []
+		renderJSPivotInter.InitMetadata.Measures = []
 		var initMeasures = fullXmlData.getElementsByTagName("OLAPMeasure");
 		for (var i = 0; i < initMeasures.length; i++) {
 			var measureObject = {}
@@ -391,12 +391,12 @@ if (typeof exports != "undefined") {
 			}
 			
 			//measureObject.Visible = measureObject.defaultPosition != "hidden"
-			this.InitMetadata.Measures.push(measureObject)
+			renderJSPivotInter.InitMetadata.Measures.push(measureObject)
 		}
-		this.InitMetadata.DimensionPosition = []
+		renderJSPivotInter.InitMetadata.DimensionPosition = []
 
 		//parse metadata
-		this.HideDataFilds = []
+		renderJSPivotInter.HideDataFilds = []
 
 		var result;
 		var previousState = OATgetState(queryName, UcId.replace(/,/g, "").replace(/\./g, ""))
@@ -414,28 +414,28 @@ if (typeof exports != "undefined") {
 				}
 			}
 
-			this.InitMetadata.Measures = previousState.Measures
-			this.InitMetadata.Dimensions = previousState.Dimensions
-			this.InitMetadata.DataFields = previousState.DataFields
-			this.InitMetadata.DimensionPosition = previousState.DimensionPosition
+			renderJSPivotInter.InitMetadata.Measures = previousState.Measures
+			renderJSPivotInter.InitMetadata.Dimensions = previousState.Dimensions
+			renderJSPivotInter.InitMetadata.DataFields = previousState.DataFields
+			renderJSPivotInter.InitMetadata.DimensionPosition = previousState.DimensionPosition
 
 			if (pivotParams.ServerPagingPivot) {
-				this.InitMetadata.Conditions = previousState.Conditions
+				renderJSPivotInter.InitMetadata.Conditions = previousState.Conditions
 			}
 
 			result = OATParseMetadata(metadata, hideDimension, hideMeasures, pivotParams.ServerPagingPivot, translations)
 		} else {
 			var hideDimension = [];
-			for (var i = 0; i < this.InitMetadata.Dimensions.length; i++) {
-				if (!this.InitMetadata.Dimensions[i].Visible) {
-					hideDimension.push(this.InitMetadata.Dimensions[i].dataField)
+			for (var i = 0; i < renderJSPivotInter.InitMetadata.Dimensions.length; i++) {
+				if (!renderJSPivotInter.InitMetadata.Dimensions[i].Visible) {
+					hideDimension.push(renderJSPivotInter.InitMetadata.Dimensions[i].dataField)
 				}
 			}
 
 			var hideMeasures = [];
-			for (var i = 0; i < this.InitMetadata.Measures.length; i++) {
-				if (!this.InitMetadata.Measures[i].Visible) {
-					hideMeasures.push(this.InitMetadata.Measures[i].dataField)
+			for (var i = 0; i < renderJSPivotInter.InitMetadata.Measures.length; i++) {
+				if (!renderJSPivotInter.InitMetadata.Measures[i].Visible) {
+					hideMeasures.push(renderJSPivotInter.InitMetadata.Measures[i].dataField)
 				}
 			}
 			if ((pivotParams.RealType == "Table")) {
@@ -445,40 +445,40 @@ if (typeof exports != "undefined") {
 			}
 		}
 		
-		this.InitMetadata.GrandTotalVisibility = { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns }
+		renderJSPivotInter.InitMetadata.GrandTotalVisibility = { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns }
 		
 
-		metadata = result[0]; var orderFildsHidden = result[1]; var nameFildsHidden = result[3]; this.HideDataFilds = result[2];
+		metadata = result[0]; var orderFildsHidden = result[1]; var nameFildsHidden = result[3]; renderJSPivotInter.HideDataFilds = result[2];
 
 
 		var xmlDoc = jQuery.parseXML(metadata);
 
 		var defaultPicture = xmlDoc.childNodes[0];
 
-		this.IdForQueryViewerCollection = UcId;
+		renderJSPivotInter.IdForQueryViewerCollection = UcId;
 		UcId = UcId.replace(/,/g, "").replace(/\./g, "")
-		this.UcId = UcId;
-		this.pivotDiv = container.id;
-		this.query = queryName;
-		this.control = controlName;
-		this.pageSize = pageSize;
-		this.autoResize = autoResize;
-		this.disableColumnSort = DisableColumnSort;
-		this.header = [];
-		this.data = [];
-		this.columnNumbers = [];
-		this.rowNumbers = [];
-		this.filterNumbers = [];
-		this.cols = 0;
-		this.conditionalFormats = [];
-		this.conditionalFormatsColumns = []; //conditional format for columns - needed?
-		this.formatValues = [];
-		this.formatValuesMeasures = [];
+		renderJSPivotInter.UcId = UcId;
+		renderJSPivotInter.pivotDiv = container.id;
+		renderJSPivotInter.query = queryName;
+		renderJSPivotInter.control = controlName;
+		renderJSPivotInter.pageSize = pageSize;
+		renderJSPivotInter.autoResize = autoResize;
+		renderJSPivotInter.disableColumnSort = DisableColumnSort;
+		renderJSPivotInter.header = [];
+		renderJSPivotInter.data = [];
+		renderJSPivotInter.columnNumbers = [];
+		renderJSPivotInter.rowNumbers = [];
+		renderJSPivotInter.filterNumbers = [];
+		renderJSPivotInter.cols = 0;
+		renderJSPivotInter.conditionalFormats = [];
+		renderJSPivotInter.conditionalFormatsColumns = []; //conditional format for columns - needed?
+		renderJSPivotInter.formatValues = [];
+		renderJSPivotInter.formatValuesMeasures = [];
 
-		this.forPivotFormatValues = [];
-		this.forPivotFormats = [];
-		this.forPivotCustomPicture = [];
-		this.forPivotCustomFormat = [];
+		renderJSPivotInter.forPivotFormatValues = [];
+		renderJSPivotInter.forPivotFormats = [];
+		renderJSPivotInter.forPivotCustomPicture = [];
+		renderJSPivotInter.forPivotCustomFormat = [];
 
 
 		//Columns and measures names
@@ -486,7 +486,8 @@ if (typeof exports != "undefined") {
 		var columnNames = [];
 		var rowNames = [];
 		var filterNames = [];
-		this.measures = xmlDoc.getElementsByTagName("OLAPMeasure");
+		renderJSPivotInter.measures = xmlDoc.getElementsByTagName("OLAPMeasure");
+
 		var columnsDataType = [];
 		var measureNames = []; var measuresNamesWidthHidden = [];
 		var j = 0;
@@ -502,9 +503,9 @@ if (typeof exports != "undefined") {
 
 		if ((pivotParams.RealType == "Table")) {
 			for (var i = 0; i < columns.length; i++) {
-				this.initialColumnVisible[i] = true
+				renderJSPivotInter.initialColumnVisible[i] = true
 				if (columns[i].attributes.getNamedItem("visible").nodeValue != "Yes") {
-					this.initialColumnVisible[i] = false
+					renderJSPivotInter.initialColumnVisible[i] = false
 				}
 			}
 		}
@@ -513,7 +514,7 @@ if (typeof exports != "undefined") {
 		for (var i = 0; i < columns.length; i++) {
 
 			if ((columns[i].attributes.getNamedItem("axis").nodeValue == "Rows")
-				|| (pivotParams.RealType == "Table") || (this.InitMetadata.Dimensions[i].validPosition == "")) {
+				|| (pivotParams.RealType == "Table") || (renderJSPivotInter.InitMetadata.Dimensions[i].validPosition == "")) {
 				columnNames[j] = columns[i].attributes.getNamedItem("displayName").nodeValue;
 				preHeader[i] = columnNames[j];
 				j++;
@@ -529,9 +530,9 @@ if (typeof exports != "undefined") {
 				k++;
 			}
 			if (pivotParams.ServerPagingPivot && (columns[i].attributes.getNamedItem("axis").nodeValue == "")) {
-				for (var t = 0; t < this.InitMetadata.Dimensions.length; t++) {
-					if (this.InitMetadata.Dimensions[t].dataField == columns[i].attributes.getNamedItem("dataField").nodeValue) {
-						if (this.InitMetadata.Dimensions[t].Visible) {
+				for (var t = 0; t < renderJSPivotInter.InitMetadata.Dimensions.length; t++) {
+					if (renderJSPivotInter.InitMetadata.Dimensions[t].dataField == columns[i].attributes.getNamedItem("dataField").nodeValue) {
+						if (renderJSPivotInter.InitMetadata.Dimensions[t].Visible) {
 							columnNames[j] = columns[i].attributes.getNamedItem("displayName").nodeValue;
 							j++;
 							preHeader[i] = columns[i].attributes.getNamedItem("displayName").nodeValue;
@@ -554,7 +555,7 @@ if (typeof exports != "undefined") {
 									var crude = columns[i].childNodes[m].childNodes[n].textContent;
 									value.value = crude.replace(/^\s+|\s+$/g, '');
 									value.columnNumber = i;
-									this.formatValues.push(value);
+									renderJSPivotInter.formatValues.push(value);
 								}
 							}
 						}
@@ -576,7 +577,7 @@ if (typeof exports != "undefined") {
 										format.value2 = columns[i].childNodes[m].childNodes[n].attributes.getNamedItem("value2").nodeValue;
 									}
 									format.columnNumber = i;
-									this.conditionalFormatsColumns.push(format);
+									renderJSPivotInter.conditionalFormatsColumns.push(format);
 								}
 							}
 						}
@@ -598,30 +599,30 @@ if (typeof exports != "undefined") {
 				}
 
 			}
-			this.forPivotCustomPicture.push(columns[i].attributes.getNamedItem("picture").nodeValue);
-			this.forPivotCustomFormat.push(columns[i].attributes.getNamedItem("format").nodeValue);
+			renderJSPivotInter.forPivotCustomPicture.push(columns[i].attributes.getNamedItem("picture").nodeValue);
+			renderJSPivotInter.forPivotCustomFormat.push(columns[i].attributes.getNamedItem("format").nodeValue);
 			orderFilds.push(columns[i].attributes.getNamedItem("dataField").nodeValue);
 
 		}
 
 		//var measures;
-		for (var i = 0; i < this.measures.length; i++) {
+		for (var i = 0; i < renderJSPivotInter.measures.length; i++) {
 
-			measureNames[i] = this.measures[i].attributes.getNamedItem("displayName").nodeValue;
+			measureNames[i] = renderJSPivotInter.measures[i].attributes.getNamedItem("displayName").nodeValue;
 			//manage format values
-			if (measures[i].childNodes.length > 0) {
-				if (measures[i].childNodes != null) {
-					for (var m = 0; m < measures[i].childNodes.length; m++) {
-						if (measures[i].childNodes[m].localName == "formatValues") {
-							for (var n = 0; n < measures[i].childNodes[m].childNodes.length; n++) {
-								if (measures[i].childNodes[m].childNodes[n].localName == "value") {
+			if (renderJSPivotInter.measures[i].childNodes.length > 0) {
+				if (renderJSPivotInter.measures[i].childNodes != null) {
+					for (var m = 0; m < renderJSPivotInter.measures[i].childNodes.length; m++) {
+						if (renderJSPivotInter.measures[i].childNodes[m].localName == "formatValues") {
+							for (var n = 0; n < renderJSPivotInter.measures[i].childNodes[m].childNodes.length; n++) {
+								if (renderJSPivotInter.measures[i].childNodes[m].childNodes[n].localName == "value") {
 									var value = {};
-									value.format = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("format").nodeValue;
-									value.recursive = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("recursive").nodeValue;
-									var crude = measures[i].childNodes[m].childNodes[n].textContent;
+									value.format = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("format").nodeValue;
+									value.recursive = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("recursive").nodeValue;
+									var crude = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].textContent;
 									value.value = crude.replace(/^\s+|\s+$/g, '');
 									value.columnNumber = i;
-									this.formatValuesMeasures.push(value);
+									formatValuesMeasures.push(value);
 								}
 							}
 						}
@@ -630,22 +631,22 @@ if (typeof exports != "undefined") {
 				}
 			}
 			//manage conditional formats
-			if (measures[i].childNodes.length > 0) {
-				if (measures[i].childNodes != null) {
-					for (var m = 0; m < measures[i].childNodes.length; m++) {
-						if (measures[i].childNodes[m].localName == "conditionalFormats") {
-							for (var n = 0; n < measures[i].childNodes[m].childNodes.length; n++) {
-								if (measures[i].childNodes[m].childNodes[n].localName == "rule") {
+			if (renderJSPivotInter.measures[i].childNodes.length > 0) {
+				if (renderJSPivotInter.measures[i].childNodes != null) {
+					for (var m = 0; m < renderJSPivotInter.measures[i].childNodes.length; m++) {
+						if (renderJSPivotInter.measures[i].childNodes[m].localName == "conditionalFormats") {
+							for (var n = 0; n < renderJSPivotInter.measures[i].childNodes[m].childNodes.length; n++) {
+								if (renderJSPivotInter.measures[i].childNodes[m].childNodes[n].localName == "rule") {
 									var format = {};
-									format.format = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("format").nodeValue;
-									format.operation1 = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op1").nodeValue;
-									format.value1 = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("value1").nodeValue;
-									if (measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op2") != null) {
-										format.operation2 = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op2").nodeValue;
-										format.value2 = measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("value2").nodeValue;
+									format.format = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("format").nodeValue;
+									format.operation1 = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op1").nodeValue;
+									format.value1 = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("value1").nodeValue;
+									if (renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op2") != null) {
+										format.operation2 = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("op2").nodeValue;
+										format.value2 = renderJSPivotInter.measures[i].childNodes[m].childNodes[n].attributes.getNamedItem("value2").nodeValue;
 									}
 									format.columnNumber = i; //+ columns.length; Only the measure number
-									this.conditionalFormats.push(format);
+									conditionalFormats.push(format);
 								}
 							}
 						}
@@ -654,46 +655,42 @@ if (typeof exports != "undefined") {
 			}
 
 			//manage pictures
-			if (measures[i].attributes.getNamedItem("picture").nodeValue != "") {
-				if (measures[i].attributes.getNamedItem("dataType").nodeValue == "date") {
-					datePictures.push(measures[i].attributes.getNamedItem("picture").nodeValue);
-					dateFields.push(measures[i].attributes.getNamedItem("dataField").nodeValue);
+			if (renderJSPivotInter.measures[i].attributes.getNamedItem("picture").nodeValue != "") {
+				if (renderJSPivotInter.measures[i].attributes.getNamedItem("dataType").nodeValue == "date") {
+					datePictures.push(renderJSPivotInter.measures[i].attributes.getNamedItem("picture").nodeValue);
+					dateFields.push(renderJSPivotInter.measures[i].attributes.getNamedItem("dataField").nodeValue);
 				}
-				if (measures[i].attributes.getNamedItem("dataType").nodeValue == "integer" || measures[i].attributes.getNamedItem("dataType").nodeValue == "real") {
-					intPictures.push(measures[i].attributes.getNamedItem("picture").nodeValue);
-					intFields.push(measures[i].attributes.getNamedItem("dataField").nodeValue);/* */
+				if (renderJSPivotInter.measures[i].attributes.getNamedItem("dataType").nodeValue == "integer" || renderJSPivotInter.measures[i].attributes.getNamedItem("dataType").nodeValue == "real") {
+					intPictures.push(renderJSPivotInter.measures[i].attributes.getNamedItem("picture").nodeValue);
+					intFields.push(renderJSPivotInter.measures[i].attributes.getNamedItem("dataField").nodeValue);/* */
 				}
 			}
 
 			//manage formula
-			if ((measures[i].attributes.getNamedItem("formula") != undefined) && (measures[i].attributes.getNamedItem("formula").nodeValue != "")) {
-				formulaInfo.measureFormula.push({ hasFormula: true, textFormula: measures[i].attributes.getNamedItem("formula").nodeValue })
+			if ((renderJSPivotInter.measures[i].attributes.getNamedItem("formula") != undefined) && (renderJSPivotInter.measures[i].attributes.getNamedItem("formula").nodeValue != "")) {
+				formulaInfo.measureFormula.push({ hasFormula: true, textFormula: renderJSPivotInter.measures[i].attributes.getNamedItem("formula").nodeValue })
 			} else {
 				formulaInfo.measureFormula.push({ hasFormula: false })
 			}
 
-			this.forPivotCustomPicture.push(measures[i].attributes.getNamedItem("picture").nodeValue);
-			orderFilds.push(measures[i].attributes.getNamedItem("dataField").nodeValue);
+			renderJSPivotInter.forPivotCustomPicture.push(renderJSPivotInter.measures[i].attributes.getNamedItem("picture").nodeValue);
+			orderFilds.push(renderJSPivotInter.measures[i].attributes.getNamedItem("dataField").nodeValue);
 		}
 
 
-		this.header = preHeader.concat(measureNames);
+		renderJSPivotInter.header = preHeader.concat(measureNames);
 
-		this.getDataFromXML = function (dataString, tableOrderField){
+		renderJSPivotInter.getDataFromXML = function (dataString, tableOrderField){
 			var stringRecord = dataString.split("<Record>")
 
 			//get server pagination info
-			if (this.serverPaging) {
-				this.ServerRecordCount = parseToIntRegisterValue(stringRecord[0], "RecordCount")
-				this.ServerPageCount = parseToIntRegisterValue(stringRecord[0], "PageCount")
-				this.ServerPageNumber = parseToIntRegisterValue(stringRecord[0], "PageNumber")
+			if (renderJSPivotInter.serverPaging) {
+				renderJSPivotInter.ServerRecordCount = parseToIntRegisterValue(stringRecord[0], "RecordCount")
+				renderJSPivotInter.ServerPageCount = parseToIntRegisterValue(stringRecord[0], "PageCount")
+				renderJSPivotInter.ServerPageNumber = parseToIntRegisterValue(stringRecord[0], "PageNumber")
 			}
 			//get records of the table
-			/*var filds = orderFilds;
-			if (this.TableOrderFilds != undefined) {
-				filds = this.TableOrderFilds;
-			}*/
-			filds = tableOrderField;
+			var filds = tableOrderField;
 			
 			for (var i = 1; i < stringRecord.length; i++) {
 				var recordData = [];
@@ -715,42 +712,43 @@ if (typeof exports != "undefined") {
 
 					}
 				}
-				this.data.push(recordData);
+				renderJSPivotInter.data.push(recordData);
 
 				var pos_init = filds.length;
-				for (var j = 0; j < this.HideDataFilds.length; j++) {
+				for (var j = 0; j < renderJSPivotInter.HideDataFilds.length; j++) {
 					fullRecordData[pos_init + j] = undefined
-					var dt = stringRecord[i].split("<" + this.HideDataFilds[j] + ">")
+					var dt = stringRecord[i].split("<" + renderJSPivotInter.HideDataFilds[j] + ">")
 					if (dt.length > 1) {
-						var at = dt[1].split("</" + this.HideDataFilds[j] + ">")
+						var at = dt[1].split("</" + renderJSPivotInter.HideDataFilds[j] + ">")
 						fullRecordData[pos_init + j] = at[0]
 					}
 				}
-				this.fullRecord.push(fullRecordData);
-				if (fullRecordData.length > this.maxLengthRecord) this.maxLengthRecord = fullRecordData.length;
+				renderJSPivotInter.fullRecord.push(fullRecordData);
+				if (fullRecordData.length > renderJSPivotInter.maxLengthRecord) renderJSPivotInter.maxLengthRecord = fullRecordData.length;
 			}
 		}
 
-		this.maxLengthRecord = 0;
-		this.data = []
-		this.fullRecord = []  //array to store extra data for formulas
-		this.orderFildsHidden = orderFildsHidden
-		this.TableOrderFilds = orderFilds;
+		renderJSPivotInter.maxLengthRecord = 0;
+		renderJSPivotInter.data = []
+		renderJSPivotInter.fullRecord = []  //array to store extra data for formulas
+		renderJSPivotInter.orderFildsHidden = orderFildsHidden
+		renderJSPivotInter.TableOrderFilds = orderFilds;
 		if (!pivotParams.ServerPagingPivot) {
-			this.getDataFromXML(pivotParams.data, this.TableOrderFilds);
+			renderJSPivotInter.getDataFromXML(pivotParams.data, renderJSPivotInter.TableOrderFilds);
 		} else {
-			ShowMeasuresAsRows = ((ShowMeasuresAsRows) && (measures.length > 1))
-			this.pagingData = {}//OATGetDataFromXMLForPivot(this.dataString, ShowMeasuresAsRows);
-			this.pagingData.dataFields = orderFilds;
+			
+			ShowMeasuresAsRows = ((ShowMeasuresAsRows) && (renderJSPivotInter.measures.length > 1))
+			renderJSPivotInter.pagingData = {}//OATGetDataFromXMLForPivot(renderJSPivotInter.dataString, ShowMeasuresAsRows);
+			renderJSPivotInter.pagingData.dataFields = orderFilds;
 		}
 
 		var furmulaIndex = {}
 		for (var j = 0; j < orderFildsHidden.length; j++) {
 			furmulaIndex[orderFildsHidden[j]] = orderFilds.length + j
 		}
-		this.orderFildsHidden = nameFildsHidden
+		renderJSPivotInter.orderFildsHidden = nameFildsHidden
 		formulaInfo.itemPosition = furmulaIndex
-		formulaInfo.recordDataLength = this.maxLengthRecord;
+		formulaInfo.recordDataLength = renderJSPivotInter.maxLengthRecord;
 		formulaInfo.cantFormulaMeasures = 0;
 
 		for (var n = 0; n < formulaInfo.measureFormula.length; n++) {
@@ -802,16 +800,16 @@ if (typeof exports != "undefined") {
 		var m = 0;
 		var d = 0;
 		for (var i = 0; i < preHeader.length; i++) {
-			if (this.contains(columnNames, preHeader[i]) != -1) {
-				this.columnNumbers[l] = i;
+			if (contains2(columnNames, preHeader[i]) != -1) {
+				renderJSPivotInter.columnNumbers[l] = i;
 				l++;
 			}
-			if (this.contains(rowNames, preHeader[i]) != -1) {
-				this.rowNumbers[m] = i;
+			if (contains2(rowNames, preHeader[i]) != -1) {
+				renderJSPivotInter.rowNumbers[m] = i;
 				m++;
 			}
-			if (this.contains(filterNames, preHeader[i]) != -1) {
-				this.filterNumbers[d] = i;
+			if (contains2(filterNames, preHeader[i]) != -1) {
+				renderJSPivotInter.filterNumbers[d] = i;
 				d++;
 			}
 		}
@@ -838,9 +836,9 @@ if (typeof exports != "undefined") {
 		}
 
 		var relativePath = urlRelative.substring(0, urlRelative.indexOf("QueryViewer/oatPivot"));
-		this.relativePath = relativePath
+		renderJSPivotInter.relativePath = relativePath
 	
-		this.fireOnPageChangeTable = function(UcId, move){
+		renderJSPivotInter.fireOnPageChangeTable = function(UcId, move){
 			setTimeout( function() {
 				var paramobj = {"QueryviewerId": UcId, "Navigation": move};
 				var evt = document.createEvent("Events")
@@ -853,83 +851,83 @@ if (typeof exports != "undefined") {
 		var pivot;
 
 		queryName = queryName.replace(/\./g, "")
-		this.query = queryName
-		this.translations = translations
+		renderJSPivotInter.query = queryName
+		renderJSPivotInter.translations = translations
 		if (type == "PivotTable") {
-			pivot = OAT_JS.pivot.cb(this, this.pivotDiv, page, content, defaultPicture, QueryViewerCollection, colms,
-				this.formatValues, this.conditionalFormatsColumns, this.formatValuesMeasures, this.autoResize, this.disableColumnSort, this.UcId, this.IdForQueryViewerCollection,
-				rememberLayout, ShowMeasuresAsRows, formulaInfo, this.fullRecord,
-				pivotParams.ServerPagingPivot, this.pagingData, this.HideDataFilds, this.orderFildsHidden, this.InitMetadata, this.relativePath,
-			    this.pivotParams );
+			pivot = OAT_JS.pivot.cb(renderJSPivotInter, renderJSPivotInter.pivotDiv, page, content, defaultPicture, QueryViewerCollection, colms,
+				renderJSPivotInter.formatValues, renderJSPivotInter.conditionalFormatsColumns, renderJSPivotInter.formatValuesMeasures, renderJSPivotInter.autoResize, renderJSPivotInter.disableColumnSort, renderJSPivotInter.UcId, renderJSPivotInter.IdForQueryViewerCollection,
+				rememberLayout, ShowMeasuresAsRows, formulaInfo, renderJSPivotInter.fullRecord,
+				pivotParams.ServerPagingPivot, renderJSPivotInter.pagingData, renderJSPivotInter.HideDataFilds, renderJSPivotInter.orderFildsHidden, renderJSPivotInter.InitMetadata, renderJSPivotInter.relativePath,
+			    renderJSPivotInter.pivotParams );
 			if (pivot == 'error') {
 				return;
 			}
 		} else {
 			if (type == "Table") {
-				pivot = OAT_JS.grid.cb(this.pivotDiv, this.UcId + '_' + queryName, columnsDataType, defaultPicture, this.forPivotCustomPicture, this.conditionalFormatsColumns,
-					this.formatValues, this.forPivotCustomFormat, colms, columns, QueryViewerCollection, this.pageSize, this.disableColumnSort, this.UcId, this.IdForQueryViewerCollection,
-					rememberLayout, this);
+				pivot = OAT_JS.grid.cb(renderJSPivotInter.pivotDiv, renderJSPivotInter.UcId + '_' + queryName, columnsDataType, defaultPicture, renderJSPivotInter.forPivotCustomPicture, renderJSPivotInter.conditionalFormatsColumns,
+					renderJSPivotInter.formatValues, renderJSPivotInter.forPivotCustomFormat, colms, columns, QueryViewerCollection, renderJSPivotInter.pageSize, renderJSPivotInter.disableColumnSort, renderJSPivotInter.UcId, renderJSPivotInter.IdForQueryViewerCollection,
+					rememberLayout, renderJSPivotInter);
 			}
 		}
 		//add pagination functionality
 		if (type == "Table") {
-			this.pageSize = (this.previousState) ? this.previousState.pageSize : pageSize;
+			renderJSPivotInter.pageSize = (renderJSPivotInter.previousState) ? renderJSPivotInter.previousState.pageSize : pageSize;
 
-			var rowNum = this.pageSize;
+			var rowNum = renderJSPivotInter.pageSize;
 			if ((pivot.rowsPerPage != undefined) && (pivot.rowsPerPage != "")) {
 				rowNum = pivot.rowsPerPage;
 			}
 
-			if (QueryViewerCollection[this.UcId]._ControlRenderedTo) {
-				jQuery("#"+this.UcId + "_" + this.query + "_tablePagination").remove(); //jQuery(".pivot_pag_div").remove()
+			if (QueryViewerCollection[renderJSPivotInter.UcId]._ControlRenderedTo) {
+				jQuery("#"+renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").remove(); //jQuery(".pivot_pag_div").remove()
 			}
 
-			if (this.pageSize) {
+			if (renderJSPivotInter.pageSize) {
 				
 					var options = {
-						currPage: this.ServerPageNumber,
-						ignoreRows: jQuery('tbody tr[visibQ=tf]', jQuery("#" + this.UcId + "_" + this.query)),
-						optionsForRows: OAT.AddItemToList([10, 15, 20], this.InitMetadata.RowsPerPage),
+						currPage: renderJSPivotInter.ServerPageNumber,
+						ignoreRows: jQuery('tbody tr[visibQ=tf]', jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)),
+						optionsForRows: OAT.AddItemToList([10, 15, 20], renderJSPivotInter.InitMetadata.RowsPerPage),
 						rowsPerPage: rowNum != 'undefined' ? rowNum : 10,
 						jstype: "table",
 						topNav: false,
-						controlName: this.UcId + "_" + this.query,
-						cantPages: this.ServerPageCount,
-						controlUcId: this.UcId,
+						controlName: renderJSPivotInter.UcId + "_" + renderJSPivotInter.query,
+						cantPages: renderJSPivotInter.ServerPageCount,
+						controlUcId: renderJSPivotInter.UcId,
 						translations: translations,
-						control: this
+						control: renderJSPivotInter
 					}
-					OAT.partialTablePagination(jQuery("#" + this.UcId + "_" + this.query),options);
-					var wd2 = jQuery("#" + this.UcId + "_" + this.query)[0].clientWidth - 1;
-					jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ width: wd2 + "px" });
-					if (jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css('display') === 'none') {
-						jQuery("#" + this.UcId + "_" + this.query).css({ marginBottom: "0px" });
+					OAT.partialTablePagination(jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query),options);
+					var wd2 = jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].clientWidth - 1;
+					jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ width: wd2 + "px" });
+					if (jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css('display') === 'none') {
+						jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css({ marginBottom: "0px" });
 					} else {
-						jQuery("#" + this.UcId + "_" + this.query).css("margin-bottom", "0px");
+						jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css("margin-bottom", "0px");
 					}
 
-					if ((jQuery("#" + this.UcId + "_" + this.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + this.UcId + "_" + this.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + this.UcId + "_" + this.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
-						jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ marginBottom: "0px" })
+					if ((jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
+						jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ marginBottom: "0px" })
 					}
-					var wd = jQuery("#" + this.UcId + "_" + this.query)[0].offsetWidth - 4;
-					jQuery("#" + this.UcId + "_" + this.query + "_grid_top_div").css({ width: wd + "px" });
+					var wd = jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
+					jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
 
-					if ((this.serverPaging) && ((this.pageSize == 10) || (this.ServerRecordCount < 10))) {
-						if (this.ServerPageCount <= 1) { //hide pagiantion
-							jQuery("#" + this.UcId + "_" + this.query + "_tablePagination").css({ display: "none" });
+					if ((renderJSPivotInter.serverPaging) && ((renderJSPivotInter.pageSize == 10) || (renderJSPivotInter.ServerRecordCount < 10))) {
+						if (renderJSPivotInter.ServerPageCount <= 1) { //hide pagiantion
+							jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ display: "none" });
 						}
 					}
 				
 
 			}
-			var wd = jQuery("#" + this.UcId + "_" + this.query)[0].offsetWidth - 4;
+			var wd = jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
 			try {
 				if (jQuery("#MAINFORM")[0].className.indexOf("form-horizontal") > -1) {
 					wd = wd + 4;
 				}
 			} catch (Error) {
 			}
-			jQuery("#" + this.UcId + "_" + this.query + "_grid_top_div").css({ width: wd + "px" });
+			jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
 
 			//set interval for handler values infinite scroll
 			if (self.serverPaging) {
@@ -956,15 +954,15 @@ if (typeof exports != "undefined") {
 		}
 
 		if (!pivotParams.ServerPagingPivot) {
-			if (this.autoResize) {
-				jQuery("#" + this.UcId + "_" + this.query).css({ minWidth: "10px" });
+			if (renderJSPivotInter.autoResize) {
+				jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css({ minWidth: "10px" });
 			}
 		}
 
-		this.getDataForTable = function (UcId, pageNumber, rowsPerPage, recalculateCantPages, DataFieldOrder, OrderType, DataFieldFilter, DataFieldBlackList, restoreDefaultView, fromExternalRefresh) {
+		renderJSPivotInter.getDataForTable = function (UcId, pageNumber, rowsPerPage, recalculateCantPages, DataFieldOrder, OrderType, DataFieldFilter, DataFieldBlackList, restoreDefaultView, fromExternalRefresh) {
 			var layoutChanged = false;
 			if ((recalculateCantPages) || (DataFieldOrder != "") || (DataFieldFilter != "")) {
-				OAT_JS.grid.cleanCache(this, UcId);
+				OAT_JS.grid.cleanCache(renderJSPivotInter, UcId);
 				layoutChanged = true;
 			}
 			if (DataFieldOrder != "") OAT_JS.grid.gridData[UcId].dataFieldOrder = DataFieldOrder;
@@ -983,20 +981,20 @@ if (typeof exports != "undefined") {
 			if (!OAT_JS.grid.pageInCache(UcId, pageNumber)) {
 				
 				OAT_JS.grid.lastCallToQueryViewer = "getDataForTable"
-				OAT_JS.grid.lastCallData = { "self": this, "UcId": OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, "RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, "PageNumber": pageNumber, "fromExternalRefresh": fromExternalRefresh}
-				this.requestPageDataForTable(pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection)
+				OAT_JS.grid.lastCallData = { "self": renderJSPivotInter, "UcId": OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, "RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, "PageNumber": pageNumber, "fromExternalRefresh": fromExternalRefresh}
+				renderJSPivotInter.requestPageDataForTable(pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection)
 				
 				/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTable((function (resXML) {
 					if (pageNumber == 0) { pageNumber = 1, recalculateCantPages = false; }
-					OAT_JS.grid.redraw(this, UcId, resXML, recalculateCantPages, DataFieldOrder != "", pageNumber, fromExternalRefresh)
-				}).closure(this), [pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged]);*/
+					OAT_JS.grid.redraw(renderJSPivotInter, UcId, resXML, recalculateCantPages, DataFieldOrder != "", pageNumber, fromExternalRefresh)
+				}).closure(renderJSPivotInter), [pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged]);*/
 			} else {
-				OAT_JS.grid.redraw(this, UcId, OAT_JS.grid.pageInCache(UcId, pageNumber), false, false, pageNumber, true)
+				OAT_JS.grid.redraw(renderJSPivotInter, UcId, OAT_JS.grid.pageInCache(UcId, pageNumber), false, false, pageNumber, true)
 			}
 		}
 		
 		
-		this.requestPageDataForTable = function(PageNumber, PageSize, recalculateCantPages, DataFieldOrder, OrderType, Filters, LayoutChange, IdForQueryViewerCollection){
+		renderJSPivotInter.requestPageDataForTable = function(PageNumber, PageSize, recalculateCantPages, DataFieldOrder, OrderType, Filters, LayoutChange, IdForQueryViewerCollection){
 			setTimeout( function() {
 				var paramobj = {  "PageNumber": PageNumber, "PageSize": PageSize,"RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, 
 					"OrderType":OrderType, "Filters":Filters, "LayoutChange":LayoutChange, "QueryviewerId": IdForQueryViewerCollection};
@@ -1010,30 +1008,30 @@ if (typeof exports != "undefined") {
 		
 		
 		
-		this.getActualCantPages = function(UcId){  
+		renderJSPivotInter.getActualCantPages = function(UcId){  
 		 	return OAT_JS.grid.gridData[UcId].actualCantPages
 		}
 		
-		this.getValuesForColumn = function (UcId, columnNumber, filterValue) {
+		renderJSPivotInter.getValuesForColumn = function (UcId, columnNumber, filterValue) {
 			var dataField = OAT_JS.grid.gridData[UcId].columnDataField[columnNumber]
 			if (filterValue != "") {
 				var page = 1;
 				
 				OAT_JS.grid.lastCallToQueryViewer = "getValuesForColumn"
-				OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": filterValue, "dataField": dataField }
+				OAT_JS.grid.lastCallData = { "self": renderJSPivotInter, "UcId": UcId, "columnNumber": columnNumber, "filterValue": filterValue, "dataField": dataField }
 				
-				this.requestAttributeForTable(UcId, dataField, page, filterValue, 10)
+				renderJSPivotInter.requestAttributeForTable(UcId, dataField, page, filterValue, 10)
 				/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 					var res = JSON.parse(resJSON);
 					OAT_JS.grid.changeValues(UcId, dataField, columnNumber, res, filterValue);
-				}).closure(this), [dataField, page, 10, filterValue]);*/
+				}).closure(renderJSPivotInter), [dataField, page, 10, filterValue]);*/
 			} else {
 				OAT_JS.grid.resetScrollValue(UcId, dataField, columnNumber)
 			}
 		}
 		
 		
-		this.requestAttributeForTable = function(UcId, dataField, page, filterValue, pageSize){
+		renderJSPivotInter.requestAttributeForTable = function(UcId, dataField, page, filterValue, pageSize){
 			setTimeout( function() {
 				var paramobj = {  "Page": page, "PageSize": pageSize, "DataField": dataField, "Filters":filterValue, "QueryviewerId": UcId};
 				var evt = document.createEvent("Events")
@@ -1044,7 +1042,7 @@ if (typeof exports != "undefined") {
 		}
 		
 		
-		this.fireOnFilterChanged = function(UcId, FilterChangedData){
+		renderJSPivotInter.fireOnFilterChanged = function(UcId, FilterChangedData){
 			setTimeout( function() {
 				var paramobj = {"QueryViewerd": UcId, "FilterChangedData": FilterChangedData};
 				var evt = document.createEvent("Events")
@@ -1080,12 +1078,13 @@ if (typeof exports != "undefined") {
 			this.gridData[UcId].autoResize = _mthis.autoResize;
 			this.gridData[UcId].selection = {Allow: _mthis.pivotParams.AllowSelection, EntireLine: _mthis.pivotParams.SelectLine, SelectedNode: []};
 			
-			this.gridData[UcId].grid = new OAT.Grid(content, controlName, query, columnsDataType, colms, QueryViewerCollection, this.gridData[UcId].rowsPerPage,
+			this.gridData[UcId].grid = new OAT.Grid(content, controlName, _mthis.query, columnsDataType, colms, QueryViewerCollection, this.gridData[UcId].rowsPerPage,
 				disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, _mthis.serverPaging, _mthis.HideDataFilds, _mthis.orderFildsHidden, _mthis.TableOrderFilds, _mthis.relativePath,
 				this.gridData[UcId].selection, _mthis.pivotParams.Title, _mthis.translations );
 			this.gridData[UcId].grid.oat_component = this;
 			this.gridData[UcId].QueryViewerCollectionItem = QueryViewerCollection[IdForQueryViewerCollection];
-
+			this.gridData[UcId].Events = _mthis;
+			this.gridData[UcId].translations = _mthis.translations;
 			//initialize 
 			this.gridData[UcId].columnDataField = []
 			if ((_mthis.previousState) && (_mthis.previousState.columnDataField)){
@@ -1213,8 +1212,8 @@ if (typeof exports != "undefined") {
 			this.gridData[UcId].customOrderValues = [];
 			for (var index = 0; index < columns.length; index++) {
 				if ((columns[index].getAttribute("order") != undefined) && (columns[index].getAttribute("order") === "custom")) {
-					result = this.gridData[UcId].grid.applyCustomSort(index, columns[index], data);
-					data = result[0]
+					result = this.gridData[UcId].grid.applyCustomSort(index, columns[index], _mthis.data);
+					_mthis.data = result[0]
 					this.gridData[UcId].customOrderValues[index] = result[1]
 				} else {
 					this.gridData[UcId].customOrderValues[index] = false
@@ -1223,10 +1222,10 @@ if (typeof exports != "undefined") {
 
 			this.gridData[UcId].rowsMetadata = {
 				columnsDataType: columnsDataType, defaultPicture: defaultPicture, forPivotCustomPicture: forPivotCustomPicture,
-				conditionalFormatsColumns: conditionalFormatsColumns, formatValues: formatValues, forPivotCustomFormat: forPivotCustomFormat, columns: columns
+				conditionalFormatsColumns: conditionalFormatsColumns, formatValues: formatValues, forPivotCustomFormat: _mthis.forPivotCustomFormat, columns: columns
 			}
-			this.gridData[UcId].rowsData = data;
-			for (var i = 0; i < data.length; i++) {
+			this.gridData[UcId].rowsData = _mthis.data;
+			for (var i = 0; i < _mthis.data.length; i++) {
 				OAT.CreateGridRow(_mthis.data[i], this.gridData[UcId])
 			}
 
@@ -1294,7 +1293,7 @@ if (typeof exports != "undefined") {
 			if (_mthis.previousState) {
 				var __mthis = this
 				setTimeout( function() {
-					self.getDataForTable(UcId, 1, __mthis.gridData[UcId].rowsPerPage, true, __mthis.gridData[UcId].dataFieldOrder, __mthis.gridData[UcId].orderType, "", "", "", false);
+					this.gridData[UcId].Events.getDataForTable(UcId, 1, __mthis.gridData[UcId].rowsPerPage, true, __mthis.gridData[UcId].dataFieldOrder, __mthis.gridData[UcId].orderType, "", "", "", false);
 				} , 0)
 			}
 
@@ -1709,7 +1708,7 @@ if (typeof exports != "undefined") {
 			}
 			if ((!filterExist) && (!noFilterNeeded)) {
 				var notNullValues = { Included: included, Excluded: excluded, DefaultAction: this.gridData[UcId].blackLists[DataFieldFilter].defaultAction }
-				filter = { DataField: DataFieldFilter, NullIncluded: nullIncluded, NotNullValues: notNullValues }
+				var filter = { DataField: DataFieldFilter, NullIncluded: nullIncluded, NotNullValues: notNullValues }
 				this.gridData[UcId].filterInfo.push(filter);
 			}
 		},
@@ -1727,7 +1726,7 @@ if (typeof exports != "undefined") {
 					OAT_JS.grid.lastCallToQueryViewer = "readScrollValue"
 					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": "", "dataField": dataField }
 				
-					self.requestAttributeForTable(UcId, dataField, page, "", 10)
+					this.gridData[UcId].Events.requestAttributeForTable(UcId, dataField, page, "", 10)
 					/*qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						OAT_JS.grid.appendNewValueData(UcId, res)
@@ -1741,7 +1740,7 @@ if (typeof exports != "undefined") {
 					OAT_JS.grid.lastCallToQueryViewer = "readScrollValueFilter"
 					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "posColumnNumber": posColumnNumber, "filterValue": filterText, "dataField": dataField, "filterText": filterText }
 				
-					self.requestAttributeForTable(UcId, dataField, page, filterText, 10)
+					this.gridData[UcId].Events.requestAttributeForTable(UcId, dataField, page, filterText, 10)
 					/*qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						OAT_JS.grid.appendNewFilteredValueData(UcId, res, posColumnNumber, filterText)
@@ -1925,7 +1924,7 @@ if (typeof exports != "undefined") {
 				OAT_JS.grid.lastCallToQueryViewer = "initValueRead"
 				OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": "", "dataField": requestDataField }
 				
-				self.requestAttributeForTable(UcId, this.gridData[UcId].grid.lastRequestValue, 1, "", cantItems)
+				this.gridData[UcId].Events.requestAttributeForTable(UcId, this.gridData[UcId].grid.lastRequestValue, 1, "", cantItems)
 				
 				
 				
@@ -2009,7 +2008,7 @@ if (typeof exports != "undefined") {
 		},
 		initValueLoad: function (data, UcId, requestDataField){
 			//load data
-			dataField = this.gridData[UcId].grid.lastRequestValue
+			var dataField = this.gridData[UcId].grid.lastRequestValue
 			this.gridData[UcId].differentValuesPaginationInfo[dataField].previousPage = data.PageNumber
 			this.gridData[UcId].differentValuesPaginationInfo[dataField].totalPages = data.PagesCount
 
@@ -2261,7 +2260,7 @@ if (typeof exports != "undefined") {
 					OAT_JS.grid.lastCallToQueryViewer = "filterChange"
 					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId,  "filterValue": "", "dataField": df, "oatDimension": oatDimension }
 				
-					self.requestAttributeForTable(UcId, df, page, "", 0)
+					OAT_JS.grid.gridData[UcId].Events.requestAttributeForTable(UcId, df, page, "", 0)
 				
 					/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
@@ -2512,27 +2511,27 @@ if (typeof exports != "undefined") {
 			formatValueMeasures, autoResize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, ShowMeasuresAsRows,
 			formulaInfo, fullRecord, serverPagination, pagingData, HideDataFilds, OrderFildsHidden, initMetadata, relativePath, pivotParams) {
 			this.div = pivotdiv;
-			var cols = columnNumbers.length + rowNumbers.length + filterNumbers.length;
-			if (measures.length > 1) {
+			var cols = _mthis.columnNumbers.length + _mthis.rowNumbers.length + _mthis.filterNumbers.length;
+			if (_mthis.measures.length > 1) {
 				var prevCol = cols;
-				cols = cols + measures.length - 1;
+				cols = cols + _mthis.measures.length - 1;
 				for (var i = prevCol; i < cols; i++) {
-					columnNumbers.push(i);
+					_mthis.columnNumbers.push(i);
 				}
 			} else {
-				for (var i = 0; i < data.length; i++) {
-					data[i].push("0");
+				for (var i = 0; i < _mthis.data.length; i++) {
+					_mthis.data[i].push("0");
 				}
 			}
 			var pivot;
-			try {
-				pivot = new OAT.Pivot(_mthis, content, page, header, data, columnNumbers, rowNumbers, filterNumbers, cols, query, conditionalFormats, UcId, pageSize, defaultPicture, QueryViewerCollection, colms, pivotdiv,
-					formatValue, conditionalFormatsColumns, formatValueMeasures, measures, autoResize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout,
+			// try {
+				pivot = new OAT.Pivot(_mthis, content, page, _mthis.header, _mthis.data, _mthis.columnNumbers, _mthis.rowNumbers, _mthis.filterNumbers, cols, _mthis.query, _mthis.conditionalFormats, UcId, _mthis.pageSize, defaultPicture, QueryViewerCollection, colms, pivotdiv,
+					formatValue, conditionalFormatsColumns, formatValueMeasures, _mthis.measures, autoResize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout,
 					ShowMeasuresAsRows, formulaInfo, fullRecord, serverPagination, pagingData, HideDataFilds, OrderFildsHidden, initMetadata, relativePath,
 					{ Allow: pivotParams.AllowSelection, EntireLine: pivotParams.SelectLine}, { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns } , pivotParams.Title );
-			} catch (Error) {
-				//alert(Error)
-			}
+			// } catch (Error) {
+				// alert(Error)
+			// }
 			return pivot;
 		}
 	}
@@ -3382,663 +3381,3 @@ if (typeof exports != "undefined") {
 
 	}
 	
-	
-	//FILE OAT.Layers
-	OAT.Layers = function (f) {
-		var a = this;
-		this.baseOffset = f;
-		this.layers = [];
-		this.currentIndex = 0;
-		this.raise = function (b) {
-			if (-1 != a.layers.indexOf(b)) {
-				for (var d = b.style.zIndex, c = 0; c < a.layers.length; c++) {
-					var e = a.layers[c];
-					e.style.zIndex > d && e.style.zIndex--
-				}
-				b.style.zIndex = a.currentIndex
-			}
-		};
-		this.addLayer = function (b, d) {
-			var c = OAT.$(b);
-			c && (a.currentIndex++ , c.style.zIndex = a.currentIndex, a.layers.push(c), OAT.Dom.attach(c, d ? d : "mousedown", function () {
-				a.raise(c)
-			}))
-		};
-		this.removeLayer = function (b) {
-			b = OAT.$(b);
-			b = a.layers.indexOf(b);
-			-1 != b && a.layers.splice(b, 1)
-		};
-		a.currentIndex = a.baseOffset
-	};
-
-
-
-
-
-
-	; (function () {
-		/*jshint eqeqeq:false curly:false latedef:false */
-		"use strict";
-
-		function setup($) {
-			$.fn._fadeIn = $.fn.fadeIn;
-
-			var noOp = $.noop || function () { };
-
-			// this bit is to ensure we don't call setExpression when we shouldn't (with extra muscle to handle
-			// confusing userAgent strings on Vista)
-			var msie = /MSIE/.test(navigator.userAgent);
-			var ie6 = /MSIE 6.0/.test(navigator.userAgent) && ! /MSIE 8.0/.test(navigator.userAgent);
-			var mode = document.documentMode || 0;
-			var setExpr = $.isFunction(document.createElement('div').style.setExpression);
-
-			// global $ methods for blocking/unblocking the entire page
-			$.blockUI = function (opts) { install(window, opts); };
-			$.unblockUI = function (opts) { remove(window, opts); };
-
-			// convenience method for quick growl-like notifications  (http://www.google.com/search?q=growl)
-			$.growlUI = function (title, message, timeout, onClose) {
-				var $m = $('<div class="growlUI"></div>');
-				if (title) $m.append('<h1>' + title + '</h1>');
-				if (message) $m.append('<h2>' + message + '</h2>');
-				if (timeout === undefined) timeout = 3000;
-
-				// Added by konapun: Set timeout to 30 seconds if this growl is moused over, like normal toast notifications
-				var callBlock = function (opts) {
-					opts = opts || {};
-
-					$.blockUI({
-						message: $m,
-						fadeIn: typeof opts.fadeIn !== 'undefined' ? opts.fadeIn : 700,
-						fadeOut: typeof opts.fadeOut !== 'undefined' ? opts.fadeOut : 1000,
-						timeout: typeof opts.timeout !== 'undefined' ? opts.timeout : timeout,
-						centerY: false,
-						showOverlay: false,
-						onUnblock: onClose,
-						css: $.blockUI.defaults.growlCSS
-					});
-				};
-
-				callBlock();
-				var nonmousedOpacity = $m.css('opacity');
-				$m.mouseover(function () {
-					callBlock({
-						fadeIn: 0,
-						timeout: 30000
-					});
-
-					var displayBlock = $('.blockMsg');
-					displayBlock.stop(); // cancel fadeout if it has started
-					displayBlock.fadeTo(300, 1); // make it easier to read the message by removing transparency
-				}).mouseout(function () {
-					$('.blockMsg').fadeOut(1000);
-				});
-				// End konapun additions
-			};
-
-			// plugin method for blocking element content
-			$.fn.block = function (opts) {
-				if (this[0] === window) {
-					$.blockUI(opts);
-					return this;
-				}
-				var fullOpts = $.extend({}, $.blockUI.defaults, opts || {});
-				this.each(function () {
-					var $el = $(this);
-					if (fullOpts.ignoreIfBlocked && $el.data('blockUI.isBlocked'))
-						return;
-					$el.unblock({ fadeOut: 0 });
-				});
-
-				return this.each(function () {
-					if ($.css(this, 'position') == 'static') {
-						this.style.position = 'relative';
-						$(this).data('blockUI.static', true);
-					}
-					this.style.zoom = 1; // force 'hasLayout' in ie
-					install(this, opts);
-				});
-			};
-
-			// plugin method for unblocking element content
-			$.fn.unblock = function (opts) {
-				if (this[0] === window) {
-					$.unblockUI(opts);
-					return this;
-				}
-				return this.each(function () {
-					remove(this, opts);
-				});
-			};
-
-			$.blockUI.version = 2.70; // 2nd generation blocking at no extra cost!
-
-			// override these in your code to change the default behavior and style
-			$.blockUI.defaults = {
-				// message displayed when blocking (use null for no message)
-				message: '<h1>Please wait...</h1>',
-
-				title: null,		// title string; only used when theme == true
-				draggable: true,	// only used when theme == true (requires jquery-ui.js to be loaded)
-
-				theme: false, // set to true to use with jQuery UI themes
-
-				// styles for the message when blocking; if you wish to disable
-				// these and use an external stylesheet then do this in your code:
-				// $.blockUI.defaults.css = {};
-				css: {
-					padding: 0,
-					margin: 0,
-					width: '30%',
-					top: '40%',
-					left: '35%',
-					textAlign: 'center',
-					color: '#000',
-					border: '3px solid #aaa',
-					backgroundColor: '#fff',
-					cursor: 'wait'
-				},
-
-				// minimal style set used when themes are used
-				themedCSS: {
-					width: '30%',
-					top: '40%',
-					left: '35%'
-				},
-
-				// styles for the overlay
-				overlayCSS: {
-					backgroundColor: '#000',
-					opacity: 0.1,
-					cursor: 'wait'
-				},
-
-				// style to replace wait cursor before unblocking to correct issue
-				// of lingering wait cursor
-				cursorReset: 'default',
-
-				// styles applied when using $.growlUI
-				growlCSS: {
-					width: '350px',
-					top: '10px',
-					left: '',
-					right: '10px',
-					border: 'none',
-					padding: '5px',
-					opacity: 0.6,
-					cursor: 'default',
-					color: '#fff',
-					backgroundColor: '#000',
-					'-webkit-border-radius': '10px',
-					'-moz-border-radius': '10px',
-					'border-radius': '10px'
-				},
-
-				// IE issues: 'about:blank' fails on HTTPS and javascript:false is s-l-o-w
-				// (hat tip to Jorge H. N. de Vasconcelos)
-				/*jshint scripturl:true */
-				iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank',
-
-				// force usage of iframe in non-IE browsers (handy for blocking applets)
-				forceIframe: false,
-
-				// z-index for the blocking overlay
-				baseZ: 1000,
-
-				// set these to true to have the message automatically centered
-				centerX: true, // <-- only effects element blocking (page block controlled via css above)
-				centerY: true,
-
-				// allow body element to be stetched in ie6; this makes blocking look better
-				// on "short" pages.  disable if you wish to prevent changes to the body height
-				allowBodyStretch: true,
-
-				// enable if you want key and mouse events to be disabled for content that is blocked
-				bindEvents: true,
-
-				// be default blockUI will supress tab navigation from leaving blocking content
-				// (if bindEvents is true)
-				constrainTabKey: true,
-
-				// fadeIn time in millis; set to 0 to disable fadeIn on block
-				fadeIn: 200,
-
-				// fadeOut time in millis; set to 0 to disable fadeOut on unblock
-				fadeOut: 400,
-
-				// time in millis to wait before auto-unblocking; set to 0 to disable auto-unblock
-				timeout: 0,
-
-				// disable if you don't want to show the overlay
-				showOverlay: true,
-
-				// if true, focus will be placed in the first available input field when
-				// page blocking
-				focusInput: true,
-
-				// elements that can receive focus
-				focusableElements: ':input:enabled:visible',
-
-				// suppresses the use of overlay styles on FF/Linux (due to performance issues with opacity)
-				// no longer needed in 2012
-				// applyPlatformOpacityRules: true,
-
-				// callback method invoked when fadeIn has completed and blocking message is visible
-				onBlock: null,
-
-				// callback method invoked when unblocking has completed; the callback is
-				// passed the element that has been unblocked (which is the window object for page
-				// blocks) and the options that were passed to the unblock call:
-				//	onUnblock(element, options)
-				onUnblock: null,
-
-				// callback method invoked when the overlay area is clicked.
-				// setting this will turn the cursor to a pointer, otherwise cursor defined in overlayCss will be used.
-				onOverlayClick: null,
-
-				// don't ask; if you really must know: http://groups.google.com/group/jquery-en/browse_thread/thread/36640a8730503595/2f6a79a77a78e493#2f6a79a77a78e493
-				quirksmodeOffsetHack: 4,
-
-				// class name of the message block
-				blockMsgClass: 'blockMsg',
-
-				// if it is already blocked, then ignore it (don't unblock and reblock)
-				ignoreIfBlocked: false
-			};
-
-			// private data and functions follow...
-
-			var pageBlock = null;
-			var pageBlockEls = [];
-
-			function install(el, opts) {
-				var css, themedCSS;
-				var full = (el == window);
-				var msg = (opts && opts.message !== undefined ? opts.message : undefined);
-				opts = $.extend({}, $.blockUI.defaults, opts || {});
-
-				if (opts.ignoreIfBlocked && $(el).data('blockUI.isBlocked'))
-					return;
-
-				opts.overlayCSS = $.extend({}, $.blockUI.defaults.overlayCSS, opts.overlayCSS || {});
-				css = $.extend({}, $.blockUI.defaults.css, opts.css || {});
-				if (opts.onOverlayClick)
-					opts.overlayCSS.cursor = 'pointer';
-
-				themedCSS = $.extend({}, $.blockUI.defaults.themedCSS, opts.themedCSS || {});
-				msg = msg === undefined ? opts.message : msg;
-
-				// remove the current block (if there is one)
-				if (full && pageBlock)
-					remove(window, { fadeOut: 0 });
-
-				// if an existing element is being used as the blocking content then we capture
-				// its current place in the DOM (and current display style) so we can restore
-				// it when we unblock
-				if (msg && typeof msg != 'string' && (msg.parentNode || msg.jquery)) {
-					var node = msg.jquery ? msg[0] : msg;
-					var data = {};
-					$(el).data('blockUI.history', data);
-					data.el = node;
-					data.parent = node.parentNode;
-					data.display = node.style.display;
-					data.position = node.style.position;
-					if (data.parent)
-						data.parent.removeChild(node);
-				}
-
-				$(el).data('blockUI.onUnblock', opts.onUnblock);
-				var z = opts.baseZ;
-
-				// blockUI uses 3 layers for blocking, for simplicity they are all used on every platform;
-				// layer1 is the iframe layer which is used to supress bleed through of underlying content
-				// layer2 is the overlay layer which has opacity and a wait cursor (by default)
-				// layer3 is the message content that is displayed while blocking
-				var lyr1, lyr2, lyr3, s;
-				if (msie || opts.forceIframe)
-					lyr1 = $('<iframe class="blockUI" style="z-index:' + (z++) + ';display:none;border:none;margin:0;padding:0;position:absolute;width:100%;height:100%;top:0;left:0" src="' + opts.iframeSrc + '"></iframe>');
-				else
-					lyr1 = $('<div class="blockUI" style="display:none"></div>');
-
-				if (opts.theme)
-					lyr2 = $('<div class="blockUI blockOverlay ui-widget-overlay" style="z-index:' + (z++) + ';display:none"></div>');
-				else
-					lyr2 = $('<div class="blockUI blockOverlay" style="z-index:' + (z++) + ';display:none;border:none;margin:0;padding:0;width:100%;height:100%;top:0;left:0"></div>');
-
-				if (opts.theme && full) {
-					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockPage ui-dialog ui-widget ui-corner-all" style="z-index:' + (z + 10) + ';display:none;position:fixed">';
-					if (opts.title) {
-						s += '<div class="ui-widget-header ui-dialog-titlebar ui-corner-all blockTitle">' + (opts.title || '&nbsp;') + '</div>';
-					}
-					s += '<div class="ui-widget-content ui-dialog-content"></div>';
-					s += '</div>';
-				}
-				else if (opts.theme) {
-					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockElement ui-dialog ui-widget ui-corner-all" style="z-index:' + (z + 10) + ';display:none;position:absolute">';
-					if (opts.title) {
-						s += '<div class="ui-widget-header ui-dialog-titlebar ui-corner-all blockTitle">' + (opts.title || '&nbsp;') + '</div>';
-					}
-					s += '<div class="ui-widget-content ui-dialog-content"></div>';
-					s += '</div>';
-				}
-				else if (full) {
-					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockPage" style="z-index:' + (z + 10) + ';display:none;position:fixed"></div>';
-				}
-				else {
-					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockElement" style="z-index:' + (z + 10) + ';display:none;position:absolute"></div>';
-				}
-				lyr3 = $(s);
-
-				// if we have a message, style it
-				if (msg) {
-					if (opts.theme) {
-						lyr3.css(themedCSS);
-						lyr3.addClass('ui-widget-content');
-					}
-					else
-						lyr3.css(css);
-				}
-
-				// style the overlay
-				if (!opts.theme /*&& (!opts.applyPlatformOpacityRules)*/)
-					lyr2.css(opts.overlayCSS);
-				lyr2.css('position', full ? 'fixed' : 'absolute');
-
-				// make iframe layer transparent in IE
-				if (msie || opts.forceIframe)
-					lyr1.css('opacity', 0.0);
-
-				//$([lyr1[0],lyr2[0],lyr3[0]]).appendTo(full ? 'body' : el);
-				var layers = [lyr1, lyr2, lyr3], $par = full ? $('body') : $(el);
-				$.each(layers, function () {
-					this.appendTo($par);
-				});
-
-				if (opts.theme && opts.draggable && $.fn.draggable) {
-					lyr3.draggable({
-						handle: '.ui-dialog-titlebar',
-						cancel: 'li'
-					});
-				}
-
-				// ie7 must use absolute positioning in quirks mode and to account for activex issues (when scrolling)
-				var expr = setExpr && (!$.support.boxModel || $('object,embed', full ? null : el).length > 0);
-				if (ie6 || expr) {
-					// give body 100% height
-					if (full && opts.allowBodyStretch && $.support.boxModel)
-						$('html,body').css('height', '100%');
-
-					// fix ie6 issue when blocked element has a border width
-					if ((ie6 || !$.support.boxModel) && !full) {
-						var t = sz(el, 'borderTopWidth'), l = sz(el, 'borderLeftWidth');
-						var fixT = t ? '(0 - ' + t + ')' : 0;
-						var fixL = l ? '(0 - ' + l + ')' : 0;
-					}
-
-					// simulate fixed position
-					$.each(layers, function (i, o) {
-						var s = o[0].style;
-						s.position = 'absolute';
-						if (i < 2) {
-							if (full)
-								s.setExpression('height', 'Math.max(document.body.scrollHeight, document.body.offsetHeight) - (jQuery.support.boxModel?0:' + opts.quirksmodeOffsetHack + ') + "px"');
-							else
-								s.setExpression('height', 'this.parentNode.offsetHeight + "px"');
-							if (full)
-								s.setExpression('width', 'jQuery.support.boxModel && document.documentElement.clientWidth || document.body.clientWidth + "px"');
-							else
-								s.setExpression('width', 'this.parentNode.offsetWidth + "px"');
-							if (fixL) s.setExpression('left', fixL);
-							if (fixT) s.setExpression('top', fixT);
-						}
-						else if (opts.centerY) {
-							if (full) s.setExpression('top', '(document.documentElement.clientHeight || document.body.clientHeight) / 2 - (this.offsetHeight / 2) + (blah = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + "px"');
-							s.marginTop = 0;
-						}
-						else if (!opts.centerY && full) {
-							var top = (opts.css && opts.css.top) ? parseInt(opts.css.top, 10) : 0;
-							var expression = '((document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + ' + top + ') + "px"';
-							s.setExpression('top', expression);
-						}
-					});
-				}
-
-				// show the message
-				if (msg) {
-					if (opts.theme)
-						lyr3.find('.ui-widget-content').append(msg);
-					else
-						lyr3.append(msg);
-					if (msg.jquery || msg.nodeType)
-						$(msg).show();
-				}
-
-				if ((msie || opts.forceIframe) && opts.showOverlay)
-					lyr1.show(); // opacity is zero
-				if (opts.fadeIn) {
-					var cb = opts.onBlock ? opts.onBlock : noOp;
-					var cb1 = (opts.showOverlay && !msg) ? cb : noOp;
-					var cb2 = msg ? cb : noOp;
-					if (opts.showOverlay)
-						lyr2._fadeIn(opts.fadeIn, cb1);
-					if (msg)
-						lyr3._fadeIn(opts.fadeIn, cb2);
-				}
-				else {
-					if (opts.showOverlay)
-						lyr2.show();
-					if (msg)
-						lyr3.show();
-					if (opts.onBlock)
-						opts.onBlock.bind(lyr3)();
-				}
-
-				// bind key and mouse events
-				bind(1, el, opts);
-
-				if (full) {
-					pageBlock = lyr3[0];
-					pageBlockEls = $(opts.focusableElements, pageBlock);
-					if (opts.focusInput)
-						setTimeout(focus, 20);
-				}
-				else
-					center(lyr3[0], opts.centerX, opts.centerY);
-
-				if (opts.timeout) {
-					// auto-unblock
-					var to = setTimeout(function () {
-						if (full)
-							$.unblockUI(opts);
-						else
-							$(el).unblock(opts);
-					}, opts.timeout);
-					$(el).data('blockUI.timeout', to);
-				}
-			}
-
-			// remove the block
-			function remove(el, opts) {
-				var count;
-				var full = (el == window);
-				var $el = $(el);
-				var data = $el.data('blockUI.history');
-				var to = $el.data('blockUI.timeout');
-				if (to) {
-					clearTimeout(to);
-					$el.removeData('blockUI.timeout');
-				}
-				opts = $.extend({}, $.blockUI.defaults, opts || {});
-				bind(0, el, opts); // unbind events
-
-				if (opts.onUnblock === null) {
-					opts.onUnblock = $el.data('blockUI.onUnblock');
-					$el.removeData('blockUI.onUnblock');
-				}
-
-				var els;
-				if (full) // crazy selector to handle odd field errors in ie6/7
-					els = $('body').children().filter('.blockUI').add('body > .blockUI');
-				else
-					els = $el.find('>.blockUI');
-
-				// fix cursor issue
-				if (opts.cursorReset) {
-					if (els.length > 1)
-						els[1].style.cursor = opts.cursorReset;
-					if (els.length > 2)
-						els[2].style.cursor = opts.cursorReset;
-				}
-
-				if (full)
-					pageBlock = pageBlockEls = null;
-
-				if (opts.fadeOut) {
-					count = els.length;
-					els.stop().fadeOut(opts.fadeOut, function () {
-						if (--count === 0)
-							reset(els, data, opts, el);
-					});
-				}
-				else
-					reset(els, data, opts, el);
-			}
-
-			// move blocking element back into the DOM where it started
-			function reset(els, data, opts, el) {
-				var $el = $(el);
-				if ($el.data('blockUI.isBlocked'))
-					return;
-
-				els.each(function (i, o) {
-					// remove via DOM calls so we don't lose event handlers
-					if (this.parentNode)
-						this.parentNode.removeChild(this);
-				});
-
-				if (data && data.el) {
-					data.el.style.display = data.display;
-					data.el.style.position = data.position;
-					data.el.style.cursor = 'default'; // #59
-					if (data.parent)
-						data.parent.appendChild(data.el);
-					$el.removeData('blockUI.history');
-				}
-
-				if ($el.data('blockUI.static')) {
-					$el.css('position', 'static'); // #22
-				}
-
-				if (typeof opts.onUnblock == 'function')
-					opts.onUnblock(el, opts);
-
-				// fix issue in Safari 6 where block artifacts remain until reflow
-				var body = $(document.body), w = body.width(), cssW = body[0].style.width;
-				body.width(w - 1).width(w);
-				body[0].style.width = cssW;
-			}
-
-			// bind/unbind the handler
-			function bind(b, el, opts) {
-				var full = el == window, $el = $(el);
-
-				// don't bother unbinding if there is nothing to unbind
-				if (!b && (full && !pageBlock || !full && !$el.data('blockUI.isBlocked')))
-					return;
-
-				$el.data('blockUI.isBlocked', b);
-
-				// don't bind events when overlay is not in use or if bindEvents is false
-				if (!full || !opts.bindEvents || (b && !opts.showOverlay))
-					return;
-
-				// bind anchors and inputs for mouse and key events
-				var events = 'mousedown mouseup keydown keypress keyup touchstart touchend touchmove';
-				if (b)
-					$(document).bind(events, opts, handler);
-				else
-					$(document).unbind(events, handler);
-
-				// former impl...
-				//		var $e = $('a,:input');
-				//		b ? $e.bind(events, opts, handler) : $e.unbind(events, handler);
-			}
-
-			// event handler to suppress keyboard/mouse events when blocking
-			function handler(e) {
-				// allow tab navigation (conditionally)
-				if (e.type === 'keydown' && e.keyCode && e.keyCode == 9) {
-					if (pageBlock && e.data.constrainTabKey) {
-						var els = pageBlockEls;
-						var fwd = !e.shiftKey && e.target === els[els.length - 1];
-						var back = e.shiftKey && e.target === els[0];
-						if (fwd || back) {
-							setTimeout(function () { focus(back); }, 10);
-							return false;
-						}
-					}
-				}
-				var opts = e.data;
-				var target = $(e.target);
-				if (target.hasClass('blockOverlay') && opts.onOverlayClick)
-					opts.onOverlayClick(e);
-
-				// allow events within the message content
-				if (target.parents('div.' + opts.blockMsgClass).length > 0)
-					return true;
-
-				// allow events for content that is not being blocked
-				return target.parents().children().filter('div.blockUI').length === 0;
-			}
-
-			function focus(back) {
-				if (!pageBlockEls)
-					return;
-				var e = pageBlockEls[back === true ? pageBlockEls.length - 1 : 0];
-				if (e)
-					e.focus();
-			}
-
-			function center(el, x, y) {
-				var p = el.parentNode, s = el.style;
-				var l = ((p.offsetWidth - el.offsetWidth) / 2) - sz(p, 'borderLeftWidth');
-				var t = ((p.offsetHeight - el.offsetHeight) / 2) - sz(p, 'borderTopWidth');
-				if (x) s.left = l > 0 ? (l + 'px') : '0';
-				if (y) s.top = t > 0 ? (t + 'px') : '0';
-			}
-
-			function sz(el, p) {
-				return parseInt($.css(el, p), 10) || 0;
-			}
-
-		}
-
-
-		/*global define:true */
-		if (typeof define === 'function' && define.amd && define.amd.jQuery) {
-			define(['jquery'], setup);
-		} else {
-			if(typeof jQuery != "undefined"){
-				setup(jQuery);
-			}
-		}
-
-	})();
-
-
-
-
-
-
-
-
-	try {
-		OAT.Loader.featureLoaded("layers");
-	} catch (ERROR) {
-
-	}
-
-
-	
-

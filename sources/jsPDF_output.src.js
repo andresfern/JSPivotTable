@@ -1,3 +1,4 @@
+//jsPDF_output.src.js
 var jsPDF = (function () {
 		'use strict';
 		/*jslint browser:true, plusplus: true, bitwise: true, nomen: true */
@@ -2181,10 +2182,8 @@ var jsPDF = (function () {
 
 
 	})(jsPDF.API)
-
-
-
-	//FILE jspdf_encoding
+	
+		//FILE jspdf_encoding
 
 
 
