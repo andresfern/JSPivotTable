@@ -1256,11 +1256,20 @@
 				
 		}
 		
+		this.EventForFilteredDataXMLRequest = function(IdForQueryViewerCollection, dataXML){
+			setTimeout( function() {
+				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
+				var evt = document.createEvent("Events")
+				evt.initEvent("PivotTableOnFilteredDataRequest", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
 		
 		this.getFilteredDataXML = function (serverData) {
 			
 				//var temp = self.QueryViewerCollection[self.IdForQueryViewerCollection].getPivottableDataSync();
-				temp = serverData.replace(/\&amp;/g, '&').replace(/\&lt;/g, '<').replace(/\&gt;/g, '>').replace(/\&apos;/g, '\'').replace(/\&quot/g, '\"');
+				var temp = serverData.replace(/\&amp;/g, '&').replace(/\&lt;/g, '<').replace(/\&gt;/g, '>').replace(/\&apos;/g, '\'').replace(/\&quot/g, '\"');
 				var stringRecord = temp.split("<Record>")
 
 				var tempData = [];
@@ -1335,9 +1344,20 @@
 				return dataStr
 			
 		}
-
+		
+		
+		this.EventForDataXMLRequest = function(IdForQueryViewerCollection, dataXML){
+			setTimeout( function() {
+				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
+				var evt = document.createEvent("Events")
+				evt.initEvent("PivotTableOnDataRequest", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		this.getMetadataXML = function () {
-			xml = '<OLAPCube format="' + this.defaultPicture.getAttribute("format") + '" thousandsSeparator="' + this.defaultPicture.getAttribute("thousandsSeparator") + '" decimalSeparator="' + this.defaultPicture.getAttribute("decimalSeparator") + '" dateFormat="' + this.defaultPicture.getAttribute("dateFormat") + '">'
+			var xml = '<OLAPCube format="' + this.defaultPicture.getAttribute("format") + '" thousandsSeparator="' + this.defaultPicture.getAttribute("thousandsSeparator") + '" decimalSeparator="' + this.defaultPicture.getAttribute("decimalSeparator") + '" dateFormat="' + this.defaultPicture.getAttribute("dateFormat") + '">'
 
 			var forMetadatacolumns = this.columns;
 			if (self.initMetadata.Metadata) {
@@ -2328,7 +2348,7 @@
 			//restore save conditions
 			try {
 				if (rememberLayout) {
-					mState = self.getState();
+					var mState = self.getState();
 					if ((mState != undefined) && (mState.version != undefined) && (mState.version === self.rememberLayoutStateVersion)) { //check version
 						if ((mState.query == self.query) && (self.conditions.length == mState.conditions.length)) {
 							self.conditions[index].subtotals = mState.conditions[index].subtotals;
@@ -4185,7 +4205,7 @@
 
 
 			var checkToClose = function (b) {
-				source = OAT.Event.source(b);
+				var source = OAT.Event.source(b);
 				var clean = false;
 				var closing = false;
 				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
@@ -4212,7 +4232,7 @@
 			};
 
 			var checkInfoFilters = function (b) {
-				source = OAT.Event.source(b);
+				var source = OAT.Event.source(b);
 				var clean = false;
 				var closing = false;
 				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
@@ -4467,7 +4487,7 @@
 					exportXMLButton = OAT.Dom.create("div");
 					
 
-					exportXMLButtonSub = self.createExportButton(exportXMLButton)
+					var exportXMLButtonSub = self.createExportButton(exportXMLButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXml/*gx.getMessage("GXPL_QViewerContextMenuExportXml")*/)
@@ -4558,7 +4578,7 @@
 					var exportHTMLButton = OAT.Dom.create("div");
 					// exportHTMLButton.style.marginBottom = "10px"
 
-					exportButtonSub = self.createExportButton(exportHTMLButton)
+					var exportButtonSub = self.createExportButton(exportHTMLButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportHtml/*gx.getMessage("GXPL_QViewerContextMenuExportHtml")*/)
@@ -4592,7 +4612,7 @@
 				
 					var exportPdfButton = OAT.Dom.create("div");
 
-					exportButtonSub = self.createExportButton(exportPdfButton)
+					var exportButtonSub = self.createExportButton(exportPdfButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportPdf /*gx.getMessage("GXPL_QViewerContextMenuExportPdf")*/)
@@ -4627,7 +4647,7 @@
 				
 					var exportXLSButton = OAT.Dom.create("div");
 
-					exportButtonSub = self.createExportButton(exportXLSButton)
+					var exportButtonSub = self.createExportButton(exportXLSButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl,self.translations.GXPL_QViewerContextMenuExportXls2003 /*gx.getMessage("GXPL_QViewerContextMenuExportXls2003")*/)
@@ -4674,7 +4694,7 @@
 				
 					var exportXLSButton = OAT.Dom.create("div");
 
-					exportButtonSub = self.createExportButton(exportXLSButton)
+					var exportButtonSub = self.createExportButton(exportXLSButton)
 
 					var pvpl = OAT.Dom.create("label");
 					OAT.addTextNode(pvpl, self.translations.GXPL_QViewerContextMenuExportXlsx /*gx.getMessage("GXPL_QViewerContextMenuExportXlsx")*/)
@@ -5279,7 +5299,7 @@
 
 				if ((lessThan[0] != undefined)) {
 					var cmpar = lessThan[0].split("-");
-					cmparElements = new Array(3);
+					var cmparElements = new Array(3);
 					cmparElements[1] = parseInt(cmpar[1]);
 					cmparElements[2] = parseInt(cmpar[2]);
 					cmparElements[0] = parseInt(cmpar[0]);
@@ -5294,8 +5314,8 @@
 				if ((between[0] != undefined) && (between[1] != undefined)) {
 					var cmpar = between[0].split("-");
 					var cmpar2 = between[1].split("-");
-					cmparElements = new Array(3);
-					cmparElements2 = new Array(3);
+					var cmparElements = new Array(3);
+					var cmparElements2 = new Array(3);
 					cmparElements[1] = parseInt(cmpar[1]);
 					cmparElements[2] = parseInt(cmpar[2]);
 					cmparElements[0] = parseInt(cmpar[0]);
@@ -6488,7 +6508,7 @@
 					//add lateral total
 					if ((self.options.totals && self.colConditions.length) && (self.GrandTotalVisibility.TotalForColumns == "Yes")) {
 						var td = OAT.Dom.create("td", {}, "total");
-						total_ = 0
+						var total_ = 0
 						if (lateralMeasureList.length > 0) {
 							if (self.formulaInfo.measureFormula[getMeasureNumberByName(measureTitle, measures)].hasFormula) {
 								total_ = self.calculateFormulaTotal(lateralMeasureList, getMeasureNumberByName(measureTitle, measures), "MeasureInRows")
@@ -8718,7 +8738,7 @@
 							rowPos = position
 							
 							var posincol = self.rowConditions.indexOf(pos)
-							var cont = 0; var noterminar = true;
+							var cont = 0, noterminar = true, dataFieldRC, positionDF;
 							for (var iterRC = posincol+1; iterRC < self.rowConditions.length && noterminar; iterRC++) //buscar dimensiones desplazadas
 							{	
 								cont++
@@ -10156,7 +10176,7 @@
 			var found = false;
 
 			var dataField = (SelectedType == "DIMENSION") ? self.columns[SelectedMorDNumber].getAttribute("dataField") : measures[SelectedMorDNumber].getAttribute("dataField");
-
+			var selectedCellOffset, selectedRowOffset;
 			for (var i = 0; i < jQuery("#" + self.controlName + "_" + self.query + " tr").length && (!found); i++) {//search selected cell in every row
 				var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
 				for (var j = 0; j < tRow.children.length && (!found); j++) {

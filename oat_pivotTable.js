@@ -11621,7 +11621,28 @@ var jsPDF = (function () {
 	
 				return dataStr;
 		}
-
+		
+		this.EventForDataXMLRequest = function(IdForQueryViewerCollection, dataXML){
+			setTimeout( function() {
+				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnDataRequest", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
+		
+		this.EventForFilteredDataXMLRequest = function(IdForQueryViewerCollection, dataXML){
+			setTimeout( function() {
+				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnFilteredDataRequest", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		this.getFilteredDataXML = function (serverData) {
 			return OAT_JS.grid.getTableWhenServerPagination(self.UcId, serverData);
 		}
@@ -14968,8 +14989,8 @@ if (typeof exports != "undefined") {
 
 //EVENTS
 	function getDataXML(oat_element, serverData){
-		var result = oat_element.getDataXML(serverData)
-		return result;
+		var oat_element_dataxml = oat_element.getDataXML(serverData)
+		oat_element.EventForDataXMLRequest(oat_element.IdForQueryViewerCollection, oat_element_dataxml)
 	}
 
 if (typeof exports != "undefined") {
@@ -14977,8 +14998,8 @@ if (typeof exports != "undefined") {
 }
 
 	function getFilteredDataXML(oat_element, serverData){
-		var result = oat_element.getFilteredDataXML(serverData)
-		return result;
+		var oat_element_dataxml = oat_element.getFilteredDataXML(serverData)
+		oat_element.EventForFilteredDataXMLRequest(oat_element.IdForQueryViewerCollection, oat_element_dataxml)
 	}
 
 if (typeof exports != "undefined") {
@@ -20717,6 +20738,16 @@ if (typeof exports != "undefined") {
 				
 		}
 		
+		this.EventForFilteredDataXMLRequest = function(IdForQueryViewerCollection, dataXML){
+			setTimeout( function() {
+				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
+				var evt = document.createEvent("Events")
+				evt.initEvent("PivotTableOnFilteredDataRequest", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		
 		this.getFilteredDataXML = function (serverData) {
 			
@@ -20796,7 +20827,17 @@ if (typeof exports != "undefined") {
 				return dataStr
 			
 		}
-
+		
+		this.EventForDataXMLRequest = function(IdForQueryViewerCollection, dataXML){
+			setTimeout( function() {
+				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
+				var evt = document.createEvent("Events")
+				evt.initEvent("PivotTableOnDataRequest", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		this.getMetadataXML = function () {
 			var xml = '<OLAPCube format="' + this.defaultPicture.getAttribute("format") + '" thousandsSeparator="' + this.defaultPicture.getAttribute("thousandsSeparator") + '" decimalSeparator="' + this.defaultPicture.getAttribute("decimalSeparator") + '" dateFormat="' + this.defaultPicture.getAttribute("dateFormat") + '">'
 

@@ -208,8 +208,8 @@ if (typeof exports != "undefined") {
 
 //EVENTS
 	function getDataXML(oat_element, serverData){
-		var result = oat_element.getDataXML(serverData)
-		return result;
+		var oat_element_dataxml = oat_element.getDataXML(serverData)
+		oat_element.EventForDataXMLRequest(oat_element.IdForQueryViewerCollection, oat_element_dataxml)
 	}
 
 if (typeof exports != "undefined") {
@@ -217,8 +217,8 @@ if (typeof exports != "undefined") {
 }
 
 	function getFilteredDataXML(oat_element, serverData){
-		var result = oat_element.getFilteredDataXML(serverData)
-		return result;
+		var oat_element_dataxml = oat_element.getFilteredDataXML(serverData)
+		oat_element.EventForFilteredDataXMLRequest(oat_element.IdForQueryViewerCollection, oat_element_dataxml)
 	}
 
 if (typeof exports != "undefined") {

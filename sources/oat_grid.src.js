@@ -416,7 +416,7 @@
 		
 		
 		this.setDataSynForTable = function(dataSync){
-			_self = self.oat_component.lastCallData.self
+			var _self = self.oat_component.lastCallData.self
 			
 			OAT.ClickHandle(_self, self.oat_component.lastCallData.elemvalue, dataSync)
 		}
@@ -1049,7 +1049,29 @@
 	
 				return dataStr;
 		}
-
+		
+		
+		this.EventForDataXMLRequest = oat_elem = function(IdForQueryViewerCollection, dataXML){
+			setTimeout( function() {
+				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnDataRequest", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
+		
+		this.EventForFilteredDataXMLRequest = function(IdForQueryViewerCollection, dataXML){
+			setTimeout( function() {
+				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
+				var evt = document.createEvent("Events")
+				evt.initEvent("TableOnFilteredDataRequest", true, true);
+				evt.parameter = paramobj;
+				document.dispatchEvent(evt);
+			}, 0)
+		}
+		
 		this.getFilteredDataXML = function (serverData) {
 			return OAT_JS.grid.getTableWhenServerPagination(self.UcId, serverData);
 		}
@@ -3867,7 +3889,7 @@
 	}
 
 	OAT.ExportToXML = function (self, fileName) {
-		var hiddenColumns = [];
+		var hiddenColumns = [], data;
 		for (var i = 0; i < 1; i++) {
 			var tRow = jQuery("#" + self.grid.controlName + " tr")[i];
 			for (var j = 0; j < tRow.children.length; j++) {
