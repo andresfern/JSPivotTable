@@ -556,7 +556,8 @@
 				self.filterDiv.selects[il].value = "[all]"
 			}
 			for (var ci = 0; ci <= self.conditions.length - 1; ci++) {
-				self.conditions[ci].blackList = [];
+				if (self.conditions[ci].blackList)
+					self.conditions[ci].blackList = [];
 			}
 			//localStorage.removeItem(OAT.getURL()+self.query+self.controlName);
 			//self.deleteState = false;

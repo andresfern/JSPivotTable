@@ -15486,7 +15486,7 @@ if (typeof exports != "undefined") {
 						recordData[j] = at[0]
 						fullRecordData[j] = recordData[j]
 					} else {
-						if (stringRecord[i].indexOf("<" + filds[j] + "/>") >= 0) {
+						if (stringRecord[i].indexOf("<" + filds[j]) >= 0) {
 							recordData[j] = ""
 							fullRecordData[j] = ""
 						}
@@ -17540,7 +17540,10 @@ if (typeof exports != "undefined") {
 						try {
 							value = headersItems[df - 1].split(datafield + ">")[1].split("<")[0]
 						} catch (ERROR) {
-							value = "#NuN#";
+							if (headersItems[df - 1].indexOf("IsNull") > -1)
+								value = "#NuN#";
+							else
+								value = ""	
 						}
 					}
 
@@ -20038,7 +20041,8 @@ if (typeof exports != "undefined") {
 				self.filterDiv.selects[il].value = "[all]"
 			}
 			for (var ci = 0; ci <= self.conditions.length - 1; ci++) {
-				self.conditions[ci].blackList = [];
+				if (self.conditions[ci].blackList)
+					self.conditions[ci].blackList = [];
 			}
 			//localStorage.removeItem(OAT.getURL()+self.query+self.controlName);
 			//self.deleteState = false;
