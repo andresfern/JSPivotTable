@@ -17847,6 +17847,9 @@ if (typeof exports != "undefined") {
 			}
 		}
 		if ((serverPaging) && (allHide)) {
+			if (translations.GXPL_QViewerQuantity == undefined){
+				translations.GXPL_QViewerQuantity = "Quantity"
+			}
 			measuresString.push('<OLAPMeasure name="Quantity" displayName="' + translations.GXPL_QViewerQuantity/*gx.getMessage("GXPL_QViewerQuantity")*/ + '" description="' + translations.GXPL_QViewerQuantity + '" dataField="F0" aggregation="count" summarize="yes" align="right" picture="" targetValue="0" defaultPosition="data" validPositions="data" dataType="integer" format="borderThickness:1"> </OLAPMeasure>');
 		}
 
@@ -27519,7 +27522,7 @@ if (typeof exports != "undefined") {
 			self.saveHiddenState(stateHidden)
 
 
-			var result = OATParseMetadata(self.initMetadata.Metadata, hideDimension, hideMeasures, self.serverPagination)
+			var result = OATParseMetadata(self.initMetadata.Metadata, hideDimension, hideMeasures, self.serverPagination, self.translations)
 			var newMetadata = result[0]; self.HideDataFilds = result[2]; self.OrderFildsHidden = result[1];
 
 			var xmlDoc = jQuery.parseXML(newMetadata);
