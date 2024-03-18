@@ -1395,6 +1395,16 @@ var OAT = {};
   		});
 	}
 
+    function getNotNullValues(xml, field) {
+        const rows = Array.from(xml.getElementsByTagName(field));
+        return rows.reduce((acc, row) => {
+        const rowLabel = row.textContent.trimpivot();
+        if (!acc.includes(rowLabel)) {
+            acc.push(rowLabel);
+        }
+        return acc;
+        }, []);
+    }
 
 //jsPDF_output.src.js
 var jsPDF = (function () {
@@ -20255,16 +20265,34 @@ if (typeof exports != "undefined") {
 			}, 0)
 		}
 		
-		this.setAttributeValuesForPivotTable = function(resJSON)
+		this.setAttributeValuesForPivotTable = function(xml)
 		{
+            var data = {
+              PagesCount: null,
+              PageNumber: null,
+              Null: null, // TOOD: what is the source of this data?
+              NotNullValues: [] // TOOD: what is the source of this data?
+            };
+      
+            var parser = new DOMParser();
+            var xmlParserData = parser.parseFromString(xml, 'text/xml');
+            var TagPage = xmlParserData.getElementsByTagName("Page");
+            var TagRecorset = xmlParserData.getElementsByTagName("Recordset");
+      
+            if (TagPage.length > 0 && TagPage[0].hasAttribute("PageNumber")) {
+              data.PageNumber = TagPage[0].getAttribute("PageNumber");
+            }
+            if (TagRecorset.length > 0 && TagRecorset[0].hasAttribute("PageCount")) {
+              data.PageCount = TagRecorset[0].getAttribute("PageCount");
+            }
 			
 			switch(self.lastRequestAttributeValues) {
-				case "initValueRead":
-					var data = JSON.parse(resJSON);
-					
+				case "initValueRead":					
 					var columnNumber = self.lastRequestAttributeColumnNumber
 					var allData = self.lastRequestAttributeAllData 
 					var requestDataField = self.lastRequestAttributeRequestDataField
+                                
+                    data.NotNullValues = getNotNullValues(xmlParserData, self.conditions[columnNumber].dataField);
 					
 					self.conditions[columnNumber].previousPage = data.PageNumber
 					self.conditions[columnNumber].totalPages = data.PagesCount
@@ -20335,8 +20363,8 @@ if (typeof exports != "undefined") {
 					}
 					break;
 				case "DrawFilters":
-					var data = JSON.parse(resJSON);
 					var columnNumber = self.lastRequestAttributeColumnNumber
+                    data.NotNullValues = getNotNullValues(xmlParserData, self.conditions[columnNumber].dataField);
 					
 					self.conditions[columnNumber].previousPage = data.PageNumber
 					self.conditions[columnNumber].totalPages = data.PagesCount
@@ -20392,8 +20420,8 @@ if (typeof exports != "undefined") {
 					}
 					break;
 				case "hiddenDimension":
-						var data = JSON.parse(resJSON);
 						var columnNumber = self.lastRequestAttributeColumnNumber
+                        data.NotNullValues = getNotNullValues(xmlParserData, self.conditions[columnNumber].dataField);
 						
 						self.conditions[columnNumber].previousPage = data.PageNumber
 						self.conditions[columnNumber].totalPages = data.PagesCount
@@ -20456,28 +20484,27 @@ if (typeof exports != "undefined") {
 						}
 					break;
 				case "readScrollValueWithoutFilters":
-					var res = JSON.parse(resJSON);
-					self.appendNewValueData(self.lastRequestValue, res)
+					self.appendNewValueData(self.lastRequestValue, data)
 					break;
 				case "readScrollValueWithFilters":
-					var res = JSON.parse(resJSON);
 					var columnNumber = self.lastRequestAttributeColumnNumber
 					var filterText = self.lastRequestAttributeFilterText
-					self.appendNewFilteredValueData(res, columnNumber, filterText)
+                    data.NotNullValues = getNotNullValues(xmlParserData, self.conditions[columnNumber].dataField);
+					self.appendNewFilteredValueData(data, columnNumber, filterText)
 					break;
 				case "ValuesForColumn":
-					var res = JSON.parse(resJSON);
 					var columnNumber = self.lastRequestAttributeColumnNumber 
 					var filterValuePars = self.lastRequestAttributeFilterText
 					var dataField = self.lastRequestAttributeDataField
 					var UcId = self.lastRequestAttributeUcId = UcId
-					self.changeValues(UcId, dataField, columnNumber, res, filterValuePars);
+                    data.NotNullValues = getNotNullValues(xmlParserData, self.conditions[columnNumber].dataField);
+					self.changeValues(UcId, dataField, columnNumber, data, filterValuePars);
 					break;
 				case "ExpandCollapse":
-					var data = JSON.parse(resJSON);
 					var columnNumber = self.lastColumnNumber
 					var elemvalue = self.lastRequestAttributeValuesElemValue
-					var action = self.lastRequestAttributeValuesAction 
+					var action = self.lastRequestAttributeValuesAction
+                    data.NotNullValues = getNotNullValues(xmlParserData, self.conditions[columnNumber].dataField);
 					
 					self.conditions[columnNumber].previousPage = data.PageNumber
 					self.conditions[columnNumber].totalPages = data.PagesCount
@@ -20526,8 +20553,8 @@ if (typeof exports != "undefined") {
 					}, 2000);
 					break;
 				case "FilteredChanged":
+          data.NotNullValues = getNotNullValues(xmlParserData, self.conditions[self.lastColumnNumber].dataField);
 					setTimeout(function () {
-						var data = JSON.parse(resJSON);
 						self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(self.lastColumnNumber, data.NotNullValues, self.conditions[self.lastColumnNumber].blackList);
 					}, 200)
 					break;
@@ -23121,17 +23148,17 @@ if (typeof exports != "undefined") {
 			var all = document.createElement("button");
 			all.textContent = self.translations.GXPL_QViewerJSAll; /*gx.getMessage("GXPL_QViewerJSAll");*/
 			all.setAttribute("class", "btn");
-			jQuery(all).click(allRef);
+			jQuery(all).on("click", allRef);
 
 			var none = document.createElement("button");
 			none.textContent = self.translations.GXPL_QViewerJSNone //gx.getMessage("GXPL_QViewerJSNone");
 			none.setAttribute("class", "btn");
-			jQuery(none).click(noneRef);
+			jQuery(none).on("click", noneRef);
 
 			var reverse = document.createElement("button");
 			reverse.textContent = self.translations.GXPL_QViewerJSReverse //gx.getMessage("GXPL_QViewerJSReverse");
 			reverse.setAttribute("class", "btn");
-			jQuery(reverse).click(reverseRef);
+			jQuery(reverse).on("click", reverseRef);
 
 
 			OAT.Dom.append([d, all, none, reverse], [div, d]);
@@ -31944,7 +31971,21 @@ if (typeof exports != "undefined") {
 			
 	}
 
-	exports.OAT = OAT;
+	// exports.OAT = OAT;
+
+    module.exports = {
+        OAT,
+        renderJSPivot,
+        setPageDataForPivotTable,
+        setAttributeValuesForPivotTable,
+        setPivottableDataCalculation,
+        setDataSynForPivotTable,
+        setPageDataForTable,
+        setAttributeForTable,
+        setDataSynForTable,
+        getDataXML,
+        getFilteredDataXML,
+    }
 
 
 

@@ -5,7 +5,8 @@
   "main": "oat_pivotTable.js",
   "types": "oat_pivotTable.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "declaration": "tsc oat_pivotTable.js --declaration --allowJs --emitDeclarationOnly --outDir ."
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,13 @@
   "bugs": {
     "url": "https://github.com/andresfern/JSPivotTable/issues"
   },
-  "homepage": "https://github.com/andresfern/JSPivotTable#readme"
+  "homepage": "https://github.com/andresfern/JSPivotTable#readme",
+  "devDependencies": {
+    "typescript": "^5.4.2"
+  },
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "jquery": "^3.7.1",
+    "node-zip": "^1.1.1"
+  }
 }
