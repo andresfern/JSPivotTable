@@ -18836,42 +18836,6 @@ if (typeof exports != "undefined") {
 	}
 
 
-	
-
-//FILE OAT.Layers
-	OAT.Layers = function (f) {
-		var a = this;
-		this.baseOffset = f;
-		this.layers = [];
-		this.currentIndex = 0;
-		this.raise = function (b) {
-			if (-1 != a.layers.indexOf(b)) {
-				for (var d = b.style.zIndex, c = 0; c < a.layers.length; c++) {
-					var e = a.layers[c];
-					e.style.zIndex > d && e.style.zIndex--
-				}
-				b.style.zIndex = a.currentIndex
-			}
-		};
-		this.addLayer = function (b, d) {
-			var c = OAT.$(b);
-			c && (a.currentIndex++ , c.style.zIndex = a.currentIndex, a.layers.push(c), OAT.Dom.attach(c, d ? d : "mousedown", function () {
-				a.raise(c)
-			}))
-		};
-		this.removeLayer = function (b) {
-			b = OAT.$(b);
-			b = a.layers.indexOf(b);
-			-1 != b && a.layers.splice(b, 1)
-		};
-		a.currentIndex = a.baseOffset
-	};
-
-
-
-
-
-
 	; (function () {
 		/*jshint eqeqeq:false curly:false latedef:false */
 		"use strict";
@@ -20553,7 +20517,6 @@ if (typeof exports != "undefined") {
 					}, 2000);
 					break;
 				case "FilteredChanged":
-          data.NotNullValues = getNotNullValues(xmlParserData, self.conditions[self.lastColumnNumber].dataField);
 					setTimeout(function () {
 						self.onFilteredChangedEventHandleWhenServerPaginationCreateXML(self.lastColumnNumber, data.NotNullValues, self.conditions[self.lastColumnNumber].blackList);
 					}, 200)
@@ -31971,21 +31934,7 @@ if (typeof exports != "undefined") {
 			
 	}
 
-	// exports.OAT = OAT;
-
-    module.exports = {
-        OAT,
-        renderJSPivot,
-        setPageDataForPivotTable,
-        setAttributeValuesForPivotTable,
-        setPivottableDataCalculation,
-        setDataSynForPivotTable,
-        setPageDataForTable,
-        setAttributeForTable,
-        setDataSynForTable,
-        getDataXML,
-        getFilteredDataXML,
-    }
+	exports.OAT = OAT;
 
 
 
