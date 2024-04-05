@@ -27,7 +27,7 @@ var OAT = {};
 
 	OAT.$ = function (something) {
 		if (typeof (something) == "string") {
-			var elm = document.getElementById(something);
+			var elm = jQuery("#"+something)[0];
 		} else {
 			var elm = something;
 		}
@@ -37,18 +37,6 @@ var OAT = {};
 		}
 		if (!elm) return false;
 		return elm;
-	}
-
-	OAT.$$ = function (className, root) {
-		var e = root || document;
-		var elms = e.getElementsByTagName("*");
-		var matches = [];
-
-		if (OAT.Dom.isClass(e, className)) { matches.push(e); }
-		for (var i = 0; i < elms.length; i++) {
-			if (OAT.Dom.isClass(elms[i], className)) { matches.push(elms[i]); }
-		}
-		return matches;
 	}
 
 	OAT.$v = function (something) {
@@ -72,16 +60,15 @@ var OAT = {};
 
 
 	OAT.addTextNode = function (node, text) {
-		var txtNode = document.createTextNode(text)
 		var nodeJ = jQuery('<span id="span_txt_pivot"></span>')[0]
-		nodeJ.appendChild(txtNode)
+		nodeJ.textContent = text
 		node.appendChild(nodeJ)
 	}
 	
 	
 	OAT.addImageNode = function(parent, icon_name, style, id)
 	{
-		var icon = document.createElement("i");
+		var icon = jQuery('<i></i>')[0];
 		if (id!=undefined){
 			icon.setAttribute("id", id);
 		}
@@ -95,8 +82,7 @@ var OAT = {};
 		while (node.firstChild) {
 			node.removeChild(node.firstChild);
 		}
-		var txtNode = document.createTextNode(text)
-		node.appendChild(txtNode)
+		node.textContent = text
 	}
 	
 	OAT.AddItemToList = function (list, item) {
@@ -504,20 +490,12 @@ var OAT = {};
 	}
 	
 	OAT.ClearSelectedNodes = function($container) {
-		/*$container.find(".gx-qv-selected-element").each(function (index, value) {
-			var previousColor = jQuery(value).attr("previousBackgroundColor");
-			jQuery(value).css({backgroundColor: previousColor});
-		});*/
-		
+	
 		$container.find(".gx-qv-selected-element").removeClass("gx-qv-selected-element");
 	}
 	
 	OAT.SetNodeBackgroundColor = function(node, color){
 		if (!jQuery(node).hasClass("gx-qv-selected-element")){
-			//var backgroundColor = jQuery(node).css("background-color");
-			//jQuery(node).attr("previousBackgroundColor", backgroundColor);
-		
-			//jQuery(node).css({backgroundColor: color});
 			jQuery(node).addClass("gx-qv-selected-element");
 		}
 	}
@@ -557,10 +535,7 @@ var OAT = {};
 	}	
 
 	OAT.isIE = function(){
-		if (window.document.documentMode)
-			return true
-		else
-			return false
+		return false
 	}
 	
 	OAT.isWebkit = function(){
@@ -595,42 +570,18 @@ var OAT = {};
 	
 	OAT.Dom = { /* DOM common object */
 		create: function (tagName, styleObj, className) {
-			var elm = document.createElement(tagName);
-			 //console.log(Object.keys(styleObj).length > 0);
-			 if (styleObj && Object.keys(styleObj).length > 0) {
-		 	 for (var prop in styleObj) { 
-			 //		console.log(prop);
-			 		elm.style[prop] = styleObj[prop]; }
-		     }
+			var elm = jQuery("<" +tagName + "></" + tagName + ">")[0];
+			if (styleObj && Object.keys(styleObj).length > 0) {
+		 	for (var prop in styleObj) { 
+			 	elm.style[prop] = styleObj[prop]; }
+		    }
 			if (className) { elm.className = className; }
 			return elm;
 		},
 
-		createNS: function (ns, tagName) {
-			if (document.createElementNS) {
-				var elm = document.createElementNS(ns, tagName);
-			} else {
-				var elm = document.createElement(tagName);
-				elm.setAttribute("xmlns", ns);
-			}
-			return elm;
-		},
-
-		text: function (text) {
-			var elm = document.createTextNode(text);
-			return elm;
-		},
-
-		button: function (label) {
-			var b = OAT.Dom.create("input");
-			b.type = "button";
-			b.value = label;
-			return b;
-		},
-
 		radio: function (name) {
 			if (OAT.isIE()) {
-				var elm = document.createElement('<input type="radio" name="' + name + '" />');
+				var elm = jQuery('<input type="radio" name="' + name + '" />');
 				return elm;
 			} else {
 				var elm = OAT.Dom.create("input");
@@ -741,25 +692,6 @@ var OAT = {};
 			elm.parentNode.removeChild(elm);
 		},
 
-		center: function (element, x, y, reference) {
-			var elm = OAT.$(element);
-			var p = elm.offsetParent;
-			if (reference) { p = reference; }
-			if (!p) { return; }
-			var par_dims = (p == document.body || p.tagName.toLowerCase() == "html" ? OAT.Dom.getViewport() : OAT.Dom.getWH(p));
-			var dims = OAT.Dom.getWH(elm);
-			var new_x = Math.round(par_dims[0] / 2 - dims[0] / 2);
-			var new_y = Math.round(par_dims[1] / 2 - dims[1] / 2);
-			if (new_y < 0) { new_y = 30; }
-			var s = OAT.Dom.getScroll();
-			if (p == document.body || p.tagName.toLowerCase() == "html") {
-				new_x += s[0];
-				new_y += s[1];
-			}
-			if (x) { elm.style.left = new_x + "px"; }
-			if (y) { elm.style.top = new_y + "px"; }
-		},
-
 		isChild: function (child, parent) {
 			var c_elm = OAT.$(child);
 			var p_elm = OAT.$(parent);
@@ -769,13 +701,13 @@ var OAT = {};
 				if (!node) { return false; }
 				if (node == p_elm) { return true; }
 				node = node.parentNode;
-			} while (node != document.body && node != document);
+			} while (node && node.tagName && node.tagName.toLowerCase() != "body");
 			return false;
 		},
 
 		isKonqueror: function () { return (navigator.userAgent.match(/konqueror/i) ? true : false); },
 		isKHTML: function () { return (navigator.userAgent.match(/khtml/i) ? true : false); },
-		isIE: function () { return (document.attachEvent && !document.addEventListener ? true : false); },
+		isIE: function () { return false; },
 		isIE7: function () { return (navigator.userAgent.match(/msie 7/i) ? true : false); },
 		isIE6: function () { return (OAT.Dom.isIE() && !OAT.Dom.isIE7()); },
 		isGecko: function () { return ((!OAT.Dom.isKHTML() && navigator.userAgent.match(/Gecko/i)) ? true : false); },
@@ -844,27 +776,15 @@ var OAT = {};
 		},
 
 		getViewport: function () {
-			if (OAT.isWebkit()) {
-				return [window.innerWidth, window.innerHeight];
-			}
-			if ( (navigator.userAgent.match(/Opera/)) || document.compatMode == "BackCompat") {
-				return [document.body.clientWidth, document.body.clientHeight];
-			} else {
-				return [document.documentElement.clientWidth, document.documentElement.clientHeight];
-			}
+			return [window.innerWidth, window.innerHeight];
 		},
 
 		position: function (something) {
 			var elm = OAT.$(something);
 			var parent = elm.offsetParent;
-			if (elm == document.body || elm == document || !parent) { return OAT.Dom.getLT(elm); }
+			if (elm.tagName.toLowerCase() == "body" || !parent) {return OAT.Dom.getLT(elm);};
 			var parent_coords = OAT.Dom.position(parent);
 			var c = OAT.Dom.getLT(elm);
-			/*
-			var x = elm.offsetLeft - elm.scrollLeft + parent_coords[0];
-			var y = elm.offsetTop - elm.scrollTop + parent_coords[1];
-			*/
-
 			/*
 			this is interesting: Opera with no scrolling reports scrollLeft/Top equal to offsetLeft/Top for <input> elements
 			*/
@@ -875,7 +795,7 @@ var OAT = {};
 				y -= elm.scrollTop;
 			}
 
-			if (OAT.isWebkit() && parent == document.body && OAT.Dom.style(elm, "position") == "absolute") { return [x, y]; }
+			if (OAT.isWebKit && (parent && parent.tagName.toLowerCase() == "body") && OAT.Dom.style(elm, "position") == "absolute") { return [x, y]; }
 
 			x += parent_coords[0];
 			y += parent_coords[1];
@@ -929,8 +849,8 @@ var OAT = {};
 			}
 
 			/* one more bonus - if we are getting height of document.body, take window size */
-			if (elm == document.body) {
-				curr_h = (OAT.isIE() ? document.body.clientHeight : window.innerHeight);
+			if (elm.tagName.toLowerCase() == "body"){
+				curr_h = window.innerHeight;
 			}
 			return [curr_w, curr_h];
 		},
@@ -1002,19 +922,12 @@ var OAT = {};
 		},
 
 		removeSelection: function () {
-			var selObj = false;
-			if (document.getSelection && !(!OAT.Dom.isKHTML() && navigator.userAgent.match(/Gecko/i)) ) { selObj = document.getSelection(); }
-			if (window.getSelection) { selObj = window.getSelection(); }
-			if (document.selection) { selObj = document.selection; }
-			if (selObj) {
-				if (selObj.empty) { selObj.empty(); }
-				if (selObj.removeAllRanges) { selObj.removeAllRanges(); }
-			}
+			
 		},
 
 		getScroll: function () {
-			var l = Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
-			var t = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+			var l = (jQuery(window).scrollLeft()) ? jQuery(window).scrollLeft() : 0;
+			var t = (jQuery(window).scrollTop()) ? jQuery(window).scrollTop() : 0;
 			return [l, t];
 		},
 
@@ -1073,28 +986,7 @@ var OAT = {};
 		},
 
 		changeHref: function (elm, newHref) {
-			/* opera cannot do this with elements not being part of the page :/ */
-			var ok = false;
-			var e = OAT.$(elm);
-			var node = e;
-			while (node.parentNode) {
-				node = node.parentNode;
-				if (node == document.body) { ok = true; }
-			}
-			if (ok) {
-				e.href = newHref;
-			} else if (e.parentNode) {
-				var oldParent = e.parentNode;
-				var next = e.nextSibling;
-				document.body.appendChild(e);
-				e.href = newHref;
-				OAT.Dom.unlink(e);
-				oldParent.insertBefore(e, next);
-			} else {
-				document.body.appendChild(e);
-				e.href = newHref;
-				OAT.Dom.unlink(e);
-			}
+			
 		},
 
 		makePosition: function (elm) {
@@ -1106,39 +998,11 @@ var OAT = {};
 	}
 
 	OAT.Style = { /* Style helper */
-		include: function (file, relativePath, force) {
-			if (!file) return;
-			file = relativePath + 'QueryViewer/oatPivot/css/' + file; /*OAT.Preferences.stylePath*/
-			if (!force) { /* prevent loading when already loaded */
-				var styles = document.getElementsByTagName('link');
-				var host = location.protocol + '//' + location.host;
-				for (var i = 0; i < styles.length; i++)
-					if (file == styles[i].getAttribute('href') || host + file == styles[i].getAttribute('href'))
-						return;
-			}
-			var elm = OAT.Dom.create("link");
-			elm.rel = "stylesheet";
-			elm.type = "text/css";
-			elm.href = file;
-			//document.getElementsByTagName("head")[0].appendChild(elm);
-			jQuery("head").prepend(elm);
-			
-		},
-
+		
 		get: function (elm, property) {
 			var element = OAT.$(elm);
-			if (document.defaultView && document.defaultView.getComputedStyle) {
-				var cs = document.defaultView.getComputedStyle(element, '');
-				if (!cs) { return true; }
-				return cs[property];
-			} else {
-				try {
-					var out = element.currentStyle[property];
-				} catch (e) {
-					var out = element.getExpression(property);
-				}
-				return out;
-			}
+			var value = jQuery(elm).css(property);
+			return value;
 		},
 
 		background: function (element, src) {
@@ -1217,11 +1081,7 @@ var OAT = {};
 			return [event.clientX + scroll[0], event.clientY + scroll[1]];
 		},
 		prevent: function (event) {
-			if (event.preventDefault) { event.preventDefault(); }
-			//if (gx.util.browser.isIE()) {
-			if (window.document.documentMode) {
-				event.returnValue = false;
-			}
+			if (event.preventDefault) { event.preventDefault(); }			
 		}
 	}
 	OAT.Dom.attach = OAT.Event.attach;
@@ -1317,7 +1177,7 @@ var OAT = {};
 			OAT.Loader.listeners[i](); // Habr�a que ser un poco m�s defensivo ac�, chequear que el typeof sea function
 	};
 
-	OAT.LoadJapanesseCharacters = function () {
+	/*OAT.LoadJapanesseCharacters = function () {
 		
 		var uR = "";
 		for (var i = 0; i < jQuery('script').length; i++) {
@@ -1372,11 +1232,11 @@ var OAT = {};
 			}
 		}
 		
-	}
+	}*/
 
 
 
-	function loadJS(FILE_URL, async = true) {
+	/*function loadJS(FILE_URL, async = true) {
 		let scriptEle = document.createElement("script");
 
 		scriptEle.setAttribute("src", FILE_URL);
@@ -1393,7 +1253,7 @@ var OAT = {};
   		scriptEle.addEventListener("error", (ev) => {
     		console.log("Error on loading file", ev);
   		});
-	}
+	}*/
 
 
 //jsPDF_output.src.js
@@ -2318,7 +2178,7 @@ var jsPDF = (function () {
 							return 'data:application/pdf;base64,' + btoa(buildDocument());
 						case 'datauri':
 						case 'dataurl':
-							document.location.href = 'data:application/pdf;base64,' + btoa(buildDocument());
+							return 'data:application/pdf;base64,' + btoa(buildDocument());
 							break;
 						case 'dataurlnewwindow':
 							window.open('data:application/pdf;base64,' + btoa(buildDocument()));
@@ -3489,93 +3349,7 @@ var jsPDF = (function () {
 			}
 
 		jsPDFAPI.addImage = function (imageData, format, x, y, w, h) {
-			'use strict'
-			if (typeof imageData === 'object' && imageData.nodeType === 1) {
-				var canvas = document.createElement('canvas');
-				canvas.width = imageData.clientWidth;
-				canvas.height = imageData.clientHeight;
-
-				var ctx = canvas.getContext('2d');
-				if (!ctx) {
-					throw ('addImage requires canvas to be supported by browser.');
-				}
-				ctx.drawImage(imageData, 0, 0, canvas.width, canvas.height);
-				imageData = canvas.toDataURL('image/jpeg');
-				format = "JPEG";
-			}
-			if (format.toUpperCase() !== 'JPEG') {
-				throw new Error('addImage currently only supports format \'JPEG\', not \'' + format + '\'');
-			}
-
-			var imageIndex
-				, images = this.internal.collections[namespace + 'images']
-				, coord = this.internal.getCoordinateString
-				, vcoord = this.internal.getVerticalCoordinateString;
-
-			// Detect if the imageData is raw binary or Data URL
-			if (imageData.substring(0, 23) === 'data:image/jpeg;base64,') {
-				imageData = atob(imageData.replace('data:image/jpeg;base64,', ''));
-			}
-
-			if (images) {
-				// this is NOT the first time this method is ran on this instance of jsPDF object.
-				imageIndex = Object.keys ?
-					Object.keys(images).length :
-					(function (o) {
-						var i = 0
-						for (var e in o) { if (o.hasOwnProperty(e)) { i++ } }
-						return i
-					})(images)
-			} else {
-				// this is the first time this method is ran on this instance of jsPDF object.
-				imageIndex = 0
-				this.internal.collections[namespace + 'images'] = images = {}
-				this.internal.events.subscribe('putResources', putResourcesCallback)
-				this.internal.events.subscribe('putXobjectDict', putXObjectsDictCallback)
-			}
-
-			var dims = getJpegSize(imageData);
-			var info = {
-				w: dims[0],
-				h: dims[1],
-				cs: 'DeviceRGB',
-				bpc: 8,
-				f: 'DCTDecode',
-				i: imageIndex,
-				data: imageData
-				// n: objectNumber will be added by putImage code
-
-			};
-			images[imageIndex] = info
-			if (!w && !h) {
-				w = -96;
-				h = -96;
-			}
-			if (w < 0) {
-				w = (-1) * info['w'] * 72 / w / this.internal.scaleFactor;
-			}
-			if (h < 0) {
-				h = (-1) * info['h'] * 72 / h / this.internal.scaleFactor;
-			}
-			if (w === 0) {
-				w = h * info['w'] / info['h'];
-			}
-			if (h === 0) {
-				h = w * info['h'] / info['w'];
-			}
-
-			this.internal.write(
-				'q'
-				, coord(w)
-				, '0 0'
-				, coord(h) // TODO: check if this should be shifted by vcoord
-				, coord(x)
-				, vcoord(y + h)
-				, 'cm /I' + info['i']
-				, 'Do Q'
-			)
-
-			return this
+		
 		}
 
 
@@ -4193,39 +3967,11 @@ var jsPDF = (function () {
 			}
 
 			function InjectCSS(cssbody, document) {
-				var styletag = document.createElement('style')
-				styletag.type = 'text/css'
-				if (styletag.styleSheet) {
-					// ie
-					styletag.styleSheet.cssText = cssbody
-				} else {
-					// others
-					styletag.appendChild(document.createTextNode(cssbody))
-				}
-				document.getElementsByTagName("head")[0].appendChild(styletag)
+				
 			}
 
 			function createWorkerNode(document) {
-
-				var frameID = 'childframe' // Date.now().toString() + '_' + (Math.random() * 100).toString()
-					, frame = document.createElement('iframe')
-
-				InjectCSS(
-					'.jsPDF_sillysvg_iframe {display:none;position:absolute;}'
-					, document
-				)
-
-				frame.name = frameID
-				frame.setAttribute("width", 0)
-				frame.setAttribute("height", 0)
-				frame.setAttribute("frameborder", "0")
-				frame.setAttribute("scrolling", "no")
-				frame.setAttribute("seamless", "seamless")
-				frame.setAttribute("class", "jsPDF_sillysvg_iframe")
-
-				document.body.appendChild(frame)
-
-				return frame
+				
 			}
 
 			function attachSVGToWorkerNode(svgtext, frame) {
@@ -4423,21 +4169,16 @@ var jsPDF = (function () {
 		|| (function (view) {
 			
 			var
-				doc = view.document
+				
 				// only get URL when necessary in case BlobBuilder.js hasn't overridden it yet
-				, get_URL = function () {
+				get_URL = function () {
 					return view.URL || view.webkitURL || view;
 				}
 				, URL = view.URL || view.webkitURL || view
-				, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+				, save_link = jQuery("<a></a>")[0]
 				, can_use_save_link = "download" in save_link
 				, click = function (node) {
-					var event = doc.createEvent("MouseEvents");
-					event.initMouseEvent(
-						"click", true, false, view, 0, 0, 0, 0, 0
-						, false, false, false, false, 0, null
-					);
-					return node.dispatchEvent(event); // false if event was cancelled
+					node.dispatchEvent(new MouseEvent('click'))
 				}
 				, webkit_req_fs = view.webkitRequestFileSystem
 				, req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
@@ -10271,112 +10012,7 @@ var jsPDF = (function () {
 
 
 
-	OAT.Dialog = function (i, d, c) {
-		var e = this, a = {
-			width: 0,
-			height: 0,
-			modal: 0,
-			onshow: function () {
-			},
-			onhide: function () {
-			},
-			zIndex: 1E3,
-			buttons: 1,
-			resize: 1,
-			close: 1,
-			autoEnter: 1,
-			imagePath: OAT.Preferences.imagePath
-		};
-		if (c)
-			for (var f in c)
-				a[f] = c[f];
-		var b = new OAT.Window({
-			close: a.close,
-			max: 0,
-			min: 0,
-			width: a.width,
-			height: a.height,
-			x: 0,
-			y: 0,
-			title: i,
-			resize: a.resize,
-			imagePath: a.imagePath
-		});
-		OAT.Dom.hide(b.div);
-		try {
-			OAT.$(d).style.margin = "10px"
-		} catch (k) {
-		}
-		i = OAT.Dom.create("table", {
-			marginTop: "1em",
-			width: "90%",
-			textAlign: "center"
-		});
-		c = OAT.Dom.create("tbody");
-		f = OAT.Dom.create("tr");
-		var j = OAT.Dom.create("td", {
-			border: "none"
-		}), g = OAT.Dom.create("input");
-		g.setAttribute("type", "button");
-		g.value = " OK ";
-		j.appendChild(g);
-		var h = OAT.Dom.create("input", {
-			marginLeft: "2em"
-		});
-		h.setAttribute("type", "button");
-		h.value = "Cancel";
-		j.appendChild(h);
-		f.appendChild(j);
-		c.appendChild(f);
-		i.appendChild(c);
-		a.buttons && OAT.$(d).appendChild(i);
-		document.body.appendChild(b.div);
-		b.content.appendChild(OAT.$(d));
-		b.div.style.zIndex = a.zIndex;
-		a.modal ? (this.show = function () {
-			OAT.Dimmer.show(b.div, {});
-			b.accomodate();
-			OAT.Dom.center(b.div, 1, 1);
-			a.onshow()
-		}, this.hide = function () {
-			OAT.Dimmer.hide();
-			a.onhide()
-		}) : (this.show = function () {
-			OAT.Dom.show(b.div);
-			b.accomodate();
-			OAT.Dom.center(b.div, 1, 1);
-			a.onshow()
-		}, this.hide = function () {
-			OAT.Dom.hide(b.div);
-			a.onhide()
-		});
-		b.onclose = this.hide;
-		this.accomodate = b.accomodate;
-		this.ok = function () {
-		};
-		this.cancel = function () {
-		};
-		this.okBtn = g;
-		this.cancelBtn = h;
-		OAT.Dom.attach(g, "click", function () {
-			e.ok()
-		});
-		OAT.Dom.attach(h, "click", function () {
-			e.cancel()
-		});
-		d = function (a) {
-			if (e.okBtn.getAttribute("disabled") != "disabled") {
-			a.keyCode == 13 && e.ok();
-				a.keyCode == 27 && e.cancel()
-			}
-		};
-		a.autoEnter && OAT.Dom.attach(b.div, "keypress", d)
-	};
-	try {
-		OAT.Loader.featureLoaded("dialog");
-	} catch (ERROR) {
-
-	}
+	
 
 	OAT.Drag = {
 		TYPE_X: 1, TYPE_Y: 2, TYPE_XY: 3, elm: !1, mouse_x: 0, mouse_y: 0,
@@ -10411,7 +10047,12 @@ var jsPDF = (function () {
 					}
 				}
 			}
-		}, up: function () { if (OAT.Drag.elm) { for (var b = OAT.Drag.elm._Drag_movers, d = 0; d < b.length; d++)b[d][1].endFunction(b[d][0]); OAT.Drag.elm = !1 } }, create: function (b, d, e) {
+		}, up: function () { 
+			if (OAT.Drag.elm) 
+			{ 
+				for (var b = OAT.Drag.elm._Drag_movers, d = 0; d < b.length; d++)b[d][1].endFunction(b[d][0]); OAT.Drag.elm = !1 
+			} 
+		}, create: function (b, d, e) {
 			var a = { type: OAT.Drag.TYPE_XY, restrictionFunction: function () { return !1 }, endFunction: function () { }, moveFunction: !1, magnetsH: [], magnetsV: [], cursor: !0 }; if (e) for (p in e) a[p] = e[p]; var c = OAT.$(b), b = OAT.$(d), d = function (a) { OAT.Drag.initiate(a, c) }; c._Drag_movers || (OAT.Dom.attach(c, "mousedown", d), c._Drag_movers =
 				[], c._Drag_cursor = c.style.cursor); a.cursor && (c.style.cursor = "move"); c._Drag_movers.push([b, a])
 		}, initiate: function (b, d) { OAT.Drag.elm = d; OAT.Drag.mouse_x = b.clientX; OAT.Drag.mouse_y = b.clientY }, remove: function (b, d) { var e = OAT.$(b); OAT.$(d); if (e._Drag_movers) { for (var a = -1, c = 0; c < e._Drag_movers.length; c++)e._Drag_movers[c][0] == d && (a = c); -1 != a && e._Drag_movers.splice(a, 1) } }, removeAll: function (b) { b = OAT.$(b); b._Drag_movers && (b._Drag_movers = [], b.style.cursor = b._Drag_cursor) }, createDefault: function (b, d) {
@@ -10424,10 +10065,7 @@ var jsPDF = (function () {
 			}
 		}
 	};
-	if(typeof document != "undefined"){
-	 OAT.Dom.attach(document, "mousemove", OAT.Drag.move); 
-	 OAT.Dom.attach(document, "mouseup", OAT.Drag.up); 
-	}
+	
 	try {
 		OAT.Loader.featureLoaded("drag");
 	} catch (ERROR) {
@@ -10454,9 +10092,15 @@ var jsPDF = (function () {
 			}
 		},
 		move: function (a) {
-			if (OAT.GhostDragData.lock) {/*OAT.Dom.prevent(a);*/var b = OAT.GhostDragData.lock, c = b.object; c.pending && (document.body.appendChild(b), b.style.zIndex = 2E3,
-				c.process && c.process(b),
-				c.pending = 0, OAT.MSG.send(c, OAT.MSG.GD_START, b)); OAT.Dom.removeSelection(); var d = a.clientX - b.mouse_x, c = a.clientY - b.mouse_y, d = parseInt(OAT.Dom.style(b,
+			if (OAT.GhostDragData.lock) {
+				var b = OAT.GhostDragData.lock, 
+				c = b.object; 
+				c.pending && 
+				(
+					a.currentTarget.appendChild(b),
+					b.style.zIndex = 2E3,
+					c.process && c.process(b),
+					c.pending = 0, OAT.MSG.send(c, OAT.MSG.GD_START, b)); OAT.Dom.removeSelection(); var d = a.clientX - b.mouse_x, c = a.clientY - b.mouse_y, d = parseInt(OAT.Dom.style(b,
 					"left")) + d, c = parseInt(OAT.Dom.style(b, "top")) + c; b.style.left = d + "px"; b.style.top = c + "px"; b.mouse_x = a.clientX; b.mouse_y = a.clientY
 			}
 		}, pos: function (a, b, c) { if (!a || "none" == a.style.display.toLowerCase()) return 0; var d = OAT.Dom.position(a), e = d[0] - 2, d = d[1] - 2, f = parseInt(a.offsetWidth) + 2, a = parseInt(a.offsetHeight) + 2; return b >= e && b <= e + f && c >= d && c <= d + a }
@@ -10509,66 +10153,14 @@ var jsPDF = (function () {
 			) 
 		}
 	};
-	if(typeof document != "undefined"){
-	OAT.Dom.attach(document, "mousemove", OAT.GhostDragData.move);
-	OAT.Dom.attach(document, "mouseup", OAT.GhostDragData.up);
-	};
+	
 	try {
 		OAT.Loader.featureLoaded("ghostdrag");
 	} catch (ERROR) {
 
 	}
 
-	OAT.Instant = function (d, c) {
-		var a = this;
-		this.options = {
-			showCallback: !1,
-			hideCallback: !1
-		};
-		for (var e in c)
-			a.options[e] = c[e];
-		this.state = 1;
-		this.elm = OAT.$(d);
-		this.handles = [];
-		this.hide = function () {
-			a.state = 0;
-			OAT.Dom.hide(a.elm)
-		};
-		this.show = function () {
-			a.options.showCallback && a.options.showCallback();
-			OAT.Dom.show(a.elm);
-			a.state = 1
-		};
-		this.check = function (b) {
-			a.state && (b = OAT.Event.source(b), b == a.elm || OAT.Dom.isChild(b, a.elm) || (a.options.hideCallback && a.options.hideCallback(), a.hide()))
-		};
-		this.createHandle = function (b) {
-			var c = OAT.$(b);
-			a.handles.push(c);
-			OAT.Event.attach(c, "mousedown", function (b) {
-			-1 != a.handles.indexOf(c) && !a.state && (OAT.Event.cancel(b), a.show())
-			})
-		};
-		this.removeHandle = function (b) {
-			b = OAT.$(b);
-			b = a.handles.indexOf(b);
-			-1 != b && a.handles.splice(b, 1)
-		};
-		a.elm._Instant_show = a.show;
-		a.elm._Instant_hide = a.hide;
-		a.hide();
-		OAT.Dom.attach(document, "mousedown", a.check)
-	};
-	OAT.Instant.assign = function (d, c) {
-		new OAT.Instant(d, {
-			hideCallback: c
-		})
-	};
-	try {
-		OAT.Loader.featureLoaded("instant");
-	} catch (ERROR) {
-
-	}
+	
 	
 	
 	//FILE oat_grid -----------------------------------------------------------------------------------------------------------------------------------------------
@@ -10632,7 +10224,7 @@ var jsPDF = (function () {
 				self.ContainerName = divContainer.getAttribute("id")
 				OAT.Dom.clear(divContainer);
 
-				var divIeContainer = document.createElement("div");
+				var divIeContainer = jQuery('<div></div>')[0];
 				divIeContainer.setAttribute("class", "divIeContainer");
 				divIeContainer.setAttribute("style", "position: relative;opacity: 0");
 				divContainer.appendChild(divIeContainer);
@@ -10657,7 +10249,7 @@ var jsPDF = (function () {
 				var hide = OAT.Dom.create("a");
 				hide.href = "#";
 
-				OAT.addTextNode(hide, document.createTextNode("GXPL_QViewerJSVisibleColumns"))
+				OAT.addTextNode(hide,"GXPL_QViewerJSVisibleColumns")
 
 				self.div.appendChild(topDiv);
 
@@ -10737,7 +10329,7 @@ var jsPDF = (function () {
 				}
 			};
 
-			OAT.Dom.attach(document, "mousedown", checkToClose)
+			OAT.Dom.attach(OAT_JS.grid.gridData[IdForQueryViewerCollection].Container, "mousedown", checkToClose)
 
 			OAT.Anchor.assign(exportImg, {
 				title: " ",
@@ -10746,8 +10338,8 @@ var jsPDF = (function () {
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: self.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " ExportPopup "
-				
+				containerQuery: self.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " ExportPopup ",
+				appendTo: OAT_JS.grid.gridData[IdForQueryViewerCollection].Container
 			});
 
 			var generatePair = function (index) {
@@ -10834,7 +10426,7 @@ var jsPDF = (function () {
 				OAT.Dom.clear(self.exportPage);
 				//botton to allow show all filters in pop up
 				var someExport = false;
-				var div_upper = document.createElement("div");
+				var div_upper = jQuery('<div></div>')[0];
 				div_upper.setAttribute("class", "upper_container");
 
 				jQuery('#divtoxml').remove();
@@ -10856,13 +10448,13 @@ var jsPDF = (function () {
 					self.exportPage.appendChild(hr);
 				}
 
-				var div_down = document.createElement("div");
+				var div_down = jQuery('<div></div>')[0];
 				div_down.setAttribute("class", "down_container");
 				self.exportPage.appendChild(div_down);
 
-				var label = document.createElement("span");
+				var label = jQuery('<span></span>')[0];
 				label.textContent = self.translations.GXPL_QViewerJSVisibleColumns;//gx.getMessage("GXPL_QViewerJSVisibleColumns");
-				var div_label = document.createElement("div");
+				var div_label = jQuery('<div></div>')[0];
 				div_label.setAttribute("class", "div_label_win");
 				div_label.appendChild(label);
 				div_down.appendChild(div_label);
@@ -11989,8 +11581,8 @@ var jsPDF = (function () {
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: self.grid.QueryViewerCollection[self.grid.IdForQueryViewerCollection].ControlName + "-table" + " FilterPopup "
-				
+				containerQuery: self.grid.QueryViewerCollection[self.grid.IdForQueryViewerCollection].ControlName + "-table" + " FilterPopup ",
+				appendTo: OAT_JS.grid.gridData[self.grid.IdForQueryViewerCollection].Container				
 			});
 			var callback = function (event) {
 				var type = OAT.GridData.SORT_NONE;
@@ -12731,7 +12323,7 @@ var jsPDF = (function () {
 		var cached = Math.floor(Math.random() * 10000)
 		
 		if (!_self.grid.disableColumnSort) {
-			var div_order = document.createElement("div");
+			var div_order = jQuery('<div></div>')[0];
 			div_order.setAttribute("class", "first_popup_subdiv");
 
 			var asc = OAT.Dom.radio("order");
@@ -12764,9 +12356,9 @@ var jsPDF = (function () {
 					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Ascending", "", "")
 				
 				var idI = "i_" + this.getAttribute("id");
-				var inputAsc = document.getElementById(idI);
+				var inputAsc = jQuery("#"+idI)[0];
 				inputAsc.textContent = "radio_button_checked";
-				var inputDsc = document.getElementById(idI.replace("asc", "desc"));
+				var inputDsc = jQuery("#"+idI.replace("asc", "desc"))[0];
 				inputDsc.textContent = "radio_button_unchecked";
 				
 			});
@@ -12811,9 +12403,9 @@ var jsPDF = (function () {
 					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Descending", "", "");
 				
 				var idI = "i_" + this.getAttribute("id");
-				var inputDsc = document.getElementById(idI);
+				var inputDsc = jQuery("#"+idI)[0];
 				inputDsc.textContent = "radio_button_checked";
-				var inputAsc = document.getElementById(idI.replace("desc", "asc"));
+				var inputAsc = jQuery("#"+idI.replace("desc", "asc"))[0];
 				inputAsc.textContent = "radio_button_unchecked";
 				
 			});
@@ -12844,7 +12436,7 @@ var jsPDF = (function () {
 		}
 		if ((_self.container.parentNode.cellIndex > 0)) {
 
-			var dragDiv_L_sel_div = document.createElement("div");
+			var dragDiv_L_sel_div = jQuery('<div></div>')[0];
 			dragDiv_L_sel_div.setAttribute("class", "move_item_img");
 
 			OAT.Dom.attach(dragDiv_L_sel_div, "click", function () {
@@ -12901,7 +12493,7 @@ var jsPDF = (function () {
 		//to right
 		if (_self.container.parentNode.cellIndex < _self.grid.header.cells.length - 1) { //si no es la ultima columna
 
-			var dragDiv_R_sel_div = document.createElement("div");
+			var dragDiv_R_sel_div = jQuery('<div></div>')[0];
 			dragDiv_R_sel_div.setAttribute("class", "move_item_img");
 
 			OAT.Dom.attach(dragDiv_R_sel_div, "click", function () {
@@ -12974,7 +12566,7 @@ var jsPDF = (function () {
 		if (OAT.gridStateChanged(_self)) {
 
 			var restoreview = OAT.Dom.create("div");
-			var restoreview_sel_div = document.createElement("div");
+			var restoreview_sel_div = jQuery('<div></div>')[0];
 
 			OAT.Dom.attach(restoreview_sel_div, "click", function () {
 				OAT_JS.grid.gridData[UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
@@ -13143,17 +12735,17 @@ var jsPDF = (function () {
 		var d = OAT.Dom.create("div");
 		d.setAttribute("class", "div_buttons_popup");
 
-		var all = document.createElement("button");
+		var all = jQuery('<button></button>')[0];
 		all.textContent = OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSAll; //gx.getMessage("GXPL_QViewerJSAll");
 		all.setAttribute("class", "btn");
 		jQuery(all).click(allRef);
 
-		var none = document.createElement("button");
+		var none = jQuery('<button></button>')[0];
 		none.textContent = OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSNone; //gx.getMessage("GXPL_QViewerJSNone");
 		none.setAttribute("class", "btn");
 		jQuery(none).click(noneRef);
 
-		var reverse = document.createElement("button");
+		var reverse = jQuery('<button></button>')[0];
 		reverse.textContent = OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSReverse; //gx.getMessage("GXPL_QViewerJSReverse");
 		reverse.setAttribute("class", "btn");
 		jQuery(reverse).click(reverseRef);
@@ -13165,7 +12757,7 @@ var jsPDF = (function () {
 		OAT.addImageNode(div_search, "search", "");
 
 		
-			var searchInput = document.createElement("input");
+			var searchInput = jQuery('<input></input>')[0];
 			searchInput.textContent = "none";
 			searchInput.setAttribute("class", "search_input");
 			searchInput.setAttribute("type", "text");
@@ -14818,6 +14410,10 @@ if (typeof exports != "undefined") {
 				jQuery(".oat_winrect_container").remove()
 			}
 		}
+		OAT.Dom.attach(pivotParams.container, "mousemove", OAT.Drag.move);
+	 	OAT.Dom.attach(pivotParams.container, "mouseup", OAT.Drag.up);
+		OAT.Dom.attach(pivotParams.container, "mousemove", OAT.GhostDragData.move);
+		OAT.Dom.attach(pivotParams.container, "mouseup", OAT.GhostDragData.up);
 		if ((pivotParams.RememberLayout) && (pivotParams.ServerPaging) && (pivotParams.RealType != "PivotTable")) {
 			var state = OAT.getStateWhenServingPaging(pivotParams.UcId + '_' + pivotParams.ObjectName.replace(/\./g, ""), pivotParams.ObjectName.replace(/\./g, ""))
 			if (!state) {
@@ -15859,6 +15455,8 @@ if (typeof exports != "undefined") {
 			this.gridData[UcId].autoResize = _mthis.autoResize;
 			this.gridData[UcId].selection = {Allow: _mthis.pivotParams.AllowSelection, EntireLine: _mthis.pivotParams.SelectLine, SelectedNode: []};
 			
+			this.gridData[UcId].Container = _mthis.pivotParams.container 
+			
 			this.gridData[UcId].grid = new OAT.Grid(content, controlName, _mthis.query, columnsDataType, colms, QueryViewerCollection, this.gridData[UcId].rowsPerPage,
 				disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, _mthis.serverPaging, _mthis.HideDataFilds, _mthis.orderFildsHidden, _mthis.TableOrderFilds, _mthis.relativePath,
 				this.gridData[UcId].selection, _mthis.pivotParams.Title, _mthis.translations );
@@ -15901,7 +15499,6 @@ if (typeof exports != "undefined") {
 
 
 			this.gridData[UcId].IdForQueryViewerCollection = IdForQueryViewerCollection;
-			this.gridData[UcId].Container = _mthis.pivotParams.container
 			this.gridData[UcId].TableOrderFields = _mthis.TableOrderFilds;
 
 			//initialize cache
@@ -17478,25 +17075,10 @@ if (typeof exports != "undefined") {
 
 
 	function OATSetCookie(name, value, expires, path, domain, secure) {
-		document.cookie = name + "=" + escape(value) +
-			((expires == null) ? "" : "; expires=" + expires.toGMTString()) +
-			((path == null) ? "" : "; path=" + path) +
-			((domain == null) ? "" : "; domain=" + domain) +
-			((secure == null) ? "" : "; secure");
+		
 	}
 	function OATGetCookie(name) {
-		var cname = name + "=";
-		var dc = document.cookie;
-		if (dc.length > 0) {
-			begin = dc.indexOf(cname);
-			if (begin != -1) {
-				begin += cname.length;
-				end = dc.indexOf(";", begin);
-				if (end == -1) end = dc.length;
-				return unescape(dc.substring(begin, end));
-			}
-		}
-		return null;
+		
 	}
 
 	function OATIsNotEmptyValue(value) {
@@ -18217,8 +17799,8 @@ if (typeof exports != "undefined") {
 			// confusing userAgent strings on Vista)
 			var msie = /MSIE/.test(navigator.userAgent);
 			var ie6 = /MSIE 6.0/.test(navigator.userAgent) && ! /MSIE 8.0/.test(navigator.userAgent);
-			var mode = document.documentMode || 0;
-			var setExpr = $.isFunction(document.createElement('div').style.setExpression);
+			var mode = 0;
+			var setExpr = $.isFunction(jQuery("<di></div>")[0].style.setExpression);
 
 			// global $ methods for blocking/unblocking the entire page
 			$.blockUI = function (opts) { install(window, opts); };
@@ -18720,10 +18302,6 @@ if (typeof exports != "undefined") {
 				if (typeof opts.onUnblock == 'function')
 					opts.onUnblock(el, opts);
 
-				// fix issue in Safari 6 where block artifacts remain until reflow
-				var body = $(document.body), w = body.width(), cssW = body[0].style.width;
-				body.width(w - 1).width(w);
-				body[0].style.width = cssW;
 			}
 
 			// bind/unbind the handler
@@ -18742,14 +18320,7 @@ if (typeof exports != "undefined") {
 
 				// bind anchors and inputs for mouse and key events
 				var events = 'mousedown mouseup keydown keypress keyup touchstart touchend touchmove';
-				if (b)
-					$(document).bind(events, opts, handler);
-				else
-					$(document).unbind(events, handler);
-
-				// former impl...
-				//		var $e = $('a,:input');
-				//		b ? $e.bind(events, opts, handler) : $e.unbind(events, handler);
+				
 			}
 
 			// event handler to suppress keyboard/mouse events when blocking
@@ -18829,661 +18400,6 @@ if (typeof exports != "undefined") {
 
 	
 
-//FILE OAT.Layers
-	OAT.Layers = function (f) {
-		var a = this;
-		this.baseOffset = f;
-		this.layers = [];
-		this.currentIndex = 0;
-		this.raise = function (b) {
-			if (-1 != a.layers.indexOf(b)) {
-				for (var d = b.style.zIndex, c = 0; c < a.layers.length; c++) {
-					var e = a.layers[c];
-					e.style.zIndex > d && e.style.zIndex--
-				}
-				b.style.zIndex = a.currentIndex
-			}
-		};
-		this.addLayer = function (b, d) {
-			var c = OAT.$(b);
-			c && (a.currentIndex++ , c.style.zIndex = a.currentIndex, a.layers.push(c), OAT.Dom.attach(c, d ? d : "mousedown", function () {
-				a.raise(c)
-			}))
-		};
-		this.removeLayer = function (b) {
-			b = OAT.$(b);
-			b = a.layers.indexOf(b);
-			-1 != b && a.layers.splice(b, 1)
-		};
-		a.currentIndex = a.baseOffset
-	};
-
-
-
-
-
-
-	; (function () {
-		/*jshint eqeqeq:false curly:false latedef:false */
-		"use strict";
-
-		function setup($) {
-			$.fn._fadeIn = $.fn.fadeIn;
-
-			var noOp = $.noop || function () { };
-
-			// this bit is to ensure we don't call setExpression when we shouldn't (with extra muscle to handle
-			// confusing userAgent strings on Vista)
-			var msie = /MSIE/.test(navigator.userAgent);
-			var ie6 = /MSIE 6.0/.test(navigator.userAgent) && ! /MSIE 8.0/.test(navigator.userAgent);
-			var mode = document.documentMode || 0;
-			var setExpr = $.isFunction(document.createElement('div').style.setExpression);
-
-			// global $ methods for blocking/unblocking the entire page
-			$.blockUI = function (opts) { install(window, opts); };
-			$.unblockUI = function (opts) { remove(window, opts); };
-
-			// convenience method for quick growl-like notifications  (http://www.google.com/search?q=growl)
-			$.growlUI = function (title, message, timeout, onClose) {
-				var $m = $('<div class="growlUI"></div>');
-				if (title) $m.append('<h1>' + title + '</h1>');
-				if (message) $m.append('<h2>' + message + '</h2>');
-				if (timeout === undefined) timeout = 3000;
-
-				// Added by konapun: Set timeout to 30 seconds if this growl is moused over, like normal toast notifications
-				var callBlock = function (opts) {
-					opts = opts || {};
-
-					$.blockUI({
-						message: $m,
-						fadeIn: typeof opts.fadeIn !== 'undefined' ? opts.fadeIn : 700,
-						fadeOut: typeof opts.fadeOut !== 'undefined' ? opts.fadeOut : 1000,
-						timeout: typeof opts.timeout !== 'undefined' ? opts.timeout : timeout,
-						centerY: false,
-						showOverlay: false,
-						onUnblock: onClose,
-						css: $.blockUI.defaults.growlCSS
-					});
-				};
-
-				callBlock();
-				var nonmousedOpacity = $m.css('opacity');
-				$m.mouseover(function () {
-					callBlock({
-						fadeIn: 0,
-						timeout: 30000
-					});
-
-					var displayBlock = $('.blockMsg');
-					displayBlock.stop(); // cancel fadeout if it has started
-					displayBlock.fadeTo(300, 1); // make it easier to read the message by removing transparency
-				}).mouseout(function () {
-					$('.blockMsg').fadeOut(1000);
-				});
-				// End konapun additions
-			};
-
-			// plugin method for blocking element content
-			$.fn.block = function (opts) {
-				if (this[0] === window) {
-					$.blockUI(opts);
-					return this;
-				}
-				var fullOpts = $.extend({}, $.blockUI.defaults, opts || {});
-				this.each(function () {
-					var $el = $(this);
-					if (fullOpts.ignoreIfBlocked && $el.data('blockUI.isBlocked'))
-						return;
-					$el.unblock({ fadeOut: 0 });
-				});
-
-				return this.each(function () {
-					if ($.css(this, 'position') == 'static') {
-						this.style.position = 'relative';
-						$(this).data('blockUI.static', true);
-					}
-					this.style.zoom = 1; // force 'hasLayout' in ie
-					install(this, opts);
-				});
-			};
-
-			// plugin method for unblocking element content
-			$.fn.unblock = function (opts) {
-				if (this[0] === window) {
-					$.unblockUI(opts);
-					return this;
-				}
-				return this.each(function () {
-					remove(this, opts);
-				});
-			};
-
-			$.blockUI.version = 2.70; // 2nd generation blocking at no extra cost!
-
-			// override these in your code to change the default behavior and style
-			$.blockUI.defaults = {
-				// message displayed when blocking (use null for no message)
-				message: '<h1>Please wait...</h1>',
-
-				title: null,		// title string; only used when theme == true
-				draggable: true,	// only used when theme == true (requires jquery-ui.js to be loaded)
-
-				theme: false, // set to true to use with jQuery UI themes
-
-				// styles for the message when blocking; if you wish to disable
-				// these and use an external stylesheet then do this in your code:
-				// $.blockUI.defaults.css = {};
-				css: {
-					padding: 0,
-					margin: 0,
-					width: '30%',
-					top: '40%',
-					left: '35%',
-					textAlign: 'center',
-					color: '#000',
-					border: '3px solid #aaa',
-					backgroundColor: '#fff',
-					cursor: 'wait'
-				},
-
-				// minimal style set used when themes are used
-				themedCSS: {
-					width: '30%',
-					top: '40%',
-					left: '35%'
-				},
-
-				// styles for the overlay
-				overlayCSS: {
-					backgroundColor: '#000',
-					opacity: 0.1,
-					cursor: 'wait'
-				},
-
-				// style to replace wait cursor before unblocking to correct issue
-				// of lingering wait cursor
-				cursorReset: 'default',
-
-				// styles applied when using $.growlUI
-				growlCSS: {
-					width: '350px',
-					top: '10px',
-					left: '',
-					right: '10px',
-					border: 'none',
-					padding: '5px',
-					opacity: 0.6,
-					cursor: 'default',
-					color: '#fff',
-					backgroundColor: '#000',
-					'-webkit-border-radius': '10px',
-					'-moz-border-radius': '10px',
-					'border-radius': '10px'
-				},
-
-				// IE issues: 'about:blank' fails on HTTPS and javascript:false is s-l-o-w
-				// (hat tip to Jorge H. N. de Vasconcelos)
-				/*jshint scripturl:true */
-				iframeSrc: /^https/i.test(window.location.href || '') ? 'javascript:false' : 'about:blank',
-
-				// force usage of iframe in non-IE browsers (handy for blocking applets)
-				forceIframe: false,
-
-				// z-index for the blocking overlay
-				baseZ: 1000,
-
-				// set these to true to have the message automatically centered
-				centerX: true, // <-- only effects element blocking (page block controlled via css above)
-				centerY: true,
-
-				// allow body element to be stetched in ie6; this makes blocking look better
-				// on "short" pages.  disable if you wish to prevent changes to the body height
-				allowBodyStretch: true,
-
-				// enable if you want key and mouse events to be disabled for content that is blocked
-				bindEvents: true,
-
-				// be default blockUI will supress tab navigation from leaving blocking content
-				// (if bindEvents is true)
-				constrainTabKey: true,
-
-				// fadeIn time in millis; set to 0 to disable fadeIn on block
-				fadeIn: 200,
-
-				// fadeOut time in millis; set to 0 to disable fadeOut on unblock
-				fadeOut: 400,
-
-				// time in millis to wait before auto-unblocking; set to 0 to disable auto-unblock
-				timeout: 0,
-
-				// disable if you don't want to show the overlay
-				showOverlay: true,
-
-				// if true, focus will be placed in the first available input field when
-				// page blocking
-				focusInput: true,
-
-				// elements that can receive focus
-				focusableElements: ':input:enabled:visible',
-
-				// suppresses the use of overlay styles on FF/Linux (due to performance issues with opacity)
-				// no longer needed in 2012
-				// applyPlatformOpacityRules: true,
-
-				// callback method invoked when fadeIn has completed and blocking message is visible
-				onBlock: null,
-
-				// callback method invoked when unblocking has completed; the callback is
-				// passed the element that has been unblocked (which is the window object for page
-				// blocks) and the options that were passed to the unblock call:
-				//	onUnblock(element, options)
-				onUnblock: null,
-
-				// callback method invoked when the overlay area is clicked.
-				// setting this will turn the cursor to a pointer, otherwise cursor defined in overlayCss will be used.
-				onOverlayClick: null,
-
-				// don't ask; if you really must know: http://groups.google.com/group/jquery-en/browse_thread/thread/36640a8730503595/2f6a79a77a78e493#2f6a79a77a78e493
-				quirksmodeOffsetHack: 4,
-
-				// class name of the message block
-				blockMsgClass: 'blockMsg',
-
-				// if it is already blocked, then ignore it (don't unblock and reblock)
-				ignoreIfBlocked: false
-			};
-
-			// private data and functions follow...
-
-			var pageBlock = null;
-			var pageBlockEls = [];
-
-			function install(el, opts) {
-				var css, themedCSS;
-				var full = (el == window);
-				var msg = (opts && opts.message !== undefined ? opts.message : undefined);
-				opts = $.extend({}, $.blockUI.defaults, opts || {});
-
-				if (opts.ignoreIfBlocked && $(el).data('blockUI.isBlocked'))
-					return;
-
-				opts.overlayCSS = $.extend({}, $.blockUI.defaults.overlayCSS, opts.overlayCSS || {});
-				css = $.extend({}, $.blockUI.defaults.css, opts.css || {});
-				if (opts.onOverlayClick)
-					opts.overlayCSS.cursor = 'pointer';
-
-				themedCSS = $.extend({}, $.blockUI.defaults.themedCSS, opts.themedCSS || {});
-				msg = msg === undefined ? opts.message : msg;
-
-				// remove the current block (if there is one)
-				if (full && pageBlock)
-					remove(window, { fadeOut: 0 });
-
-				// if an existing element is being used as the blocking content then we capture
-				// its current place in the DOM (and current display style) so we can restore
-				// it when we unblock
-				if (msg && typeof msg != 'string' && (msg.parentNode || msg.jquery)) {
-					var node = msg.jquery ? msg[0] : msg;
-					var data = {};
-					$(el).data('blockUI.history', data);
-					data.el = node;
-					data.parent = node.parentNode;
-					data.display = node.style.display;
-					data.position = node.style.position;
-					if (data.parent)
-						data.parent.removeChild(node);
-				}
-
-				$(el).data('blockUI.onUnblock', opts.onUnblock);
-				var z = opts.baseZ;
-
-				// blockUI uses 3 layers for blocking, for simplicity they are all used on every platform;
-				// layer1 is the iframe layer which is used to supress bleed through of underlying content
-				// layer2 is the overlay layer which has opacity and a wait cursor (by default)
-				// layer3 is the message content that is displayed while blocking
-				var lyr1, lyr2, lyr3, s;
-				if (msie || opts.forceIframe)
-					lyr1 = $('<iframe class="blockUI" style="z-index:' + (z++) + ';display:none;border:none;margin:0;padding:0;position:absolute;width:100%;height:100%;top:0;left:0" src="' + opts.iframeSrc + '"></iframe>');
-				else
-					lyr1 = $('<div class="blockUI" style="display:none"></div>');
-
-				if (opts.theme)
-					lyr2 = $('<div class="blockUI blockOverlay ui-widget-overlay" style="z-index:' + (z++) + ';display:none"></div>');
-				else
-					lyr2 = $('<div class="blockUI blockOverlay" style="z-index:' + (z++) + ';display:none;border:none;margin:0;padding:0;width:100%;height:100%;top:0;left:0"></div>');
-
-				if (opts.theme && full) {
-					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockPage ui-dialog ui-widget ui-corner-all" style="z-index:' + (z + 10) + ';display:none;position:fixed">';
-					if (opts.title) {
-						s += '<div class="ui-widget-header ui-dialog-titlebar ui-corner-all blockTitle">' + (opts.title || '&nbsp;') + '</div>';
-					}
-					s += '<div class="ui-widget-content ui-dialog-content"></div>';
-					s += '</div>';
-				}
-				else if (opts.theme) {
-					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockElement ui-dialog ui-widget ui-corner-all" style="z-index:' + (z + 10) + ';display:none;position:absolute">';
-					if (opts.title) {
-						s += '<div class="ui-widget-header ui-dialog-titlebar ui-corner-all blockTitle">' + (opts.title || '&nbsp;') + '</div>';
-					}
-					s += '<div class="ui-widget-content ui-dialog-content"></div>';
-					s += '</div>';
-				}
-				else if (full) {
-					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockPage" style="z-index:' + (z + 10) + ';display:none;position:fixed"></div>';
-				}
-				else {
-					s = '<div class="blockUI ' + opts.blockMsgClass + ' blockElement" style="z-index:' + (z + 10) + ';display:none;position:absolute"></div>';
-				}
-				lyr3 = $(s);
-
-				// if we have a message, style it
-				if (msg) {
-					if (opts.theme) {
-						lyr3.css(themedCSS);
-						lyr3.addClass('ui-widget-content');
-					}
-					else
-						lyr3.css(css);
-				}
-
-				// style the overlay
-				if (!opts.theme /*&& (!opts.applyPlatformOpacityRules)*/)
-					lyr2.css(opts.overlayCSS);
-				lyr2.css('position', full ? 'fixed' : 'absolute');
-
-				// make iframe layer transparent in IE
-				if (msie || opts.forceIframe)
-					lyr1.css('opacity', 0.0);
-
-				//$([lyr1[0],lyr2[0],lyr3[0]]).appendTo(full ? 'body' : el);
-				var layers = [lyr1, lyr2, lyr3], $par = full ? $('body') : $(el);
-				$.each(layers, function () {
-					this.appendTo($par);
-				});
-
-				if (opts.theme && opts.draggable && $.fn.draggable) {
-					lyr3.draggable({
-						handle: '.ui-dialog-titlebar',
-						cancel: 'li'
-					});
-				}
-
-				// ie7 must use absolute positioning in quirks mode and to account for activex issues (when scrolling)
-				var expr = setExpr && (!$.support.boxModel || $('object,embed', full ? null : el).length > 0);
-				if (ie6 || expr) {
-					// give body 100% height
-					if (full && opts.allowBodyStretch && $.support.boxModel)
-						$('html,body').css('height', '100%');
-
-					// fix ie6 issue when blocked element has a border width
-					if ((ie6 || !$.support.boxModel) && !full) {
-						var t = sz(el, 'borderTopWidth'), l = sz(el, 'borderLeftWidth');
-						var fixT = t ? '(0 - ' + t + ')' : 0;
-						var fixL = l ? '(0 - ' + l + ')' : 0;
-					}
-
-					// simulate fixed position
-					$.each(layers, function (i, o) {
-						var s = o[0].style;
-						s.position = 'absolute';
-						if (i < 2) {
-							if (full)
-								s.setExpression('height', 'Math.max(document.body.scrollHeight, document.body.offsetHeight) - (jQuery.support.boxModel?0:' + opts.quirksmodeOffsetHack + ') + "px"');
-							else
-								s.setExpression('height', 'this.parentNode.offsetHeight + "px"');
-							if (full)
-								s.setExpression('width', 'jQuery.support.boxModel && document.documentElement.clientWidth || document.body.clientWidth + "px"');
-							else
-								s.setExpression('width', 'this.parentNode.offsetWidth + "px"');
-							if (fixL) s.setExpression('left', fixL);
-							if (fixT) s.setExpression('top', fixT);
-						}
-						else if (opts.centerY) {
-							if (full) s.setExpression('top', '(document.documentElement.clientHeight || document.body.clientHeight) / 2 - (this.offsetHeight / 2) + (blah = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + "px"');
-							s.marginTop = 0;
-						}
-						else if (!opts.centerY && full) {
-							var top = (opts.css && opts.css.top) ? parseInt(opts.css.top, 10) : 0;
-							var expression = '((document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop) + ' + top + ') + "px"';
-							s.setExpression('top', expression);
-						}
-					});
-				}
-
-				// show the message
-				if (msg) {
-					if (opts.theme)
-						lyr3.find('.ui-widget-content').append(msg);
-					else
-						lyr3.append(msg);
-					if (msg.jquery || msg.nodeType)
-						$(msg).show();
-				}
-
-				if ((msie || opts.forceIframe) && opts.showOverlay)
-					lyr1.show(); // opacity is zero
-				if (opts.fadeIn) {
-					var cb = opts.onBlock ? opts.onBlock : noOp;
-					var cb1 = (opts.showOverlay && !msg) ? cb : noOp;
-					var cb2 = msg ? cb : noOp;
-					if (opts.showOverlay)
-						lyr2._fadeIn(opts.fadeIn, cb1);
-					if (msg)
-						lyr3._fadeIn(opts.fadeIn, cb2);
-				}
-				else {
-					if (opts.showOverlay)
-						lyr2.show();
-					if (msg)
-						lyr3.show();
-					if (opts.onBlock)
-						opts.onBlock.bind(lyr3)();
-				}
-
-				// bind key and mouse events
-				bind(1, el, opts);
-
-				if (full) {
-					pageBlock = lyr3[0];
-					pageBlockEls = $(opts.focusableElements, pageBlock);
-					if (opts.focusInput)
-						setTimeout(focus, 20);
-				}
-				else
-					center(lyr3[0], opts.centerX, opts.centerY);
-
-				if (opts.timeout) {
-					// auto-unblock
-					var to = setTimeout(function () {
-						if (full)
-							$.unblockUI(opts);
-						else
-							$(el).unblock(opts);
-					}, opts.timeout);
-					$(el).data('blockUI.timeout', to);
-				}
-			}
-
-			// remove the block
-			function remove(el, opts) {
-				var count;
-				var full = (el == window);
-				var $el = $(el);
-				var data = $el.data('blockUI.history');
-				var to = $el.data('blockUI.timeout');
-				if (to) {
-					clearTimeout(to);
-					$el.removeData('blockUI.timeout');
-				}
-				opts = $.extend({}, $.blockUI.defaults, opts || {});
-				bind(0, el, opts); // unbind events
-
-				if (opts.onUnblock === null) {
-					opts.onUnblock = $el.data('blockUI.onUnblock');
-					$el.removeData('blockUI.onUnblock');
-				}
-
-				var els;
-				if (full) // crazy selector to handle odd field errors in ie6/7
-					els = $('body').children().filter('.blockUI').add('body > .blockUI');
-				else
-					els = $el.find('>.blockUI');
-
-				// fix cursor issue
-				if (opts.cursorReset) {
-					if (els.length > 1)
-						els[1].style.cursor = opts.cursorReset;
-					if (els.length > 2)
-						els[2].style.cursor = opts.cursorReset;
-				}
-
-				if (full)
-					pageBlock = pageBlockEls = null;
-
-				if (opts.fadeOut) {
-					count = els.length;
-					els.stop().fadeOut(opts.fadeOut, function () {
-						if (--count === 0)
-							reset(els, data, opts, el);
-					});
-				}
-				else
-					reset(els, data, opts, el);
-			}
-
-			// move blocking element back into the DOM where it started
-			function reset(els, data, opts, el) {
-				var $el = $(el);
-				if ($el.data('blockUI.isBlocked'))
-					return;
-
-				els.each(function (i, o) {
-					// remove via DOM calls so we don't lose event handlers
-					if (this.parentNode)
-						this.parentNode.removeChild(this);
-				});
-
-				if (data && data.el) {
-					data.el.style.display = data.display;
-					data.el.style.position = data.position;
-					data.el.style.cursor = 'default'; // #59
-					if (data.parent)
-						data.parent.appendChild(data.el);
-					$el.removeData('blockUI.history');
-				}
-
-				if ($el.data('blockUI.static')) {
-					$el.css('position', 'static'); // #22
-				}
-
-				if (typeof opts.onUnblock == 'function')
-					opts.onUnblock(el, opts);
-
-				// fix issue in Safari 6 where block artifacts remain until reflow
-				var body = $(document.body), w = body.width(), cssW = body[0].style.width;
-				body.width(w - 1).width(w);
-				body[0].style.width = cssW;
-			}
-
-			// bind/unbind the handler
-			function bind(b, el, opts) {
-				var full = el == window, $el = $(el);
-
-				// don't bother unbinding if there is nothing to unbind
-				if (!b && (full && !pageBlock || !full && !$el.data('blockUI.isBlocked')))
-					return;
-
-				$el.data('blockUI.isBlocked', b);
-
-				// don't bind events when overlay is not in use or if bindEvents is false
-				if (!full || !opts.bindEvents || (b && !opts.showOverlay))
-					return;
-
-				// bind anchors and inputs for mouse and key events
-				var events = 'mousedown mouseup keydown keypress keyup touchstart touchend touchmove';
-				if (b)
-					$(document).bind(events, opts, handler);
-				else
-					$(document).unbind(events, handler);
-
-				// former impl...
-				//		var $e = $('a,:input');
-				//		b ? $e.bind(events, opts, handler) : $e.unbind(events, handler);
-			}
-
-			// event handler to suppress keyboard/mouse events when blocking
-			function handler(e) {
-				// allow tab navigation (conditionally)
-				if (e.type === 'keydown' && e.keyCode && e.keyCode == 9) {
-					if (pageBlock && e.data.constrainTabKey) {
-						var els = pageBlockEls;
-						var fwd = !e.shiftKey && e.target === els[els.length - 1];
-						var back = e.shiftKey && e.target === els[0];
-						if (fwd || back) {
-							setTimeout(function () { focus(back); }, 10);
-							return false;
-						}
-					}
-				}
-				var opts = e.data;
-				var target = $(e.target);
-				if (target.hasClass('blockOverlay') && opts.onOverlayClick)
-					opts.onOverlayClick(e);
-
-				// allow events within the message content
-				if (target.parents('div.' + opts.blockMsgClass).length > 0)
-					return true;
-
-				// allow events for content that is not being blocked
-				return target.parents().children().filter('div.blockUI').length === 0;
-			}
-
-			function focus(back) {
-				if (!pageBlockEls)
-					return;
-				var e = pageBlockEls[back === true ? pageBlockEls.length - 1 : 0];
-				if (e)
-					e.focus();
-			}
-
-			function center(el, x, y) {
-				var p = el.parentNode, s = el.style;
-				var l = ((p.offsetWidth - el.offsetWidth) / 2) - sz(p, 'borderLeftWidth');
-				var t = ((p.offsetHeight - el.offsetHeight) / 2) - sz(p, 'borderTopWidth');
-				if (x) s.left = l > 0 ? (l + 'px') : '0';
-				if (y) s.top = t > 0 ? (t + 'px') : '0';
-			}
-
-			function sz(el, p) {
-				return parseInt($.css(el, p), 10) || 0;
-			}
-
-		}
-
-
-		/*global define:true */
-		if (typeof define === 'function' && define.amd && define.amd.jQuery) {
-			define(['jquery'], setup);
-		} else {
-			if(typeof jQuery != "undefined"){
-				setup(jQuery);
-			}
-		}
-
-	})();
-
-
-
-
-
-
-
-
-	try {
-		OAT.Loader.featureLoaded("layers");
-	} catch (ERROR) {
-
-	}
 
 
 
@@ -22507,7 +21423,8 @@ if (typeof exports != "undefined") {
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: self.IdForQueryViewerCollection + "-pivottable" /*+qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) */+ " FilterPopup "
+				containerQuery: self.IdForQueryViewerCollection + "-pivottable" + " FilterPopup ",
+				appendTo: self.pivotContainer
 			});
 
 			jQuery(contentDiv).data('anchorRef', anchorRef);
@@ -22585,7 +21502,7 @@ if (typeof exports != "undefined") {
 
 
 			if (!disableColumnSort) {
-				var div_order = document.createElement("div");
+				var div_order = jQuery('<div></div>')[0];
 				div_order.setAttribute("class", "first_popup_subdiv");
 
 				var asc = OAT.Dom.radio("order");
@@ -22604,9 +21521,9 @@ if (typeof exports != "undefined") {
 						cond.sort = 1; self.stateChanged = true;
 						self.getDataForPivot(self.UcId, 1, self.rowsPerPage, true, cond.dataField, "", "", "")
 						var idI = "i_" + this.getAttribute("id");
-						var inputAsc = document.getElementById(idI);
+						var inputAsc = jQuery("#" + idI)[0];
 						inputAsc.textContent = "radio_button_checked";
-						var inputDsc = document.getElementById(idI.replace("asc", "desc"));
+						var inputAsc = jQuery("#" + idI.replace("desc", "asc"))[0];
 						inputDsc.textContent = "radio_button_unchecked";
 					
 						
@@ -22642,9 +21559,9 @@ if (typeof exports != "undefined") {
 						cond.sort = -1; self.stateChanged = true;
 						self.getDataForPivot(self.UcId, 1, self.rowsPerPage, true, cond.dataField, "", "", "")
 						var idI = "i_" + this.getAttribute("id");
-						var inputDsc = document.getElementById(idI);
+						var inputDsc = jQuery("#" + idI)[0];
 						inputDsc.textContent = "radio_button_checked";
-						var inputAsc = document.getElementById(idI.replace("desc", "asc"));
+						var inputAsc = jQuery("#" + idI.replace("desc", "asc"))[0];
 						inputAsc.textContent = "radio_button_unchecked";
 						
 					
@@ -22675,7 +21592,7 @@ if (typeof exports != "undefined") {
 				if (disableColumnSort) {
 					subtotals.setAttribute("class", "first_popup_subdiv");
 				}
-				var subtotal_sel_div = document.createElement("div");
+				var subtotal_sel_div =  jQuery('<div></div>')[0];
 				var class_check_div = (cond.subtotals) ? "check_item_img" : "uncheck_item_img";
 				if (self.isSD) { //android
 					var class_check_div = (cond.subtotals) ? "check_item_img_small" : "uncheck_item_img_small";
@@ -22721,7 +21638,7 @@ if (typeof exports != "undefined") {
 
 			if ((self.stateChanged) || (self.pivotStateChanged())) {
 				var restoreview = OAT.Dom.create("div");
-				var restoreview_sel_div = document.createElement("div");
+				var restoreview_sel_div =  jQuery('<div></div>')[0]; 
 
 				OAT.Dom.attach(restoreview_sel_div, "click", function () {
 						self.cleanStateWhenServerPagination();
@@ -22746,7 +21663,7 @@ if (typeof exports != "undefined") {
 			/* for pivoting purpuses*/
 			if (measures.length > 0) {
 				var pivotpurp = OAT.Dom.create("div");
-				var pivotpurp_sel_div = document.createElement("div");
+				var pivotpurp_sel_div =  jQuery('<div></div>')[0];
 
 				OAT.Dom.attach(pivotpurp_sel_div, "click", function () {
 					
@@ -22780,7 +21697,7 @@ if (typeof exports != "undefined") {
 				if (OAT.isSD()) {
 					if (self.filterIndexes.indexOf(dimensionNumber) === -1) {
 						var Ipadpurp = OAT.Dom.create("div");
-						var Ipadpurp_sel_div = document.createElement("div");
+						var Ipadpurp_sel_div =  jQuery('<div></div>')[0];
 
 
 						OAT.Dom.attach(Ipadpurp_sel_div, "click", function () {
@@ -23110,17 +22027,17 @@ if (typeof exports != "undefined") {
 			OAT.Dom.clear(div);
 			var d = OAT.Dom.create("div");
 			d.setAttribute("class", "div_buttons_popup");
-			var all = document.createElement("button");
+			var all = jQuery('<button></button>')[0];;
 			all.textContent = self.translations.GXPL_QViewerJSAll; /*gx.getMessage("GXPL_QViewerJSAll");*/
 			all.setAttribute("class", "btn");
 			jQuery(all).click(allRef);
 
-			var none = document.createElement("button");
+			var none = jQuery('<button></button>')[0];
 			none.textContent = self.translations.GXPL_QViewerJSNone //gx.getMessage("GXPL_QViewerJSNone");
 			none.setAttribute("class", "btn");
 			jQuery(none).click(noneRef);
 
-			var reverse = document.createElement("button");
+			var reverse = jQuery('<button></button>')[0];
 			reverse.textContent = self.translations.GXPL_QViewerJSReverse //gx.getMessage("GXPL_QViewerJSReverse");
 			reverse.setAttribute("class", "btn");
 			jQuery(reverse).click(reverseRef);
@@ -23133,7 +22050,7 @@ if (typeof exports != "undefined") {
 				div_search.setAttribute("class", "div_filter_input");
 
 				
-					var searchInput = document.createElement("input");
+					var searchInput = jQuery('<input></input>')[0];
 					OAT.addImageNode(div_search, "search", "");
 					searchInput.textContent = "none";
 					searchInput.setAttribute("class", "search_input");
@@ -23466,7 +22383,7 @@ if (typeof exports != "undefined") {
 				}
 
 				if (strng != "") {
-					var spanText = document.createElement('span')
+					var spanText =  jQuery('<span></span>')[0];
 					spanText.textContent = strng;
 					div.appendChild(spanText);
 				}
@@ -23654,7 +22571,7 @@ if (typeof exports != "undefined") {
 					OAT.addTextNode(d, self.headerRow[index])
 
 
-					var close = document.createElement("div");
+					var close = jQuery('<div></div>')[0];
 					close.setAttribute("class", "close_span_filter");
 					OAT.addImageNode(close, "close", "");
 					
@@ -23739,8 +22656,8 @@ if (typeof exports != "undefined") {
 				}
 			};
 
-			OAT.Dom.attach(document, "mousedown", checkToClose)
-			OAT.Dom.attach(document, "onmouseout", checkInfoFilters)
+			OAT.Dom.attach(self.pivotContainer, "mousedown", checkToClose)
+			OAT.Dom.attach(self.pivotContainer, "onmouseout", checkInfoFilters)
 			
 			OAT.Anchor.assign(exportImg, {
 				title: " ",
@@ -23749,7 +22666,8 @@ if (typeof exports != "undefined") {
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: self.IdForQueryViewerCollection + "-pivottable" +/*qv.util.GetContainerControlClass(self.QueryViewerCollection[self.IdForQueryViewerCollection]) +*/ " ExportPopup "
+				containerQuery: self.IdForQueryViewerCollection + "-pivottable" + " ExportPopup ",
+				appendTo: self.pivotContainer
 			});
 
 			var clickRef = function (event) {
@@ -23784,7 +22702,7 @@ if (typeof exports != "undefined") {
 
 				OAT.Dom.clear(self.exportPage);
 				//begin export options
-				var div_upper = document.createElement("div");
+				var div_upper = jQuery('<div></div>')[0];
 				div_upper.setAttribute("class", "upper_container");
 
 				//botton to allow show all filters in pop up
@@ -23809,13 +22727,13 @@ if (typeof exports != "undefined") {
 					self.exportPage.appendChild(hr);
 				}
 
-				var div_down = document.createElement("div");
+				var div_down = jQuery('<div></div>')[0];
 				div_down.setAttribute("class", "down_container");
 				self.exportPage.appendChild(div_down);
 
-				var label = document.createElement("span");
+				var label = jQuery('<div></div>')[0];
 				label.textContent = self.translations.GXPL_QViewerJSVisibleColumns//gx.getMessage("GXPL_QViewerJSVisibleColumns")
-				var div_label = document.createElement("div");
+				var div_label = jQuery('<div></div>')[0];
 				div_label.setAttribute("class", "div_label_win");
 				div_label.appendChild(label);
 				div_down.appendChild(div_label);
@@ -23975,7 +22893,7 @@ if (typeof exports != "undefined") {
 					pvpl.htmlFor = "pivot_checkbox_restoreview";
 					pvpl.setAttribute("class", "pivot_checkbox_restoreview");
 					exportXMLButton.appendChild(pvpl);
-					var span = document.createElement("span");
+					var span = jQuery('<span></span>')[0];
 					exportXMLButton.appendChild(span);
 
 					OAT.Dom.attach(exportXMLButtonSub, "click", function () {
@@ -24448,7 +23366,7 @@ if (typeof exports != "undefined") {
 			//}
 			// MOVE FILTERS TO TOOLBAR
 			if ((measures.length > 0) && (tr.cells[1] != undefined) && (tr.cells[1].textContent == "")) {
-				var toolbarTable = document.getElementById(self.controlName + "_" + self.query + "_toolbar");
+				var toolbarTable = jQuery("#" + self.controlName + "_" + self.query + "_toolbar")[0];
 				if (toolbarTable.rows[0])
 					toolbarTable.rows[0].appendChild(tr.cells[0]);
 			}
@@ -24517,7 +23435,7 @@ if (typeof exports != "undefined") {
 
 			/////////////////////////////////////////////////// MOVE FILTERS TO TOOLBAR
 			if (th.textContent == self.headerRow[self.colConditions[i]]) {
-				var toolbarTable = document.getElementById(self.controlName + "_" + self.query + "_toolbar");
+				var toolbarTable = jQuery("#" + self.controlName + "_" + self.query + "_toolbar")[0];
 				th.hidden = false;
 				if (toolbarTable.rows[0])
 					toolbarTable.rows[0].appendChild(th);
@@ -25208,7 +24126,7 @@ if (typeof exports != "undefined") {
 			self.drawFilters();
 			self.countedRows = 0;
 			if (OAT.isIE()) {
-				var divIeContainer = document.createElement("div");
+				var divIeContainer = jQuery('<div></div>')[0];
 				divIeContainer.setAttribute("class", "divIeContainer");
 				self.div.appendChild(divIeContainer);
 				OAT.Dom.append([table, tbody], [divIeContainer, table]);
@@ -25594,7 +24512,7 @@ if (typeof exports != "undefined") {
 			self.drawFilters();
 			self.countedRows = 0;
 			if (OAT.isIE()) {
-				var divIeContainer = document.createElement("div");
+				var divIeContainer = jQuery('<div></div>')[0];
 				divIeContainer.setAttribute("class", "divIeContainer");
 				self.div.appendChild(divIeContainer);
 				OAT.Dom.append([table, tbody], [divIeContainer, table]);
@@ -30489,7 +29407,7 @@ if (typeof exports != "undefined") {
 				var iparser = new DOMParser();
 				var xml_doc = iparser.parseFromString(datastr, "text/xml");
 				
-				//var xml_doc = qv.util.dom.xmlDocument(datastr); ///***TODO
+				//var xml_doc = qv.util.dom.xmlDocument(datastr);
 				
 				var selectXPathNode = function (xmlDoc, xpath) {
 					var nodes;
@@ -30889,7 +29807,7 @@ if (typeof exports != "undefined") {
 		b.outerResizeTo = function () {
 		};
 		b.show = function () {
-			document.body.appendChild(b.dom.container);
+			b.options.appendTo.appendChild(b.dom.container);
 			OAT.Dom.show(b.dom.container)
 		};
 		b.hide = function () {
@@ -30964,7 +29882,6 @@ if (typeof exports != "undefined") {
 			alert("OAT Window cannot be created, as a template is required but not specified!")
 	};
 	OAT.WinMS = function (a) {
-		OAT.Style.include("winms.css");
 		a.dom.container = OAT.Dom.create("div", {
 			position: "absolute"
 		}, "oat_winms_container");
@@ -30985,7 +29902,6 @@ if (typeof exports != "undefined") {
 		}
 	};
 	OAT.WinMAC = function (a) {
-		OAT.Style.include("winmac.css");
 		a.dom.container = OAT.Dom.create("div", {
 			position: "absolute"
 		}, "oat_winmac_container");
@@ -31009,7 +29925,6 @@ if (typeof exports != "undefined") {
 		}
 	};
 	OAT.WinRECT = function (a, className) {
-		//OAT.Style.include("winrect.css");
 		if (className != undefined)
 			a.dom.container = OAT.Dom.create("div", {
 				position: "absolute"
@@ -31052,7 +29967,6 @@ if (typeof exports != "undefined") {
 		}
 	};
 	OAT.WinROUND = function (a) {
-		OAT.Style.include("winround.css");
 		a.dom.container = OAT.Dom.create("div", {
 			position: "absolute"
 		}, "oat_winround_container");
@@ -31086,7 +30000,6 @@ if (typeof exports != "undefined") {
 		}
 	};
 	OAT.WinODS = function (a) {
-		OAT.Style.include("winods.css");
 		a.dom.container = OAT.Dom.create("div", {
 			position: "absolute"
 		}, "oat_winods_container");
@@ -31154,59 +30067,14 @@ if (typeof exports != "undefined") {
 			}
 		}
 	};
-	if(typeof document != "undefined") { 
-		OAT.Dom.attach(document, "mousemove", OAT.Resize.move);
-		OAT.Dom.attach(document, "mouseup", OAT.Resize.up);
-	}
+	
 	try {
 		OAT.Loader.featureLoaded("resize");
 	} catch (ERROR) {
 
 	}
 
-	OAT.XMLHTTP = function () {
-		this.obj = this.iframe = !1;
-		this.open = function (a, c, d) {
-			this.iframe ? this.temp_src = c : this.obj.open(a, c, d)
-		};
-		this.send = function (a) {
-			this.iframe ? this.ifr.src = this.temp_src : this.obj.send(a)
-		};
-		this.setResponse = function (a) {
-			this.iframe ? OAT.Dom.attach(this.ifr, "load", a) : this.obj.onreadystatechange = a
-		};
-		this.getResponseText = function () {
-
-		};
-		this.getResponseXML = function () {
-			return this.iframe ? (alert("IFRAME mode active -> XML data not supported"), "") : this.obj.responseXML
-		};
-		this.getReadyState = function () {
-			return this.iframe ? 4 : this.obj.readyState
-		};
-		this.getStatus = function () {
-			return this.iframe ? 200 : this.obj.status
-		};
-		this.setRequestHeader = function (a, c) {
-			this.iframe || this.obj.setRequestHeader(a, c)
-		};
-		this.getAllResponseHeaders = function () {
-			return !this.iframe ? this.obj.getAllResponseHeaders() : {}
-		};
-		this.isIframe = function () {
-			return this.iframe
-		};
-		window.XMLHttpRequest ? this.obj = new XMLHttpRequest : window.ActiveXObject && (this.obj = new ActiveXObject("Microsoft.XMLHTTP"));
-		this.obj || (this.iframe = !0, this.ifr = OAT.Dom.create("iframe"), this.ifr.style.display = "none", this.ifr.src = "javascript:;", document.body.appendChild(this.ifr))
-	};
-	OAT.XMLHTTP_supported = function () {
-		return !(new OAT.XMLHTTP).isIframe()
-	};
-	try {
-		OAT.Loader.featureLoaded("ajax");
-	} catch (ERROR) {
-
-	}
+	
 
 
 	OAT.AnchorData = { active: !1, window: !1 };
@@ -31295,7 +30163,8 @@ if (typeof exports != "undefined") {
 				visibleButtons: a.visibleButtons,
 				enabledButtons: a.enabledButtons,
 				template: a.template,
-				containerQuery: a.containerQuery
+				containerQuery: a.containerQuery,
+				appendTo: a.appendTo
 			});
 			OAT.Dom.attach(c.dom.container, "mouseover", function () {
 				var a = OAT.AnchorData.active; a && "hover" == a.activation && a.endClose()

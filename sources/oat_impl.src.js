@@ -1,4 +1,4 @@
-	//OAT_IMPL file
+//OAT_IMPL file
 
 
 	this.contains = function (a, obj) {
@@ -37,6 +37,10 @@ if (typeof exports != "undefined") {
 				jQuery(".oat_winrect_container").remove()
 			}
 		}
+		OAT.Dom.attach(pivotParams.container, "mousemove", OAT.Drag.move);
+	 	OAT.Dom.attach(pivotParams.container, "mouseup", OAT.Drag.up);
+		OAT.Dom.attach(pivotParams.container, "mousemove", OAT.GhostDragData.move);
+		OAT.Dom.attach(pivotParams.container, "mouseup", OAT.GhostDragData.up);
 		if ((pivotParams.RememberLayout) && (pivotParams.ServerPaging) && (pivotParams.RealType != "PivotTable")) {
 			var state = OAT.getStateWhenServingPaging(pivotParams.UcId + '_' + pivotParams.ObjectName.replace(/\./g, ""), pivotParams.ObjectName.replace(/\./g, ""))
 			if (!state) {
@@ -838,13 +842,13 @@ if (typeof exports != "undefined") {
 		var relativePath = urlRelative.substring(0, urlRelative.indexOf("QueryViewer/oatPivot"));
 		renderJSPivotInter.relativePath = relativePath
 	
-		renderJSPivotInter.fireOnPageChangeTable = function(UcId, move){
+		renderJSPivotInter.fireOnPageChangeTable = function(UcId, move, container){
 			setTimeout( function() {
 				var paramobj = {"QueryviewerId": UcId, "Navigation": move};
-				var evt = document.createEvent("Events")
+				var evt = new Event("Events");
 				evt.initEvent("TableOnPageChangeEvent", true, true);
 				evt.parameter = paramobj;
-				document.dispatchEvent(evt);
+				container.dispatchEvent(evt);
 			}, 0)
 		}
 	
@@ -982,7 +986,7 @@ if (typeof exports != "undefined") {
 				
 				OAT_JS.grid.lastCallToQueryViewer = "getDataForTable"
 				OAT_JS.grid.lastCallData = { "self": renderJSPivotInter, "UcId": OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, "RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, "PageNumber": pageNumber, "fromExternalRefresh": fromExternalRefresh}
-				renderJSPivotInter.requestPageDataForTable(pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection)
+				renderJSPivotInter.requestPageDataForTable(pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, OAT_JS.grid.gridData[UcId].Container)
 				
 				/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTable((function (resXML) {
 					if (pageNumber == 0) { pageNumber = 1, recalculateCantPages = false; }
@@ -994,14 +998,14 @@ if (typeof exports != "undefined") {
 		}
 		
 		
-		renderJSPivotInter.requestPageDataForTable = function(PageNumber, PageSize, recalculateCantPages, DataFieldOrder, OrderType, Filters, LayoutChange, IdForQueryViewerCollection){
+		renderJSPivotInter.requestPageDataForTable = function(PageNumber, PageSize, recalculateCantPages, DataFieldOrder, OrderType, Filters, LayoutChange, IdForQueryViewerCollection , container){
 			setTimeout( function() {
 				var paramobj = {  "PageNumber": PageNumber, "PageSize": PageSize,"RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, 
 					"OrderType":OrderType, "Filters":Filters, "LayoutChange":LayoutChange, "QueryviewerId": IdForQueryViewerCollection};
-				var evt = document.createEvent("Events")
+				var evt = new Event("Events");
 				evt.initEvent("RequestPageDataForTable", true, true);
 				evt.parameter = paramobj;
-				document.dispatchEvent(evt);
+				container.dispatchEvent(evt);
 			}, 0)
 		}
 		
@@ -1020,7 +1024,7 @@ if (typeof exports != "undefined") {
 				OAT_JS.grid.lastCallToQueryViewer = "getValuesForColumn"
 				OAT_JS.grid.lastCallData = { "self": renderJSPivotInter, "UcId": UcId, "columnNumber": columnNumber, "filterValue": filterValue, "dataField": dataField }
 				
-				renderJSPivotInter.requestAttributeForTable(UcId, dataField, page, filterValue, 10)
+				renderJSPivotInter.requestAttributeForTable(UcId, dataField, page, filterValue, 10, OAT_JS.grid.gridData[UcId].Container)
 				/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 					var res = JSON.parse(resJSON);
 					OAT_JS.grid.changeValues(UcId, dataField, columnNumber, res, filterValue);
@@ -1031,24 +1035,24 @@ if (typeof exports != "undefined") {
 		}
 		
 		
-		renderJSPivotInter.requestAttributeForTable = function(UcId, dataField, page, filterValue, pageSize){
+		renderJSPivotInter.requestAttributeForTable = function(UcId, dataField, page, filterValue, pageSize, container){
 			setTimeout( function() {
 				var paramobj = {  "Page": page, "PageSize": pageSize, "DataField": dataField, "Filters":filterValue, "QueryviewerId": UcId};
-				var evt = document.createEvent("Events")
+				var evt = new Event("Events");
 				evt.initEvent("RequestAttributeForTable", true, true);
 				evt.parameter = paramobj;
-				document.dispatchEvent(evt);
+				container.dispatchEvent(evt);
 			}, 0)
 		}
 		
 		
-		renderJSPivotInter.fireOnFilterChanged = function(UcId, FilterChangedData){
+		renderJSPivotInter.fireOnFilterChanged = function(UcId, FilterChangedData, container){
 			setTimeout( function() {
 				var paramobj = {"QueryViewerd": UcId, "FilterChangedData": FilterChangedData};
-				var evt = document.createEvent("Events")
+				var evt = new Event("Events");
 				evt.initEvent("TableOnFilterChangedEvent", true, true);
 				evt.parameter = paramobj;
-				document.dispatchEvent(evt);
+				container.dispatchEvent(evt);
 			}, 0)
 		}
 		
@@ -1077,6 +1081,8 @@ if (typeof exports != "undefined") {
 			
 			this.gridData[UcId].autoResize = _mthis.autoResize;
 			this.gridData[UcId].selection = {Allow: _mthis.pivotParams.AllowSelection, EntireLine: _mthis.pivotParams.SelectLine, SelectedNode: []};
+			
+			this.gridData[UcId].Container = _mthis.pivotParams.container 
 			
 			this.gridData[UcId].grid = new OAT.Grid(content, controlName, _mthis.query, columnsDataType, colms, QueryViewerCollection, this.gridData[UcId].rowsPerPage,
 				disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, _mthis.serverPaging, _mthis.HideDataFilds, _mthis.orderFildsHidden, _mthis.TableOrderFilds, _mthis.relativePath,
@@ -1120,7 +1126,6 @@ if (typeof exports != "undefined") {
 
 
 			this.gridData[UcId].IdForQueryViewerCollection = IdForQueryViewerCollection;
-			
 			this.gridData[UcId].TableOrderFields = _mthis.TableOrderFilds;
 
 			//initialize cache
@@ -1283,7 +1288,7 @@ if (typeof exports != "undefined") {
 				//if (typeof (qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function')
 				if (typeof (QueryViewerCollection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage) == 'function') 
 					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
-					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage")
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage", this.gridData[UcId].Container)
 			}
 
 			if (!_mthis.serverPaging) {
@@ -1384,17 +1389,17 @@ if (typeof exports != "undefined") {
 				if (pageNumber == 1) {
 					if (typeof (this.gridData[UcId].QueryViewerCollectionItem.OnFirstPage) == 'function') 
 					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnFirstPage()
-					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage")
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnFirstPage", this.gridData[UcId].Container)
 				} else if (pageNumber == this.gridData[UcId].actualCantPages) {
 					if (typeof (this.gridData[UcId].QueryViewerCollectionItem.OnLastPage) == 'function') 
 					//qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnLastPage()
-					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnLastPage")
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnLastPage", this.gridData[UcId].Container)
 				} else if (pageNumber < OAT_JS.grid.gridData[UcId].actualPageNumber) {
 					if (typeof (this.gridData[UcId].QueryViewerCollectionItem.OnPreviousPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnPreviousPage()
-					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnPreviousPage")
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnPreviousPage", this.gridData[UcId].Container)
 				} else {
 					if (typeof (this.gridData[UcId].QueryViewerCollectionItem.OnNextPage) == 'function') //qv.collection[this.gridData[UcId].IdForQueryViewerCollection].OnNextPage()
-					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnNextPage")
+					self.fireOnPageChangeTable(this.gridData[UcId].IdForQueryViewerCollection, "OnNextPage", this.gridData[UcId].Container)
 				}
 
 			}
@@ -1411,6 +1416,7 @@ if (typeof exports != "undefined") {
 					} else {
 						var meta = OAT.createXMLMetadata(OAT_JS.grid.gridData[UcId], null, true);
 						var spl = OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection;
+						var container = OAT_JS.grid.gridData[UcId].Container
 						//var listennings = qv.collection[spl];
 						/*if ((listennings != "") && (listennings != null) && (listennings != undefined)) {
 							qv.util.autorefresh.UpdateLayoutSameGroup(listennings, qv.pivot.GetRuntimeMetadata(meta, listennings.RealType), true);
@@ -1420,10 +1426,10 @@ if (typeof exports != "undefined") {
 						setTimeout( function() {
 				
 									var paramobj = {  "QueryviewerId": spl, "Metadata": meta};
-									var evt = document.createEvent("Events")
+									var evt = new Event("Events"); 
 									evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
 									evt.parameter = paramobj;
-									document.dispatchEvent(evt);
+									container.dispatchEvent(evt);
 				
 								}, 50)
 					}
@@ -1726,7 +1732,7 @@ if (typeof exports != "undefined") {
 					OAT_JS.grid.lastCallToQueryViewer = "readScrollValue"
 					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": "", "dataField": dataField }
 				
-					this.gridData[UcId].Events.requestAttributeForTable(UcId, dataField, page, "", 10)
+					this.gridData[UcId].Events.requestAttributeForTable(UcId, dataField, page, "", 10, this.gridData[UcId].Container)
 					/*qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						OAT_JS.grid.appendNewValueData(UcId, res)
@@ -1740,7 +1746,7 @@ if (typeof exports != "undefined") {
 					OAT_JS.grid.lastCallToQueryViewer = "readScrollValueFilter"
 					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "posColumnNumber": posColumnNumber, "filterValue": filterText, "dataField": dataField, "filterText": filterText }
 				
-					this.gridData[UcId].Events.requestAttributeForTable(UcId, dataField, page, filterText, 10)
+					this.gridData[UcId].Events.requestAttributeForTable(UcId, dataField, page, filterText, 10, this.gridData[UcId].Container)
 					/*qv.collection[this.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
 						OAT_JS.grid.appendNewFilteredValueData(UcId, res, posColumnNumber, filterText)
@@ -1924,7 +1930,7 @@ if (typeof exports != "undefined") {
 				OAT_JS.grid.lastCallToQueryViewer = "initValueRead"
 				OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId, "columnNumber": columnNumber, "filterValue": "", "dataField": requestDataField }
 				
-				this.gridData[UcId].Events.requestAttributeForTable(UcId, this.gridData[UcId].grid.lastRequestValue, 1, "", cantItems)
+				this.gridData[UcId].Events.requestAttributeForTable(UcId, this.gridData[UcId].grid.lastRequestValue, 1, "", cantItems, this.gridData[UcId].Container)
 				
 				
 				
@@ -2145,17 +2151,17 @@ if (typeof exports != "undefined") {
 						setTimeout( wait , 100)
 					} else {
 						var meta = OAT.createXMLMetadata(OAT_JS.grid.gridData[UcId], null, true);
-
+						var container = OAT_JS.grid.gridData[UcId].Container
 						var spl = OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection;
 						
 						
 						setTimeout( function() {
 				
 							var paramobj = {  "QueryviewerId": spl, "Metadata": meta};
-							var evt = document.createEvent("Events")
+							var evt = new Event("Events");
 							evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
 							evt.parameter = paramobj;
-							document.dispatchEvent(evt);
+							container.dispatchEvent(evt);
 				
 						}, 50)
 						
@@ -2247,7 +2253,7 @@ if (typeof exports != "undefined") {
 							FilterChangedData.SelectedValues[valueIndex] = Node.childNodes[i].firstChild.nodeValue;
 						}	
 						
-					self.fireOnFilterChanged(UcId, FilterChangedData)
+					self.fireOnFilterChanged(UcId, FilterChangedData, OAT_JS.grid.gridData[UcId].Container)
 					/*if (qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChanged) {
 						qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].FilterChanged();
 					}*/
@@ -2260,7 +2266,7 @@ if (typeof exports != "undefined") {
 					OAT_JS.grid.lastCallToQueryViewer = "filterChange"
 					OAT_JS.grid.lastCallData = { "self": this, "UcId": UcId,  "filterValue": "", "dataField": df, "oatDimension": oatDimension }
 				
-					OAT_JS.grid.gridData[UcId].Events.requestAttributeForTable(UcId, df, page, "", 0)
+					OAT_JS.grid.gridData[UcId].Events.requestAttributeForTable(UcId, df, page, "", 0, OAT_JS.grid.gridData[UcId].Container)
 				
 					/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getAttributeValues((function (resJSON) {
 						var res = JSON.parse(resJSON);
@@ -2276,7 +2282,7 @@ if (typeof exports != "undefined") {
 			
 			OAT_JS.grid.lastCallToQueryViewer = "getAllDataRowsForExport"
 			OAT_JS.grid.lastCallData = {  "UcId": UcId, "_selfgrid":_selfgrid, "fileName":fileName, "format": format}
-			self.requestPageDataForTable(1, 0, false, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, false, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection)
+			self.requestPageDataForTable(1, 0, false, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, false, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, OAT_JS.grid.gridData[UcId].Container)
 				
 			
 			/*
@@ -2422,14 +2428,14 @@ if (typeof exports != "undefined") {
 					} else {
 						var meta = OAT.createXMLMetadata(OAT_JS.grid.gridData[UcId], null, true);
 						var spl = OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection;
-						
+						var container = OAT_JS.grid.gridData[UcId].Container
 						setTimeout( function() {
 				
 							var paramobj = {  "QueryviewerId": spl, "Metadata": meta};
-							var evt = document.createEvent("Events")
+							var evt = new Event("Events");
 							evt.initEvent("RequestUpdateLayoutSameGroup", true, true);
 							evt.parameter = paramobj;
-							document.dispatchEvent(evt);
+							container.dispatchEvent(evt);
 				
 						}, 50)
 						/*var listennings = qv.collection[spl];
@@ -2441,22 +2447,22 @@ if (typeof exports != "undefined") {
 				wait();
 			}
 		},
-		fireOnItemClickEvent: function(query, datastr){
+		fireOnItemClickEvent: function(query, datastr, flag, container){
 			setTimeout( function() {
 				var paramobj = {"QueryViewer": query, "Data": datastr, "QueryviewerId": self.IdForQueryViewerCollection};
-				var evt = document.createEvent("Events")
+				var evt = new Event("Events");
 				evt.initEvent("TableOnItemClickEvent", true, true);
 				evt.parameter = paramobj;
-				document.dispatchEvent(evt);
+				container.dispatchEvent(evt);
 			}, 0)
 		},		
-		requestDataSynForTable: function(UcId){
+		requestDataSynForTable: function(UcId, container){
 			setTimeout( function() {
 				var paramobj = {"QueryviewerId": UcId};
-				var evt = document.createEvent("Events")
+				var evt = new Event("Events");
 				evt.initEvent("RequestDataSynForTable", true, true);
 				evt.parameter = paramobj;
-				document.dispatchEvent(evt);
+				container.dispatchEvent(evt);
 			}, 0)
 		},
 		addValueToDifferentValues: function (UcId, dataField, val) {
@@ -2528,7 +2534,7 @@ if (typeof exports != "undefined") {
 				pivot = new OAT.Pivot(_mthis, content, page, _mthis.header, _mthis.data, _mthis.columnNumbers, _mthis.rowNumbers, _mthis.filterNumbers, cols, _mthis.query, _mthis.conditionalFormats, UcId, _mthis.pageSize, defaultPicture, QueryViewerCollection, colms, pivotdiv,
 					formatValue, conditionalFormatsColumns, formatValueMeasures, _mthis.measures, autoResize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout,
 					ShowMeasuresAsRows, formulaInfo, fullRecord, serverPagination, pagingData, HideDataFilds, OrderFildsHidden, initMetadata, relativePath,
-					{ Allow: pivotParams.AllowSelection, EntireLine: pivotParams.SelectLine}, { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns } , pivotParams.Title );
+					{ Allow: pivotParams.AllowSelection, EntireLine: pivotParams.SelectLine}, { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns } , pivotParams.Title, pivotParams.container);
 			// } catch (Error) {
 				// alert(Error)
 			// }
@@ -2696,25 +2702,10 @@ if (typeof exports != "undefined") {
 
 
 	function OATSetCookie(name, value, expires, path, domain, secure) {
-		document.cookie = name + "=" + escape(value) +
-			((expires == null) ? "" : "; expires=" + expires.toGMTString()) +
-			((path == null) ? "" : "; path=" + path) +
-			((domain == null) ? "" : "; domain=" + domain) +
-			((secure == null) ? "" : "; secure");
+		
 	}
 	function OATGetCookie(name) {
-		var cname = name + "=";
-		var dc = document.cookie;
-		if (dc.length > 0) {
-			begin = dc.indexOf(cname);
-			if (begin != -1) {
-				begin += cname.length;
-				end = dc.indexOf(";", begin);
-				if (end == -1) end = dc.length;
-				return unescape(dc.substring(begin, end));
-			}
-		}
-		return null;
+		
 	}
 
 	function OATIsNotEmptyValue(value) {
@@ -3066,6 +3057,9 @@ if (typeof exports != "undefined") {
 			}
 		}
 		if ((serverPaging) && (allHide)) {
+			if (translations.GXPL_QViewerQuantity == undefined){
+				translations.GXPL_QViewerQuantity = "Quantity"
+			}
 			measuresString.push('<OLAPMeasure name="Quantity" displayName="' + translations.GXPL_QViewerQuantity/*gx.getMessage("GXPL_QViewerQuantity")*/ + '" description="' + translations.GXPL_QViewerQuantity + '" dataField="F0" aggregation="count" summarize="yes" align="right" picture="" targetValue="0" defaultPosition="data" validPositions="data" dataType="integer" format="borderThickness:1"> </OLAPMeasure>');
 		}
 

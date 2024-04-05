@@ -1,4 +1,4 @@
-//FILE OAT.Layers
+	//FILE OAT.Layers
 	OAT.Layers = function (f) {
 		var a = this;
 		this.baseOffset = f;
@@ -45,8 +45,8 @@
 			// confusing userAgent strings on Vista)
 			var msie = /MSIE/.test(navigator.userAgent);
 			var ie6 = /MSIE 6.0/.test(navigator.userAgent) && ! /MSIE 8.0/.test(navigator.userAgent);
-			var mode = document.documentMode || 0;
-			var setExpr = $.isFunction(document.createElement('div').style.setExpression);
+			var mode = 0;
+			var setExpr = $.isFunction(jQuery("<di></div>")[0].style.setExpression);
 
 			// global $ methods for blocking/unblocking the entire page
 			$.blockUI = function (opts) { install(window, opts); };
@@ -548,10 +548,6 @@
 				if (typeof opts.onUnblock == 'function')
 					opts.onUnblock(el, opts);
 
-				// fix issue in Safari 6 where block artifacts remain until reflow
-				var body = $(document.body), w = body.width(), cssW = body[0].style.width;
-				body.width(w - 1).width(w);
-				body[0].style.width = cssW;
 			}
 
 			// bind/unbind the handler
@@ -570,14 +566,7 @@
 
 				// bind anchors and inputs for mouse and key events
 				var events = 'mousedown mouseup keydown keypress keyup touchstart touchend touchmove';
-				if (b)
-					$(document).bind(events, opts, handler);
-				else
-					$(document).unbind(events, handler);
-
-				// former impl...
-				//		var $e = $('a,:input');
-				//		b ? $e.bind(events, opts, handler) : $e.unbind(events, handler);
+				
 			}
 
 			// event handler to suppress keyboard/mouse events when blocking
@@ -653,3 +642,6 @@
 	} catch (ERROR) {
 
 	}
+
+
+	

@@ -165,7 +165,7 @@
 		b.outerResizeTo = function () {
 		};
 		b.show = function () {
-			document.body.appendChild(b.dom.container);
+			b.options.appendTo.appendChild(b.dom.container);
 			OAT.Dom.show(b.dom.container)
 		};
 		b.hide = function () {
@@ -240,7 +240,6 @@
 			alert("OAT Window cannot be created, as a template is required but not specified!")
 	};
 	OAT.WinMS = function (a) {
-		OAT.Style.include("winms.css");
 		a.dom.container = OAT.Dom.create("div", {
 			position: "absolute"
 		}, "oat_winms_container");
@@ -261,7 +260,6 @@
 		}
 	};
 	OAT.WinMAC = function (a) {
-		OAT.Style.include("winmac.css");
 		a.dom.container = OAT.Dom.create("div", {
 			position: "absolute"
 		}, "oat_winmac_container");
@@ -285,7 +283,6 @@
 		}
 	};
 	OAT.WinRECT = function (a, className) {
-		//OAT.Style.include("winrect.css");
 		if (className != undefined)
 			a.dom.container = OAT.Dom.create("div", {
 				position: "absolute"
@@ -328,7 +325,6 @@
 		}
 	};
 	OAT.WinROUND = function (a) {
-		OAT.Style.include("winround.css");
 		a.dom.container = OAT.Dom.create("div", {
 			position: "absolute"
 		}, "oat_winround_container");
@@ -362,7 +358,6 @@
 		}
 	};
 	OAT.WinODS = function (a) {
-		OAT.Style.include("winods.css");
 		a.dom.container = OAT.Dom.create("div", {
 			position: "absolute"
 		}, "oat_winods_container");
@@ -430,59 +425,14 @@
 			}
 		}
 	};
-	if(typeof document != "undefined") { 
-		OAT.Dom.attach(document, "mousemove", OAT.Resize.move);
-		OAT.Dom.attach(document, "mouseup", OAT.Resize.up);
-	}
+	
 	try {
 		OAT.Loader.featureLoaded("resize");
 	} catch (ERROR) {
 
 	}
 
-	OAT.XMLHTTP = function () {
-		this.obj = this.iframe = !1;
-		this.open = function (a, c, d) {
-			this.iframe ? this.temp_src = c : this.obj.open(a, c, d)
-		};
-		this.send = function (a) {
-			this.iframe ? this.ifr.src = this.temp_src : this.obj.send(a)
-		};
-		this.setResponse = function (a) {
-			this.iframe ? OAT.Dom.attach(this.ifr, "load", a) : this.obj.onreadystatechange = a
-		};
-		this.getResponseText = function () {
-
-		};
-		this.getResponseXML = function () {
-			return this.iframe ? (alert("IFRAME mode active -> XML data not supported"), "") : this.obj.responseXML
-		};
-		this.getReadyState = function () {
-			return this.iframe ? 4 : this.obj.readyState
-		};
-		this.getStatus = function () {
-			return this.iframe ? 200 : this.obj.status
-		};
-		this.setRequestHeader = function (a, c) {
-			this.iframe || this.obj.setRequestHeader(a, c)
-		};
-		this.getAllResponseHeaders = function () {
-			return !this.iframe ? this.obj.getAllResponseHeaders() : {}
-		};
-		this.isIframe = function () {
-			return this.iframe
-		};
-		window.XMLHttpRequest ? this.obj = new XMLHttpRequest : window.ActiveXObject && (this.obj = new ActiveXObject("Microsoft.XMLHTTP"));
-		this.obj || (this.iframe = !0, this.ifr = OAT.Dom.create("iframe"), this.ifr.style.display = "none", this.ifr.src = "javascript:;", document.body.appendChild(this.ifr))
-	};
-	OAT.XMLHTTP_supported = function () {
-		return !(new OAT.XMLHTTP).isIframe()
-	};
-	try {
-		OAT.Loader.featureLoaded("ajax");
-	} catch (ERROR) {
-
-	}
+	
 
 
 	OAT.AnchorData = { active: !1, window: !1 };
@@ -571,7 +521,8 @@
 				visibleButtons: a.visibleButtons,
 				enabledButtons: a.enabledButtons,
 				template: a.template,
-				containerQuery: a.containerQuery
+				containerQuery: a.containerQuery,
+				appendTo: a.appendTo
 			});
 			OAT.Dom.attach(c.dom.container, "mouseover", function () {
 				var a = OAT.AnchorData.active; a && "hover" == a.activation && a.endClose()
@@ -961,3 +912,4 @@
 		}
 		return data
 	}
+

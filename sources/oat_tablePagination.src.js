@@ -1,4 +1,4 @@
-	var currPageNumber = [];
+var currPageNumber = [];
 
 	OAT.partialTablePagination = function (container, settings) {
 		var defaults = {
@@ -247,6 +247,7 @@
 	}
 
 	exports.OAT = OAT;
+
 
 
 

@@ -42,7 +42,7 @@
 		self.isSD = OAT.isSD() 
 
 		self.conditions = new Array(columnsDataType.length);
-		for (iC = 0; iC < columnsDataType.length; iC++) {
+		for (var iC = 0; iC < columnsDataType.length; iC++) {
 			self.conditions[iC] = {
 				blackList: [],
 				sort: 1
@@ -59,7 +59,7 @@
 				self.ContainerName = divContainer.getAttribute("id")
 				OAT.Dom.clear(divContainer);
 
-				var divIeContainer = document.createElement("div");
+				var divIeContainer = jQuery('<div></div>')[0];
 				divIeContainer.setAttribute("class", "divIeContainer");
 				divIeContainer.setAttribute("style", "position: relative;opacity: 0");
 				divContainer.appendChild(divIeContainer);
@@ -84,7 +84,7 @@
 				var hide = OAT.Dom.create("a");
 				hide.href = "#";
 
-				OAT.addTextNode(hide, document.createTextNode("GXPL_QViewerJSVisibleColumns"))
+				OAT.addTextNode(hide,"GXPL_QViewerJSVisibleColumns")
 
 				self.div.appendChild(topDiv);
 
@@ -135,17 +135,16 @@
 				exportImg.setAttribute("class", "exportOptionsAnchor");
 			}
 			self.exportPage = OAT.Dom.create("div", { padding: "0px" });
-			
 			OAT.addImageNode(exportImg, "menu", "")
 
 			var checkToClose = function (b) {
-				source = OAT.Event.source(b);
+				OAT.Dom.source = OAT.Event.source(b);
 				var clean = false;
 				var closing = false;
 				var isInside = false
 				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
 					var obj = jQuery(".oat_winrect_container")[i];
-					if (!(source == obj) && !OAT.Dom.isChild(source, obj)) {
+					if (!(OAT.Dom.source == obj) && !OAT.Dom.isChild(OAT.Dom.source, obj)) {
 						clean = true;
 					} else {
 						clean = false; isInside = true; break;
@@ -156,7 +155,7 @@
 						closing = true;
 					}
 				}
-				if (((source.getAttribute("class") == "oat_winrect_close_b") || (!OAT.Dom.isChild(source, obj))) &&
+				if (((OAT.Dom.source.getAttribute("class") == "oat_winrect_close_b") || (!OAT.Dom.isChild(OAT.Dom.source, obj))) &&
 					(closing)) {
 					self.oat_component.resetAllScrollValue(self.UcId);
 				}
@@ -165,7 +164,7 @@
 				}
 			};
 
-			OAT.Dom.attach(document, "mousedown", checkToClose)
+			OAT.Dom.attach(OAT_JS.grid.gridData[IdForQueryViewerCollection].Container, "mousedown", checkToClose)
 
 			OAT.Anchor.assign(exportImg, {
 				title: " ",
@@ -174,8 +173,8 @@
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: self.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " ExportPopup "
-				
+				containerQuery: self.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " ExportPopup ",
+				appendTo: OAT_JS.grid.gridData[IdForQueryViewerCollection].Container
 			});
 
 			var generatePair = function (index) {
@@ -262,7 +261,7 @@
 				OAT.Dom.clear(self.exportPage);
 				//botton to allow show all filters in pop up
 				var someExport = false;
-				var div_upper = document.createElement("div");
+				var div_upper = jQuery('<div></div>')[0];
 				div_upper.setAttribute("class", "upper_container");
 
 				jQuery('#divtoxml').remove();
@@ -284,13 +283,13 @@
 					self.exportPage.appendChild(hr);
 				}
 
-				var div_down = document.createElement("div");
+				var div_down = jQuery('<div></div>')[0];
 				div_down.setAttribute("class", "down_container");
 				self.exportPage.appendChild(div_down);
 
-				var label = document.createElement("span");
+				var label = jQuery('<span></span>')[0];
 				label.textContent = self.translations.GXPL_QViewerJSVisibleColumns;//gx.getMessage("GXPL_QViewerJSVisibleColumns");
-				var div_label = document.createElement("div");
+				var div_label = jQuery('<div></div>')[0];
 				div_label.setAttribute("class", "div_label_win");
 				div_label.appendChild(label);
 				div_down.appendChild(div_label);
@@ -511,7 +510,7 @@
 			str = str + "</BODY></HTML>";
 			
 			
-			isSD = OAT.isSD(); 
+			var isSD = OAT.isSD(); 
 			
 
 			if (OAT.isSafari() || (isSD)) { 
@@ -1050,14 +1049,13 @@
 				return dataStr;
 		}
 		
-		
-		this.EventForDataXMLRequest = oat_elem = function(IdForQueryViewerCollection, dataXML){
+		this.EventForDataXMLRequest = function(IdForQueryViewerCollection, dataXML){
 			setTimeout( function() {
 				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
-				var evt = document.createEvent("Events")
+				var evt = new Event("Events");
 				evt.initEvent("TableOnDataRequest", true, true);
 				evt.parameter = paramobj;
-				document.dispatchEvent(evt);
+				OAT_JS.grid.gridData[self.IdForQueryViewerCollection].Container.dispatchEvent(evt);
 			}, 0)
 		}
 		
@@ -1065,10 +1063,10 @@
 		this.EventForFilteredDataXMLRequest = function(IdForQueryViewerCollection, dataXML){
 			setTimeout( function() {
 				var paramobj = {  "Data": dataXML, "QueryviewerId": self.IdForQueryViewerCollection };
-				var evt = document.createEvent("Events")
+				var evt = new Event("Events");
 				evt.initEvent("TableOnFilteredDataRequest", true, true);
 				evt.parameter = paramobj;
-				document.dispatchEvent(evt);
+				OAT_JS.grid.gridData[self.IdForQueryViewerCollection].Container.dispatchEvent(evt);
 			}, 0)
 		}
 		
@@ -1418,8 +1416,8 @@
 				activation: "click",
 				type: OAT.WinData.TYPE_RECT,
 				width: "auto",
-				containerQuery: self.grid.QueryViewerCollection[IdForQueryViewerCollection].ControlName + "-table" + " FilterPopup "
-				
+				containerQuery: self.grid.QueryViewerCollection[self.grid.IdForQueryViewerCollection].ControlName + "-table" + " FilterPopup ",
+				appendTo: OAT_JS.grid.gridData[self.grid.IdForQueryViewerCollection].Container				
 			});
 			var callback = function (event) {
 				var type = OAT.GridData.SORT_NONE;
@@ -1582,7 +1580,7 @@
 		}
 
 		var params = (typeof (params_) == "object" ? params_ : { value: params_ });
-		for (p in params) { self.options[p] = params[p]; }
+		for (var p in params) { self.options[p] = params[p]; }
 
 		this.html = OAT.Dom.create("td");
 		this.container = OAT.Dom.create("div");
@@ -1845,7 +1843,7 @@
 					var cmpar = between[0].split("-");
 					var cmpar2 = between[1].split("-");
 					cmparElements = new Array(3);
-					cmparElements2 = new Array(3);
+					var cmparElements2 = new Array(3);
 					cmparElements[1] = parseInt(cmpar[1]);
 					cmparElements[2] = parseInt(cmpar[2]);
 					cmparElements[0] = parseInt(cmpar[0]);
@@ -2160,7 +2158,7 @@
 		var cached = Math.floor(Math.random() * 10000)
 		
 		if (!_self.grid.disableColumnSort) {
-			var div_order = document.createElement("div");
+			var div_order = jQuery('<div></div>')[0];
 			div_order.setAttribute("class", "first_popup_subdiv");
 
 			var asc = OAT.Dom.radio("order");
@@ -2190,12 +2188,12 @@
 						dataFieldId = _self.dataField
 					else
 					    dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[origen];
-					self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Ascending", "", "")
+					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Ascending", "", "")
 				
 				var idI = "i_" + this.getAttribute("id");
-				var inputAsc = document.getElementById(idI);
+				var inputAsc = jQuery("#"+idI)[0];
 				inputAsc.textContent = "radio_button_checked";
-				var inputDsc = document.getElementById(idI.replace("asc", "desc"));
+				var inputDsc = jQuery("#"+idI.replace("asc", "desc"))[0];
 				inputDsc.textContent = "radio_button_unchecked";
 				
 			});
@@ -2207,7 +2205,7 @@
 			
 			var IStyle = OAT.isIE() ? "top:-10px;" : ""; 
 			OAT.addImageNode(alabel, (_self.grid.conditions[colNumber].sort === 2)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+ascForId);
-			OAT.addTextNode(alabel, self.translations.GXPL_QViewerJSAscending); //gx.getMessage("GXPL_QViewerJSAscending"))
+			OAT.addTextNode(alabel, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSAscending); //gx.getMessage("GXPL_QViewerJSAscending"))
 			div_order.appendChild(alabel);
 			div_order.appendChild(OAT.Dom.create("br"));
 			
@@ -2237,12 +2235,12 @@
 						dataFieldId = _self.dataField
 					else
 					    dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[origen]; //_self.grid.columns[colNumber].getAttribute("dataField"); 
-					self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Descending", "", "");
+					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Descending", "", "");
 				
 				var idI = "i_" + this.getAttribute("id");
-				var inputDsc = document.getElementById(idI);
+				var inputDsc = jQuery("#"+idI)[0];
 				inputDsc.textContent = "radio_button_checked";
-				var inputAsc = document.getElementById(idI.replace("desc", "asc"));
+				var inputAsc = jQuery("#"+idI.replace("desc", "asc"))[0];
 				inputAsc.textContent = "radio_button_unchecked";
 				
 			});
@@ -2250,14 +2248,14 @@
 			dlabel.className = "first_div_label";
 			dlabel.htmlFor = dscForId;
 			OAT.addImageNode(dlabel, (_self.grid.conditions[colNumber].sort === 3)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+dscForId);
-			OAT.addTextNode(dlabel, self.translations.GXPL_QViewerJSDescending); //gx.getMessage("GXPL_QViewerJSDescending"))
+			OAT.addTextNode(dlabel, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSDescending); //gx.getMessage("GXPL_QViewerJSDescending"))
 
 			div_order.appendChild(desc);
 			div_order.appendChild(dlabel);
 
 			toAppend.push(div_order);
 
-			if (self.header.length > 1) {
+			if (_self.grid.header.cells.length.length > 1) {
 				var hr4 = OAT.Dom.create("hr", {});
 				//begin drag options
 				toAppend.push(hr4);
@@ -2273,7 +2271,7 @@
 		}
 		if ((_self.container.parentNode.cellIndex > 0)) {
 
-			var dragDiv_L_sel_div = document.createElement("div");
+			var dragDiv_L_sel_div = jQuery('<div></div>')[0];
 			dragDiv_L_sel_div.setAttribute("class", "move_item_img");
 
 			OAT.Dom.attach(dragDiv_L_sel_div, "click", function () {
@@ -2317,7 +2315,7 @@
 			});
 
 			var draglabel = OAT.Dom.create("label");
-			OAT.addTextNode(draglabel, self.translations.GXPL_QViewerJSMoveColumnToLeft); //gx.getMessage("GXPL_QViewerJSMoveColumnToLeft"))
+			OAT.addTextNode(draglabel, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSMoveColumnToLeft); //gx.getMessage("GXPL_QViewerJSMoveColumnToLeft"))
 			draglabel.htmlFor = "move_column_to_left" + cached;
 			dragDiv_L_sel_div.appendChild(draglabel);
 
@@ -2330,7 +2328,7 @@
 		//to right
 		if (_self.container.parentNode.cellIndex < _self.grid.header.cells.length - 1) { //si no es la ultima columna
 
-			var dragDiv_R_sel_div = document.createElement("div");
+			var dragDiv_R_sel_div = jQuery('<div></div>')[0];
 			dragDiv_R_sel_div.setAttribute("class", "move_item_img");
 
 			OAT.Dom.attach(dragDiv_R_sel_div, "click", function () {
@@ -2392,7 +2390,7 @@
 
 
 			var draglabelR = OAT.Dom.create("label");
-			OAT.addTextNode(draglabelR, self.translations.GXPL_QViewerJSMoveColumnToRight)//gx.getMessage("GXPL_QViewerJSMoveColumnToRight"))
+			OAT.addTextNode(draglabelR, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSMoveColumnToRight)//gx.getMessage("GXPL_QViewerJSMoveColumnToRight"))
 			draglabelR.htmlFor = "move_column_to_right" + cached;
 			dragDiv_R_sel_div.appendChild(draglabelR);
 			OAT.Dom.append([dragDiv, dragDiv_R_sel_div]);
@@ -2403,15 +2401,15 @@
 		if (OAT.gridStateChanged(_self)) {
 
 			var restoreview = OAT.Dom.create("div");
-			var restoreview_sel_div = document.createElement("div");
+			var restoreview_sel_div = jQuery('<div></div>')[0];
 
 			OAT.Dom.attach(restoreview_sel_div, "click", function () {
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
+				OAT_JS.grid.gridData[UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
 				refresh()
 			});
 
 			var rl = OAT.Dom.create("label");
-			OAT.addTextNode(rl, self.translations.GXPL_QViewerJSRestoreDefaultView);//gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
+			OAT.addTextNode(rl, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSRestoreDefaultView);//gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
 			rl.htmlFor = "pivot_checkbox_restoreview";
 			restoreview_sel_div.appendChild(rl);
 			OAT.Dom.append([restoreview, restoreview_sel_div]);
@@ -2528,7 +2526,7 @@
 
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];//_self.grid.columns[colNumber].getAttribute("dataField")
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: oper, values: value })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: oper, values: value })
 			
 
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
@@ -2538,7 +2536,7 @@
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];
 				//_self.grid.conditions[colNumber].blackList = [];
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "all", values: [] })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "all", values: [] })
 			
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
 			OAT.distinctDivs(_self, div);
@@ -2547,7 +2545,7 @@
 		var noneRef = function () {
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "none", values: [] })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "none", values: [] })
 			
 
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
@@ -2557,7 +2555,7 @@
 		var reverseRef = function () {
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];
-				self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "reverse", values: [] })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "reverse", values: [] })
 			
 
 			OAT.distinctDivs(_self, div);
@@ -2565,25 +2563,25 @@
 		}
 
 		var searchFilterClick = function () {
-			self.getValuesForColumn(_self.grid.UcId, colNumber, this.value)
+			OAT_JS.grid.gridData[_self.grid.UcId].Events.getValuesForColumn(_self.grid.UcId, colNumber, this.value)
 		}
 
 		OAT.Dom.clear(div);
 		var d = OAT.Dom.create("div");
 		d.setAttribute("class", "div_buttons_popup");
 
-		var all = document.createElement("button");
-		all.textContent = self.translations.GXPL_QViewerJSAll; //gx.getMessage("GXPL_QViewerJSAll");
+		var all = jQuery('<button></button>')[0];
+		all.textContent = OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSAll; //gx.getMessage("GXPL_QViewerJSAll");
 		all.setAttribute("class", "btn");
 		jQuery(all).click(allRef);
 
-		var none = document.createElement("button");
-		none.textContent = self.translations.GXPL_QViewerJSNone; //gx.getMessage("GXPL_QViewerJSNone");
+		var none = jQuery('<button></button>')[0];
+		none.textContent = OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSNone; //gx.getMessage("GXPL_QViewerJSNone");
 		none.setAttribute("class", "btn");
 		jQuery(none).click(noneRef);
 
-		var reverse = document.createElement("button");
-		reverse.textContent = self.translations.GXPL_QViewerJSReverse; //gx.getMessage("GXPL_QViewerJSReverse");
+		var reverse = jQuery('<button></button>')[0];
+		reverse.textContent = OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSReverse; //gx.getMessage("GXPL_QViewerJSReverse");
 		reverse.setAttribute("class", "btn");
 		jQuery(reverse).click(reverseRef);
 
@@ -2594,13 +2592,13 @@
 		OAT.addImageNode(div_search, "search", "");
 
 		
-			var searchInput = document.createElement("input");
+			var searchInput = jQuery('<input></input>')[0];
 			searchInput.textContent = "none";
 			searchInput.setAttribute("class", "search_input");
 			searchInput.setAttribute("type", "text");
-			searchInput.setAttribute("label", self.translations.GXPL_QViewerSearch); //gx.getMessage("GXPL_QViewerSearch"));
-			searchInput.setAttribute("title", self.translations.GXPL_QViewerSearch);  
-			searchInput.setAttribute("placeholder", self.translations.GXPL_QViewerSearch); 
+			searchInput.setAttribute("label", OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerSearch); //gx.getMessage("GXPL_QViewerSearch"));
+			searchInput.setAttribute("title", OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerSearch);  
+			searchInput.setAttribute("placeholder", OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerSearch); 
 			searchInput.setAttribute("id", _self.grid.UcId + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]);
 			jQuery(searchInput).keyup(searchFilterClick);
 
@@ -2700,7 +2698,7 @@
 				oper = "push";
 			}
 			var filteredValues = _self.grid.conditions[colNumber].blackList
-			self.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataField, { op: oper, values: value })
+			OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataField, { op: oper, values: value })
 
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
 		}
@@ -2841,7 +2839,7 @@
 		//if (self.grid.HideDataFilds.length) {
 			OAT_JS.grid.lastCallData = { "self": self, "elemvalue": elemvalue }
 			if (self.grid.HideDataFilds.length) {
-				OAT_JS.grid.requestDataSynForTable(self.grid.IdForQueryViewerCollection)
+				OAT_JS.grid.requestDataSynForTable(self.grid.IdForQueryViewerCollection, OAT_JS.grid.gridData[self.grid.IdForQueryViewerCollection].Container)
 			} else {
 				OAT.ClickHandle(self, elemvalue);
 			}	
@@ -2980,7 +2978,7 @@
 
 
 		var spl = self.grid.IdForQueryViewerCollection;
-		OAT_JS.grid.fireOnItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false)
+		OAT_JS.grid.fireOnItemClickEvent(self.grid.QueryViewerCollection[spl], datastr, false, OAT_JS.grid.gridData[spl].Container)
 		//return datastr;
 	}
 
@@ -3514,7 +3512,7 @@
 			}
 		}
 		
-		isSD = OAT.isSD();
+		var isSD = OAT.isSD();
 		
 		if (OAT.isSafari() || (isSD)) { //for safari
 			doc.output('dataurlnewwindow');
@@ -3626,7 +3624,7 @@
 
 
 
-		dataTable = [];
+		var dataTable = [];
 
 		var rowsToAdd = jQuery("#" + _self.grid.controlName + " tr").length;
 		if ((serverPagination != undefined) && (serverPagination)) {
@@ -3636,7 +3634,7 @@
 		var hiddenColumns = []
 
 		for (var i = 0; i < rowsToAdd; i++) {//for every row
-			dataRow = [];
+			var dataRow = [];
 
 			var tRow = jQuery("#" + _self.grid.controlName + " tr")[i];
 			for (var j = 0; j < tRow.children.length; j++) {//for every cell in the row
@@ -3706,7 +3704,7 @@
 
 		if ((serverPagination != undefined) && (serverPagination)) {
 			for (var i = 0; i < recordData.length; i++) {
-				dataRow = [];
+				var dataRow = [];
 				for (var j = 0; j < recordData[i].length; j++) {
 					if (hiddenColumns.indexOf(j) == -1) {
 						var childText = OAT.ApplyPictureValue(recordData[i][j], "", OAT_JS.grid.gridData[UcId].rowsMetadata.defaultPicture, OAT_JS.grid.gridData[UcId].rowsMetadata.forPivotCustomPicture[j]) /* Apply Picture */
@@ -3869,7 +3867,7 @@
 			}]
 		});
 		
-		isSD = OAT.isSD();
+		var isSD = OAT.isSD();
 				
 		if (OAT.isSafari() || (isSD)){ //for safari
 			window.location = sheet.href();

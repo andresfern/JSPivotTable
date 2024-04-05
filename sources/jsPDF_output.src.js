@@ -920,7 +920,7 @@ var jsPDF = (function () {
 							return 'data:application/pdf;base64,' + btoa(buildDocument());
 						case 'datauri':
 						case 'dataurl':
-							document.location.href = 'data:application/pdf;base64,' + btoa(buildDocument());
+							return 'data:application/pdf;base64,' + btoa(buildDocument());
 							break;
 						case 'dataurlnewwindow':
 							window.open('data:application/pdf;base64,' + btoa(buildDocument()));
@@ -2091,99 +2091,15 @@ var jsPDF = (function () {
 			}
 
 		jsPDFAPI.addImage = function (imageData, format, x, y, w, h) {
-			'use strict'
-			if (typeof imageData === 'object' && imageData.nodeType === 1) {
-				var canvas = document.createElement('canvas');
-				canvas.width = imageData.clientWidth;
-				canvas.height = imageData.clientHeight;
-
-				var ctx = canvas.getContext('2d');
-				if (!ctx) {
-					throw ('addImage requires canvas to be supported by browser.');
-				}
-				ctx.drawImage(imageData, 0, 0, canvas.width, canvas.height);
-				imageData = canvas.toDataURL('image/jpeg');
-				format = "JPEG";
-			}
-			if (format.toUpperCase() !== 'JPEG') {
-				throw new Error('addImage currently only supports format \'JPEG\', not \'' + format + '\'');
-			}
-
-			var imageIndex
-				, images = this.internal.collections[namespace + 'images']
-				, coord = this.internal.getCoordinateString
-				, vcoord = this.internal.getVerticalCoordinateString;
-
-			// Detect if the imageData is raw binary or Data URL
-			if (imageData.substring(0, 23) === 'data:image/jpeg;base64,') {
-				imageData = atob(imageData.replace('data:image/jpeg;base64,', ''));
-			}
-
-			if (images) {
-				// this is NOT the first time this method is ran on this instance of jsPDF object.
-				imageIndex = Object.keys ?
-					Object.keys(images).length :
-					(function (o) {
-						var i = 0
-						for (var e in o) { if (o.hasOwnProperty(e)) { i++ } }
-						return i
-					})(images)
-			} else {
-				// this is the first time this method is ran on this instance of jsPDF object.
-				imageIndex = 0
-				this.internal.collections[namespace + 'images'] = images = {}
-				this.internal.events.subscribe('putResources', putResourcesCallback)
-				this.internal.events.subscribe('putXobjectDict', putXObjectsDictCallback)
-			}
-
-			var dims = getJpegSize(imageData);
-			var info = {
-				w: dims[0],
-				h: dims[1],
-				cs: 'DeviceRGB',
-				bpc: 8,
-				f: 'DCTDecode',
-				i: imageIndex,
-				data: imageData
-				// n: objectNumber will be added by putImage code
-
-			};
-			images[imageIndex] = info
-			if (!w && !h) {
-				w = -96;
-				h = -96;
-			}
-			if (w < 0) {
-				w = (-1) * info['w'] * 72 / w / this.internal.scaleFactor;
-			}
-			if (h < 0) {
-				h = (-1) * info['h'] * 72 / h / this.internal.scaleFactor;
-			}
-			if (w === 0) {
-				w = h * info['w'] / info['h'];
-			}
-			if (h === 0) {
-				h = w * info['h'] / info['w'];
-			}
-
-			this.internal.write(
-				'q'
-				, coord(w)
-				, '0 0'
-				, coord(h) // TODO: check if this should be shifted by vcoord
-				, coord(x)
-				, vcoord(y + h)
-				, 'cm /I' + info['i']
-				, 'Do Q'
-			)
-
-			return this
+		
 		}
 
 
 	})(jsPDF.API)
-	
-		//FILE jspdf_encoding
+
+
+
+	//FILE jspdf_encoding
 
 
 
@@ -2793,39 +2709,11 @@ var jsPDF = (function () {
 			}
 
 			function InjectCSS(cssbody, document) {
-				var styletag = document.createElement('style')
-				styletag.type = 'text/css'
-				if (styletag.styleSheet) {
-					// ie
-					styletag.styleSheet.cssText = cssbody
-				} else {
-					// others
-					styletag.appendChild(document.createTextNode(cssbody))
-				}
-				document.getElementsByTagName("head")[0].appendChild(styletag)
+				
 			}
 
 			function createWorkerNode(document) {
-
-				var frameID = 'childframe' // Date.now().toString() + '_' + (Math.random() * 100).toString()
-					, frame = document.createElement('iframe')
-
-				InjectCSS(
-					'.jsPDF_sillysvg_iframe {display:none;position:absolute;}'
-					, document
-				)
-
-				frame.name = frameID
-				frame.setAttribute("width", 0)
-				frame.setAttribute("height", 0)
-				frame.setAttribute("frameborder", "0")
-				frame.setAttribute("scrolling", "no")
-				frame.setAttribute("seamless", "seamless")
-				frame.setAttribute("class", "jsPDF_sillysvg_iframe")
-
-				document.body.appendChild(frame)
-
-				return frame
+				
 			}
 
 			function attachSVGToWorkerNode(svgtext, frame) {
@@ -3023,21 +2911,16 @@ var jsPDF = (function () {
 		|| (function (view) {
 			
 			var
-				doc = view.document
+				
 				// only get URL when necessary in case BlobBuilder.js hasn't overridden it yet
-				, get_URL = function () {
+				get_URL = function () {
 					return view.URL || view.webkitURL || view;
 				}
 				, URL = view.URL || view.webkitURL || view
-				, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+				, save_link = jQuery("<a></a>")[0]
 				, can_use_save_link = "download" in save_link
 				, click = function (node) {
-					var event = doc.createEvent("MouseEvents");
-					event.initMouseEvent(
-						"click", true, false, view, 0, 0, 0, 0, 0
-						, false, false, false, false, 0, null
-					);
-					return node.dispatchEvent(event); // false if event was cancelled
+					node.dispatchEvent(new MouseEvent('click'))
 				}
 				, webkit_req_fs = view.webkitRequestFileSystem
 				, req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
@@ -8865,4 +8748,3 @@ var jsPDF = (function () {
 
 
 	}
-
