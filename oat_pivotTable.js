@@ -12569,7 +12569,7 @@ var jsPDF = (function () {
 			var restoreview_sel_div = jQuery('<div></div>')[0];
 
 			OAT.Dom.attach(restoreview_sel_div, "click", function () {
-				OAT_JS.grid.gridData[UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
 				refresh()
 			});
 
@@ -15669,9 +15669,10 @@ if (typeof exports != "undefined") {
 			}
 
 			if (_mthis.previousState) {
-				var __mthis = this
+				var __mthis = this;
+				var _UcId = UcId;
 				setTimeout( function() {
-					this.gridData[UcId].Events.getDataForTable(UcId, 1, __mthis.gridData[UcId].rowsPerPage, true, __mthis.gridData[UcId].dataFieldOrder, __mthis.gridData[UcId].orderType, "", "", "", false);
+					__mthis.gridData[_UcId].Events.getDataForTable(_UcId, 1, __mthis.gridData[_UcId].rowsPerPage, true, __mthis.gridData[_UcId].dataFieldOrder, __mthis.gridData[_UcId].orderType, "", "", "", false);
 				} , 0)
 			}
 

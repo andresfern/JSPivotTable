@@ -2404,7 +2404,7 @@
 			var restoreview_sel_div = jQuery('<div></div>')[0];
 
 			OAT.Dom.attach(restoreview_sel_div, "click", function () {
-				OAT_JS.grid.gridData[UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
 				refresh()
 			});
 

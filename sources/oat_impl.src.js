@@ -1296,9 +1296,10 @@ if (typeof exports != "undefined") {
 			}
 
 			if (_mthis.previousState) {
-				var __mthis = this
+				var __mthis = this;
+				var _UcId = UcId;
 				setTimeout( function() {
-					this.gridData[UcId].Events.getDataForTable(UcId, 1, __mthis.gridData[UcId].rowsPerPage, true, __mthis.gridData[UcId].dataFieldOrder, __mthis.gridData[UcId].orderType, "", "", "", false);
+					__mthis.gridData[_UcId].Events.getDataForTable(_UcId, 1, __mthis.gridData[_UcId].rowsPerPage, true, __mthis.gridData[_UcId].dataFieldOrder, __mthis.gridData[_UcId].orderType, "", "", "", false);
 				} , 0)
 			}
 
