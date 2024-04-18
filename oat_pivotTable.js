@@ -48,11 +48,6 @@ var OAT = {};
 
 
 	/* several helpful prototypes */
-	Array.prototype.findIndex = function (str) {
-		for (var i = 0; i < this.length; i++) if (this[i] == str) { return i; }
-		return -1;
-	}
-
 	String.prototype.trimpivot = function () {
 		var result = this.match(/^ *(.*?) *$/);
 		return (result ? result[1] : this);
@@ -9210,11 +9205,11 @@ var jsPDF = (function () {
 			for (var iCV = 0; iCV < self.columns.length; iCV++) {
 
 				var position = 'axisRow';
-				if (self.rowConditions.findIndex(iCV) != -1) {
+				if (self.rowConditions.indexOf(iCV) != -1) {
 					position = 'axisRow';
 					rowLevel++;
 					lastRowLevel = iCV;
-				} else if (self.colConditions.findIndex(iCV) != -1) {
+				} else if (self.colConditions.indexOf(iCV) != -1) {
 					position = 'axisCol';
 					colLevel++;
 					lastColLevel = iCV;
@@ -9235,7 +9230,7 @@ var jsPDF = (function () {
 					for (var val = 0; val < self.conditions[iCV].distinctValues.length; val++) {
 						pfvl.push(cleanDistinctValue(self.conditions[iCV].distinctValues[val], self));
 						var hiddenString = "";
-						if (self.conditions[iCV].blackList.findIndex(self.conditions[iCV].distinctValues[val]) != -1) {
+						if (self.conditions[iCV].blackList.indexOf(self.conditions[iCV].distinctValues[val]) != -1) {
 							hiddenString = " h=\"1\"";
 							pfvlExclude.push(cleanDistinctValue(self.conditions[iCV].distinctValues[val], self));
 						}
@@ -9258,7 +9253,7 @@ var jsPDF = (function () {
 			xlpivotTable1 = xlpivotTable1 + "</pivotFields>"
 			xlpivotTable1 = xlpivotTable1 + "<rowFields>"
 			for (var iCV = 0; iCV < self.columns.length; iCV++) {
-				if ((self.rowConditions.findIndex(iCV) != -1) || (self.filterIndexes.findIndex(iCV) != -1)) {
+				if ((self.rowConditions.indexOf(iCV) != -1) || (self.filterIndexes.indexOf(iCV) != -1)) {
 					xlpivotTable1 = xlpivotTable1 + "<field x=\"" + 0 + "\"/>";
 				}
 			}
@@ -9275,7 +9270,7 @@ var jsPDF = (function () {
 				xlpivotTable1 = xlpivotTable1 + "<colFields>"
 
 				for (var iCV = 0; iCV < self.columns.length; iCV++) {
-					if (self.colConditions.findIndex(iCV) != -1) {
+					if (self.colConditions.indexOf(iCV) != -1) {
 						var pos = pfi.indexOf(iCV);
 						xlpivotTable1 = xlpivotTable1 + "<field x=\"" + pos + "\"/>";
 					}
@@ -9573,11 +9568,11 @@ var jsPDF = (function () {
 					
 					var pos = 0;
 					for (var val = 0; val < distValues.length; val++) {
-						if (!((distValues[val] == '') && (distValues.findIndex("#NuN#") != -1))) {//and  ( distValues.findIndex("#NuN#") != -1) )  )  {  //se omite un valor porque con el #NUN# el '' queda de mas 
+						if (!((distValues[val] == '') && (distValues.indexOf("#NuN#") != -1))) {//and  ( distValues.indexOf("#NuN#") != -1) )  )  {  //se omite un valor porque con el #NUN# el '' queda de mas 
 
 							pfvl.push(cleanDistinctValue(distValues[val], self));
 							var hiddenString = "";
-							if (self.conditions[iCV].blackList.findIndex(distValues[val]) != -1) {
+							if (self.conditions[iCV].blackList.indexOf(distValues[val]) != -1) {
 								hiddenString = " h=\"1\"";
 								pfvlExclude.push(cleanDistinctValue(distValues[val], self));
 							}
@@ -9624,11 +9619,11 @@ var jsPDF = (function () {
 						
 						var pos = 0;
 						for (var val = 0; val < distValues.length; val++) {
-							if (!((distValues[val] == '') && (distValues.findIndex("#NuN#") != -1))) {
+							if (!((distValues[val] == '') && (distValues.indexOf("#NuN#") != -1))) {
 								
 								pfvl.push(cleanDistinctValue(distValues[val], self));
 								var hiddenString = "";
-								if (self.conditions[iCV].blackList.findIndex(distValues[val]) != -1) {
+								if (self.conditions[iCV].blackList.indexOf(distValues[val]) != -1) {
 									hiddenString = " h=\"1\"";
 									pfvlExclude.push(cleanDistinctValue(distValues[val], self));
 								}
@@ -9681,7 +9676,7 @@ var jsPDF = (function () {
 			if ((self.rowConditions.length + 1 != measures.length)) {
 				xlpivotTable1 = xlpivotTable1 + "<rowFields>\n"
 				for (var iCV = 0; iCV < self.columns.length; iCV++) {
-					if ((self.rowConditions.findIndex(iCV) != -1) /*|| (self.filterIndexes.find(iCV)!=-1)*/ //<-- cambio
+					if ((self.rowConditions.indexOf(iCV) != -1) /*|| (self.filterIndexes.find(iCV)!=-1)*/ //<-- cambio
 						|| (((self.rowConditions.length + self.filterIndexes.length) == 0))
 					) {
 						var pos = pfi.indexOf(iCV);
@@ -9706,11 +9701,11 @@ var jsPDF = (function () {
 				xlpivotTable1 = xlpivotTable1 + "<colFields>\n"
 
 				for (var iCV = 0; iCV < self.columns.length; iCV++) {
-					if ((self.colConditions.findIndex(iCV) != -1) && ((((self.rowConditions.length + self.filterIndexes.length) != 0)))) {
+					if ((self.colConditions.indexOf(iCV) != -1) && ((((self.rowConditions.length + self.filterIndexes.length) != 0)))) {
 						var pos = pfi.indexOf(iCV)
 						xlpivotTable1 = xlpivotTable1 + "<field x=\"" + pos + "\"/>\n";
 					} else {
-						if ((self.colConditions.findIndex(iCV) != -1) && ((((self.rowConditions.length + self.filterIndexes.length) == 0)))){
+						if ((self.colConditions.indexOf(iCV) != -1) && ((((self.rowConditions.length + self.filterIndexes.length) == 0)))){
 							var pos = pfi.indexOf(iCV)
 							if (self.rowConditions.length == 0)
 								pos = pfi.indexOf(iCV) - measures.length;
@@ -11047,9 +11042,9 @@ var jsPDF = (function () {
 					}
 					for (var i = 0; i < self.rows.length; i++) {
 						var col = columnNumber;
-						if ((includeValues.findIndex(self.rows[i].cells[col].options.value) === -1)
-							&& (includeValues.findIndex(self.rows[i].cells[col].options.value.trimpivot()) === -1)
-							&& (self.conditions[col].blackList.findIndex(self.rows[i].cells[col].options.value) === -1)) {
+						if ((includeValues.indexOf(self.rows[i].cells[col].options.value) === -1)
+							&& (includeValues.indexOf(self.rows[i].cells[col].options.value.trimpivot()) === -1)
+							&& (self.conditions[col].blackList.indexOf(self.rows[i].cells[col].options.value) === -1)) {
 							self.conditions[col].blackList.push(self.rows[i].cells[col].options.value);
 							OAT.HideGridRow({ grid: self }, columnNumber, self.rows[i].cells[columnNumber].options.value);
 							OAT.actualizeBlackList("push", self, columnNumber, self.rows[i].cells[columnNumber].options.value, false);
@@ -11322,8 +11317,8 @@ var jsPDF = (function () {
 				var previusValue = [];
 				for (var i = 0; i < self.rows.length; i++) {
 					if (self.rows[i].cells[columnaentabla] != undefined) {
-						if (previusValue.findIndex(self.rows[i].cells[columnaentabla].options.value) === -1) {
-							if (self.conditions[iCV].blackList.findIndex(self.rows[i].cells[columnaentabla].options.value) === -1) {
+						if (previusValue.indexOf(self.rows[i].cells[columnaentabla].options.value) === -1) {
+							if (self.conditions[iCV].blackList.indexOf(self.rows[i].cells[columnaentabla].options.value) === -1) {
 								xml = xml + '<value>' + self.rows[i].cells[columnaentabla].options.value + '</value> ';
 								previusValue.push(self.rows[i].cells[columnaentabla].options.value);
 							}
@@ -14079,9 +14074,9 @@ var jsPDF = (function () {
 
 				var previusValue = [];
 				for (var i = 0; i < self.grid.rows.length; i++) {
-					if (previusValue.findIndex(self.grid.rows[i].cells[iCV].options.value) === -1) {
+					if (previusValue.indexOf(self.grid.rows[i].cells[iCV].options.value) === -1) {
 						xml = xml + '<VALUE CHECKED=';
-						if (self.grid.conditions[iCV].blackList.findIndex(self.grid.rows[i].cells[iCV].options.value) === -1) {
+						if (self.grid.conditions[iCV].blackList.indexOf(self.grid.rows[i].cells[iCV].options.value) === -1) {
 							previusValue.push(self.grid.rows[i].cells[iCV].options.value);
 							xml = xml + '"true"';
 						} else {
