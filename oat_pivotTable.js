@@ -15850,11 +15850,11 @@ if (typeof exports != "undefined") {
 			this.gridData[UcId].nextCachePos = 0;
 		},
 		pageInCache: function (UcId, pageNumber) {
-			for (var cP = 0; cP < this.gridData[UcId].gridCache.length; cP++) {
+			/*for (var cP = 0; cP < this.gridData[UcId].gridCache.length; cP++) {
 				if (this.gridData[UcId].gridCache[cP].page == pageNumber) {
 					return this.gridData[UcId].gridCache[cP].pageData;
 				}
-			}
+			}*/
 			return false;
 		},
 		updateFilterInfo: function (UcId, DataFieldFilter, NewFilter) {
