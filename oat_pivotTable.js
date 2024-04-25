@@ -10108,7 +10108,7 @@ var jsPDF = (function () {
 		this.callbacks = [];
 		this.targets = [];
 		this.pending = 0;
-		this.addSource = function (b, c, d) {
+		this.addSource = function (b, c, divContainer, d) {
 			var e = OAT.$(b);
 			a.sources.push(e);
 			a.processes.push(c);
@@ -10117,8 +10117,7 @@ var jsPDF = (function () {
 				function (b) {
 					OAT.Dom.prevent(b);
 					var c = a.sources.indexOf(e);
-					-1 != c && a.startDrag(a.sources[c], a.processes[c], a.callbacks[c], b.clientX, b.clientY);
-
+					-1 != c && a.startDrag(a.sources[c], a.processes[c], a.callbacks[c], b.clientX, b.clientY, divContainer);
 				}
 			)
 		};
@@ -10127,7 +10126,7 @@ var jsPDF = (function () {
 		this.addTarget = function (b, c, d) { b = [OAT.$(b), c, d]; a.targets.length && a.targets[a.targets.length - 1][2] ? a.targets.splice(a.targets.length - 1, 0, b) : a.targets.push(b) };
 		this.delTarget = function (b) { for (var b = OAT.$(b), c = -1, d = 0; d < a.targets.length; d++)a.targets[d][0] == b && (c = d); -1 != c && a.targets.splice(c, 1) };
 		this.clearTargets = function () { a.targets = [] };
-		this.startDrag = function (b, c, d, e, f) {
+		this.startDrag = function (b, c, d, e, f, divContainer) {
 			var dragdiv;
 			OAT.GhostDragData.lock || (
 				a.pending = 1, 
@@ -10138,7 +10137,7 @@ var jsPDF = (function () {
 				c = OAT.Dom.position(b), 
 				dragdiv.style.position = "absolute",
 				dragdiv.style.left = c[0] + "px", 
-				dragdiv.style.top = c[1] + "px", 
+				dragdiv.style.top = (c[1]-jQuery(divContainer).offset().top) + "px",
 				OAT.Style.opacity(dragdiv, 0.5), 
 				dragdiv.appendChild(b.cloneNode(!0)), 
 				dragdiv.mouse_x = e, 
@@ -23181,7 +23180,7 @@ if (typeof exports != "undefined") {
 						var anchorRef = resp[1]
 						OAT.Dom.attach(th, "click", ref);
 						var callback = self.getOrderReference(self.rowConditions[j], anchorRef, ref, div);
-						self.gd.addSource(div, self.process, callback);
+						self.gd.addSource(div, self.process, self.pivotContainer, callback);
 						self.gd.addTarget(th);
 					}
 					th.conditionIndex = self.rowConditions[j];
@@ -23300,7 +23299,7 @@ if (typeof exports != "undefined") {
 					var anchorRef = resp[1];
 					OAT.Dom.attach(th, "click", ref);
 					var callback = self.getOrderReference(self.rowConditions[j], anchorRef, ref, div);
-					self.gd.addSource(div, self.process, callback);
+					self.gd.addSource(div, self.process, self.pivotContainer, callback);
 					self.gd.addTarget(th);
 					th.conditionIndex = self.rowConditions[j];
 
@@ -23388,7 +23387,7 @@ if (typeof exports != "undefined") {
 
 				OAT.Dom.attach(th, "click", ref);
 				var callback = self.getOrderReference(self.colConditions[i], anchorRef, ref, div);
-				self.gd.addSource(div, self.process, callback);
+				self.gd.addSource(div, self.process, self.pivotContainer, callback);
 				self.gd.addTarget(th);
 			}
 			var divImg = OAT.Dom.create("div", { position: "absolute", right: "0px", bottom: "2px", width: "12px", height: "12px" });
@@ -23422,7 +23421,7 @@ if (typeof exports != "undefined") {
 			var anchorRef = resp[1]
 			OAT.Dom.attach(th, "click", ref);
 			var callback = self.getOrderReference(self.colConditions[i], anchorRef, ref, div);
-			self.gd.addSource(div, self.process, callback);
+			self.gd.addSource(div, self.process, self.pivotContainer,  callback);
 			self.gd.addTarget(th);
 			th.conditionIndex = self.colConditions[i];
 			th.appendChild(div);
