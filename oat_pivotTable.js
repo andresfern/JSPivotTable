@@ -10491,7 +10491,7 @@ var jsPDF = (function () {
 						var offsetLeft = jQuery(iconExport).offset().left
 
 						if (offsetLeft + initialPopUpWidth + 15 < screenWidth) {
-							jQuery(".ExportPopup").css({ left: jQuery(iconExport).offset().left + "px", top: (jQuery(iconExport).offset().top-jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
+							jQuery(".ExportPopup").css({ left: (offsetLeft - jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().left) + "px", top: (jQuery(iconExport).offset().top-jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
 						} else {
 							jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top-jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
 						}
@@ -12278,11 +12278,13 @@ var jsPDF = (function () {
 
 		var coords = pos;
 		var event = pos;
+        var currentOffset = jQuery(event.currentTarget).offset();
+        var containerOffset = jQuery(OAT_JS.grid.gridData[_self.grid.UcId].Container).offset();
 
 		if (_self.grid.isSD) { //android
-			jQuery(".oat_winrect_container").css({ left: "-1500px", top: (jQuery(event.currentTarget).offset().top-jQuery(OAT_JS.grid.gridData[_self.grid.UcId].Container).offset().top) + "px" })
+			jQuery(".oat_winrect_container").css({ left: "-1500px", top: (currentOffset.top-containerOffset.top) + "px" })
 		} else {
-			jQuery(".oat_winrect_container").css({ left: jQuery(event.currentTarget).offset().left + "px", top: (jQuery(event.currentTarget).offset().top-jQuery(OAT_JS.grid.gridData[_self.grid.UcId].Container).offset().top) + "px" })
+			jQuery(".oat_winrect_container").css({ left: (currentOffset.left - containerOffset.left) + "px", top: (currentOffset.top - containerOffset.top) + "px" })
 		}
 
 		OAT.Dom.clear(div);
@@ -21474,7 +21476,7 @@ if (typeof exports != "undefined") {
 				jQuery(".oat_winrect_container").css({ left: "-1500px", top: jQuery(eventDiv).offset().top + "px" })
 				jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
 			} else {
-				jQuery(".oat_winrect_container").css({ left: jQuery(eventDiv).offset().left + "px", top: (jQuery(eventDiv).offset().top-jQuery(self.pivotContainer).offset().top) + "px" })
+				jQuery(".oat_winrect_container").css({ left: (jQuery(eventDiv).offset().left - jQuery(self.pivotContainer).offset().left) + "px", top: (jQuery(eventDiv).offset().top-jQuery(self.pivotContainer).offset().top) + "px" })
 			}
 
 			self.propPage.setAttribute('id', 'pop-up');
@@ -22848,12 +22850,13 @@ if (typeof exports != "undefined") {
 
 					} else {
 
-						var offsetLeft = jQuery(iconExport).offset().left
+						var offsetLeft = jQuery(iconExport).offset().left;
+                        var offsetContainer = jQuery(self.pivotContainer).offset();
 
 						if (offsetLeft + initialPopUpWidth + 15 < screenWidth) {
-							jQuery(".ExportPopup").css({ left: jQuery(iconExport).offset().left + "px", top: (jQuery(iconExport).offset().top-jQuery(self.pivotContainer).offset().top) + "px" })
+							jQuery(".ExportPopup").css({ left: (jQuery(iconExport).offset().left - offsetContainer.left) + "px", top: (jQuery(iconExport).offset().top - offsetContainer.top) + "px" })
 						} else {
-							jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top-jQuery(self.pivotContainer).offset().top) + "px" })
+							jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top - offsetContainer.top) + "px" })
 						}
 
 					}
