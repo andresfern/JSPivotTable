@@ -12874,7 +12874,7 @@ var jsPDF = (function () {
 			pict_value = pict_value.substring(0, 32) + resto
 		}
 		pict_value = pict_value.replace(/ /g, "\u00A0") + '\u00A0\u00A0\u00A0\u00A0\u00A0'
-		var pair = getPairWithIcon(pict_value, "pivot_distinct_" + i, checked);
+		var pair = getPairWithIcon(pict_value, "pivot_distinct_" + 0, checked);
 		pair[0].setAttribute('value', value);
 		var fixHeigthDiv = jQuery("#values_" + _self.grid.UcId + "_" + dataField)[0]//colNumber)[0]
 		fixHeigthDiv.appendChild(pair[0]);
@@ -27637,7 +27637,7 @@ if (typeof exports != "undefined") {
 		}
 
 		this.changeValues = function (UcId, dataField, columnNumber, data, filterText) { //when filter by search filter, delete pairs and show new ones
-			var searchInput = jQuery("#" + UcId + columnNumber)[0];
+			var searchInput = jQuery("#" + self.UcId + columnNumber)[0];
 
 			var sInput = searchInput.value;
 			if (searchInput.value) {
@@ -27649,14 +27649,15 @@ if (typeof exports != "undefined") {
 
 			self.conditions[columnNumber].filtered = true;
 			self.conditions[columnNumber].blocked = true;
-			self.removeAllPairsFromPopUp(columnNumber, data.PagesCount > 1);
+			self.removeAllPairsFromPopUp(columnNumber, false);
 
 			//set filtered pagination info
 			self.conditions[columnNumber].searchInfo.previousPage = 1
 			self.conditions[columnNumber].searchInfo.totalPages = data.PagesCount
 			self.conditions[columnNumber].searchInfo.filteredText = filterText;
-
-			for (var i = 0; i < data.NotNullValues.length; i++) {
+			
+			if (data.PagesCount > 0) { 
+				for (var i = 0; i < data.NotNullValues.length; i++) {
 				var value = data.NotNullValues[i]
 				var alreadyInValues = (self.conditions[columnNumber].distinctValues.indexOf(value) != -1)
 				//append to different values
@@ -27684,17 +27685,18 @@ if (typeof exports != "undefined") {
 				if (!((self.conditions[columnNumber].hasNull) && (value.trimpivot() == self.defaultPicture.getAttribute("textForNullValues")))) {
 					self.appendNewPairToPopUp(value, columnNumber, checked);
 				}
-			}
+				}
 
-			if (data.PagesCount > 0)
+			
 				self.conditions[columnNumber].blocked = false;
+			}
 		}
 
 		this.resetScrollValue = function (UcId, dataField, columnNumber) { //after filtered when input serach is clean, restor values without filter
 			self.conditions[columnNumber].filtered = false;
 			self.conditions[columnNumber].blocked = true;
 
-			self.removeAllPairsFromPopUp(columnNumber, data.PagesCount > 1);
+			self.removeAllPairsFromPopUp(columnNumber, false);
 
 			for (var u = 0; u < self.conditions[columnNumber].distinctValues.length; u++) {
 				var checked = true;
@@ -27826,7 +27828,7 @@ if (typeof exports != "undefined") {
 				}
 
 				pict_value = pict_value.replace(/ /g, "\u00A0") + '\u00A0\u00A0\u00A0\u00A0\u00A0'
-				var pair = getPair(pict_value, "pivot_distinct_" + i, checked);
+				var pair = getPair(pict_value, "pivot_distinct_" + 0, checked);
 				pair[0].setAttribute('value', value);
 				var fixHeigthDiv = jQuery("#values_" + self.UcId + "_" + colNumber)[0]
 				fixHeigthDiv.appendChild(pair[0]);
