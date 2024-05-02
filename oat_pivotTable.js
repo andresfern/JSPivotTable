@@ -10081,7 +10081,7 @@ var jsPDF = (function () {
 						var g = c.targets[f], h = g[1] ? g[1](a, d) : OAT.GhostDragData.pos(g[0], a, d);
 						!e && h && (e = 1, c.callback(g[0], a, d))
 					}
-					e ? (OAT.Dom.unlink(b), OAT.MSG.send(c, OAT.MSG.GD_END, b)) : (OAT.MSG.send(c, OAT.MSG.GD_ABORT, b), c.onFail(), c = OAT.Dom.position(c.originalElement),
+					e ? (OAT.Dom.unlink(b), OAT.MSG.send(c, OAT.MSG.GD_END, b)) : (OAT.MSG.send(c, OAT.MSG.GD_ABORT, b), c.onFail(), c = [jQuery(c.originalElement).offset().left, jQuery(c.originalElement).offset().top],
 						a = c[0], d = c[1], c = new OAT.AnimationPosition(b, { speed: 10, delay: 10, left: a, top: d }), OAT.MSG.attach(c.animation, OAT.MSG.ANIMATION_STOP, function () { OAT.Dom.unlink(b) }), c.start())
 				}
 			}
@@ -10098,7 +10098,7 @@ var jsPDF = (function () {
 					c.pending = 0, OAT.MSG.send(c, OAT.MSG.GD_START, b)); OAT.Dom.removeSelection(); var d = a.clientX - b.mouse_x, c = a.clientY - b.mouse_y, d = parseInt(OAT.Dom.style(b,
 					"left")) + d, c = parseInt(OAT.Dom.style(b, "top")) + c; b.style.left = d + "px"; b.style.top = c + "px"; b.mouse_x = a.clientX; b.mouse_y = a.clientY
 			}
-		}, pos: function (a, b, c) { if (!a || "none" == a.style.display.toLowerCase()) return 0; var d = OAT.Dom.position(a), e = d[0] - 2, d = d[1] - 2, f = parseInt(a.offsetWidth) + 2, a = parseInt(a.offsetHeight) + 2; return b >= e && b <= e + f && c >= d && c <= d + a }
+		}, pos: function (a, b, c) { if (!a || "none" == a.style.display.toLowerCase()) return 0; var d = [jQuery(a).offset().left, jQuery(a).offset().top], e = d[0] - 2, d = d[1] - 2, f = parseInt(a.offsetWidth) + 2, a = parseInt(a.offsetHeight) + 2; return b >= e && b <= e + f && c >= d && c <= d + a }
 	};
 	OAT.GhostDrag = function () {
 		var a = this;
@@ -10134,9 +10134,9 @@ var jsPDF = (function () {
 				a.callback = d, 
 				dragdiv = OAT.Dom.create("div", { position: "absolute" }), 
 				a.process = c, 
-				c = OAT.Dom.position(b), 
+				c = [jQuery(b).offset().left, jQuery(b).offset().top],
 				dragdiv.style.position = "absolute",
-				dragdiv.style.left = c[0] + "px", 
+				dragdiv.style.left = (c[0]-jQuery(divContainer).offset().left) + "px", 
 				dragdiv.style.top = (c[1]-jQuery(divContainer).offset().top) + "px",
 				OAT.Style.opacity(dragdiv, 0.5), 
 				dragdiv.appendChild(b.cloneNode(!0)), 
