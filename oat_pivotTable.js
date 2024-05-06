@@ -21516,12 +21516,14 @@ if (typeof exports != "undefined") {
 
 					
 						cond.sort = 1; self.stateChanged = true;
-						self.getDataForPivot(self.UcId, 1, self.rowsPerPage, true, cond.dataField, "", "", "")
+						self.getDataForPivot(self.UcId, 1, self.rowsPerPage, true, cond.dataField, "", "", "");
 						var idI = "i_" + this.getAttribute("id");
 						var inputAsc = jQuery("#" + idI)[0];
 						inputAsc.textContent = "radio_button_checked";
-						var inputAsc = jQuery("#" + idI.replace("desc", "asc"))[0];
-						inputDsc.textContent = "radio_button_unchecked";
+						
+						var idJ = idI.replace("asc", "desc");
+						var inpdsc =  jQuery("#" + idJ)[0];
+						inpdsc.textContent = "radio_button_unchecked";
 					
 						
 
