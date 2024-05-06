@@ -15406,7 +15406,7 @@ if (typeof exports != "undefined") {
 		
 		renderJSPivotInter.requestAttributeForTable = function(UcId, dataField, page, filterValue, pageSize, container){
 			setTimeout( function() {
-				var paramobj = {  "Page": page, "PageSize": pageSize, "DataField": dataField, "Filters":filterValue, "QueryviewerId": UcId};
+				var paramobj = {  "Page": page, "PageSize": pageSize, "DataField": dataField, "FilterText": filterValue, "QueryviewerId": UcId};
 				var evt = new Event("Events");
 				evt.initEvent("RequestAttributeForTable", true, true);
 				evt.parameter = paramobj;
