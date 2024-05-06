@@ -30508,7 +30508,6 @@ if (typeof exports != "undefined") {
 				file += '.' + ext;
 			if (file == '')
 				page = 'index';
-			args = location.search.substr(1).split("?");
 
 			return path + page;
 		} catch (ERROR) {
