@@ -11568,6 +11568,8 @@ var jsPDF = (function () {
 					divCont = OAT.Dom.create("div", "", "oatfilterwindow");
 				}
 			}
+            divCont.setAttribute("id", "pop-up");
+
 			OAT.Anchor.assign(self.container, {
 				title: " ",
 				content: divCont,
@@ -12411,16 +12413,18 @@ var jsPDF = (function () {
 			OAT.addImageNode(dlabel, (_self.grid.conditions[colNumber].sort === 3)?"radio_button_checked":"radio_button_unchecked", IStyle, "i_"+dscForId);
 			OAT.addTextNode(dlabel, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSDescending); //gx.getMessage("GXPL_QViewerJSDescending"))
 
+            var hr = OAT.Dom.create("hr", {});
 			div_order.appendChild(desc);
 			div_order.appendChild(dlabel);
 
 			toAppend.push(div_order);
+			toAppend.push(hr);
 
-			if (_self.grid.header.cells.length.length > 1) {
-				var hr4 = OAT.Dom.create("hr", {});
-				//begin drag options
-				toAppend.push(hr4);
-			}
+			// if (_self.grid.header.cells.length.length > 1) {
+			// 	var hr4 = OAT.Dom.create("hr", {});
+			// 	//begin drag options
+			// 	toAppend.push(hr4);
+			// }
 		}
 
 		var hr3 = OAT.Dom.create("hr", {});
@@ -12570,10 +12574,12 @@ var jsPDF = (function () {
 			});
 
 			var rl = OAT.Dom.create("label");
+            var hr4 = OAT.Dom.create("hr", {});
 			OAT.addTextNode(rl, OAT_JS.grid.gridData[_self.grid.UcId].translations.GXPL_QViewerJSRestoreDefaultView);//gx.getMessage("GXPL_QViewerJSRestoreDefaultView"))
 			rl.htmlFor = "pivot_checkbox_restoreview";
 			restoreview_sel_div.appendChild(rl);
 			OAT.Dom.append([restoreview, restoreview_sel_div]);
+			toAppend.push(hr4);
 			toAppend.push(restoreview);
 		}
 
@@ -15580,7 +15586,7 @@ if (typeof exports != "undefined") {
 			//end initialize filter info
 			//initialize order info
 			this.gridData[UcId].dataFieldOrder = (_mthis.previousDataFieldOrder != undefined) ? _mthis.previousDataFieldOrder : ""
-			this.gridData[UcId].orderType = (_mthis.previousOrderType != undefined) ? _mthis.previousOrderType : ""
+			this.gridData[UcId].orderType = (_mthis.previousOrderType != undefined) ? _mthis.previousOrderType : "Ascending"
 			//end initialize order info
 			//for custom order
 			this.gridData[UcId].customOrderValues = [];
