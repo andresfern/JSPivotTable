@@ -12766,7 +12766,7 @@ var jsPDF = (function () {
 			OAT.Dom.append([div_search, searchInput], [div, div_search]);
 		
 
-		var fixHeigthDiv = OAT.Dom.create("div");
+			var fixHeigthDiv = OAT.Dom.create("div");
 
 
 			var cantPairs = OAT_JS.grid.getCantDifferentValues(_self.grid.UcId, colNumber);
@@ -12825,9 +12825,17 @@ var jsPDF = (function () {
 			fixHeigthDiv.setAttribute("columnnumber", colNumber);
 			fixHeigthDiv.setAttribute("id", "values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber])//_self.grid.UcId + "_" + colNumber)
 		
+			OAT.Dom.attach(fixHeigthDiv, "scroll", function () {
+			  		var scrollBottom = fixHeigthDiv.scrollHeight - fixHeigthDiv.clientHeight - fixHeigthDiv.scrollTop
+					if (scrollBottom < 25) {
+						var UcId = fixHeigthDiv.getAttribute("ucid")
+						var columnNumber = parseInt(fixHeigthDiv.getAttribute("columnNumber"))
+						OAT_JS.grid.readScrollValue(UcId, columnNumber)
+					}	
+				}
+			)
 
-
-		div.appendChild(fixHeigthDiv);
+			div.appendChild(fixHeigthDiv);
 	}
 
 
