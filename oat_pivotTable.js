@@ -12419,12 +12419,6 @@ var jsPDF = (function () {
 
 			toAppend.push(div_order);
 			toAppend.push(hr);
-
-			// if (_self.grid.header.cells.length.length > 1) {
-			// 	var hr4 = OAT.Dom.create("hr", {});
-			// 	//begin drag options
-			// 	toAppend.push(hr4);
-			// }
 		}
 
 		var hr3 = OAT.Dom.create("hr", {});
@@ -15586,7 +15580,7 @@ if (typeof exports != "undefined") {
 			//end initialize filter info
 			//initialize order info
 			this.gridData[UcId].dataFieldOrder = (_mthis.previousDataFieldOrder != undefined) ? _mthis.previousDataFieldOrder : ""
-			this.gridData[UcId].orderType = (_mthis.previousOrderType != undefined) ? _mthis.previousOrderType : "Ascending"
+			this.gridData[UcId].orderType = (_mthis.previousOrderType != undefined) ? _mthis.previousOrderType : ""
 			//end initialize order info
 			//for custom order
 			this.gridData[UcId].customOrderValues = [];
