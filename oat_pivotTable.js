@@ -153,7 +153,8 @@ var OAT = {};
 					if ((picture != undefined) && (picture != "")) {
 						
 						if (typeof qv == "undefined")
-							var newValue = parseFloat(value)
+							var newValue = value;
+							//var newValue = parseFloat(value)
 						else
 							qv.util.formatNumber(parseFloat(value), decimalPlaces, picture, false);
 						
