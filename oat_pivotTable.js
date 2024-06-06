@@ -14402,6 +14402,7 @@ if (typeof exports != "undefined") {
 	exports.setDataSynForTable = void 0;
 	exports.getDataXML = void 0;
 	exports.getFilteredDataXML = void 0;
+	exports.getStateWhenServingPaging = void 0;
 	
 }
 	
@@ -14607,7 +14608,13 @@ if (typeof exports != "undefined") {
 	exports.getFilteredDataXML = getFilteredDataXML;
 }
 
+function getStateWhenServingPaging(controlName, queryName) {
+		return JSON.parse(localStorage.getItem(OAT.getURL() + controlName + queryName));
+	}
 
+if (typeof exports != "undefined") {
+	exports.getStateWhenServingPaging = getStateWhenServingPaging;	
+}
 
 	var renderJSPivotInter = function (pivotParams, QueryViewerCollection, translations, state, queryself) {
 		var type = pivotParams.RealType
