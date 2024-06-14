@@ -10099,7 +10099,9 @@ var jsPDF = (function () {
 					c.pending = 0, OAT.MSG.send(c, OAT.MSG.GD_START, b)); OAT.Dom.removeSelection(); var d = a.clientX - b.mouse_x, c = a.clientY - b.mouse_y, d = parseInt(OAT.Dom.style(b,
 					"left")) + d, c = parseInt(OAT.Dom.style(b, "top")) + c; b.style.left = d + "px"; b.style.top = c + "px"; b.mouse_x = a.clientX; b.mouse_y = a.clientY
 			}
-		}, pos: function (a, b, c) { if (!a || "none" == a.style.display.toLowerCase()) return 0; var d = [jQuery(a).offset().left, jQuery(a).offset().top], e = d[0] - 2, d = d[1] - 2, f = parseInt(a.offsetWidth) + 2, a = parseInt(a.offsetHeight) + 2; return b >= e && b <= e + f && c >= d && c <= d + a }
+		}, pos: function (a, b, c) { 
+				if (!a || "none" == a.style.display.toLowerCase()) return 0;
+				var d = [jQuery(a).offset().left, jQuery(a).offset().top], e = d[0] - 2, d = d[1] - 2, f = parseInt(a.offsetWidth) + 2, a = parseInt(a.offsetHeight) + 2; return b >= e && b <= e + f && c >= d && c <= d + a }
 	};
 	OAT.GhostDrag = function () {
 		var a = this;
@@ -10109,7 +10111,7 @@ var jsPDF = (function () {
 		this.callbacks = [];
 		this.targets = [];
 		this.pending = 0;
-		this.addSource = function (b, c, divContainer, d) {
+		this.addSource = function (b, c, divContainer, mFlexGrid, d) {
 			var e = OAT.$(b);
 			a.sources.push(e);
 			a.processes.push(c);
@@ -10118,7 +10120,7 @@ var jsPDF = (function () {
 				function (b) {
 					OAT.Dom.prevent(b);
 					var c = a.sources.indexOf(e);
-					-1 != c && a.startDrag(a.sources[c], a.processes[c], a.callbacks[c], b.clientX, b.clientY, divContainer);
+					-1 != c && a.startDrag(a.sources[c], a.processes[c], a.callbacks[c], b.clientX, b.clientY, divContainer, mFlexGrid);
 				}
 			)
 		};
@@ -10127,7 +10129,7 @@ var jsPDF = (function () {
 		this.addTarget = function (b, c, d) { b = [OAT.$(b), c, d]; a.targets.length && a.targets[a.targets.length - 1][2] ? a.targets.splice(a.targets.length - 1, 0, b) : a.targets.push(b) };
 		this.delTarget = function (b) { for (var b = OAT.$(b), c = -1, d = 0; d < a.targets.length; d++)a.targets[d][0] == b && (c = d); -1 != c && a.targets.splice(c, 1) };
 		this.clearTargets = function () { a.targets = [] };
-		this.startDrag = function (b, c, d, e, f, divContainer) {
+		this.startDrag = function (b, c, d, e, f, divContainer, mFlexGrid) {
 			var dragdiv;
 			OAT.GhostDragData.lock || (
 				a.pending = 1, 
@@ -10136,9 +10138,9 @@ var jsPDF = (function () {
 				dragdiv = OAT.Dom.create("div", { position: "absolute" }), 
 				a.process = c, 
 				c = [jQuery(b).offset().left, jQuery(b).offset().top],
-				dragdiv.style.position = "absolute",
-				dragdiv.style.left = (c[0]-jQuery(divContainer).offset().left) + "px", 
-				dragdiv.style.top = (c[1]-jQuery(divContainer).offset().top) + "px",
+				dragdiv.style.position = (mFlexGrid) ? "fixed": "absolute",
+				dragdiv.style.left = (mFlexGrid) ? c[0] + "px" : (c[0]-jQuery(divContainer).offset().left) + "px", 
+				dragdiv.style.top =  (mFlexGrid) ? (c[1] - jQuery(window).scrollTop()) + "px" : (c[1]-jQuery(divContainer).offset().top) + "px",
 				OAT.Style.opacity(dragdiv, 0.5), 
 				dragdiv.appendChild(b.cloneNode(!0)), 
 				dragdiv.mouse_x = e, 
@@ -10490,11 +10492,19 @@ var jsPDF = (function () {
 					} else {
 
 						var offsetLeft = jQuery(iconExport).offset().left
-
-						if (offsetLeft + initialPopUpWidth + 15 < screenWidth) {
-							jQuery(".ExportPopup").css({ left: (offsetLeft - jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().left) + "px", top: (jQuery(iconExport).offset().top-jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
+						
+						if (OAT_JS.grid.gridData[self.UcId].mFlexGrid) {  
+							if (offsetLeft + initialPopUpWidth + 15 < screenWidth) {
+								jQuery(".ExportPopup").css({ position:"fixed", left: jQuery(iconExport).offset().left + "px", top: ( jQuery(iconExport).offset().top - jQuery(window).scrollTop() ) + "px" })  
+							} else {
+								jQuery(".ExportPopup").css({ position:"fixed", left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top - jQuery(window).scrollTop()) + "px" })
+							}
 						} else {
-							jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top-jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
+							if (offsetLeft + initialPopUpWidth + 15 < screenWidth) {
+								jQuery(".ExportPopup").css({ left: (offsetLeft - jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().left) + "px", top: (jQuery(iconExport).offset().top-jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
+							} else {
+								jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top-jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
+							}
 						}
 					}
 				}, 50)
@@ -11343,9 +11353,17 @@ var jsPDF = (function () {
 
 
 
-
+		self.previousScrollTop = jQuery(window).scrollTop();
 		var itvl = setInterval(function () {
 			
+			if (OAT_JS.grid.gridData[self.UcId].mFlexGrid) {
+				var actualScrollTo = jQuery(window).scrollTop();
+				var diffScroll = Math.abs(self.previousScrollTop - actualScrollTo);
+				if (diffScroll > 3){
+					jQuery(".oat_winrect_container").css({ display: "none" });
+				}
+				self.previousScrollTop = actualScrollTo;
+			}
 			
 			if ((jQuery("#" + self.controlName).length > 0) && (jQuery("#" + self.controlName)[0].getAttribute("class") === "oatgrid")) {
 				var actual_rowsPerPage = 0;
@@ -12287,7 +12305,14 @@ var jsPDF = (function () {
 		if (_self.grid.isSD) { //android
 			jQuery(".oat_winrect_container").css({ left: "-1500px", top: (currentOffset.top-containerOffset.top) + "px" })
 		} else {
-			jQuery(".oat_winrect_container").css({ left: (currentOffset.left - containerOffset.left) + "px", top: (currentOffset.top - containerOffset.top) + "px" })
+			if (OAT_JS.grid.gridData[_self.grid.UcId].mFlexGrid)
+			{
+				jQuery(".oat_winrect_container").css({ position:"fixed", left: jQuery(event.currentTarget).offset().left + "px", top: (jQuery(event.currentTarget).offset().top - jQuery(window).scrollTop() )+ "px" })  //02-05
+			}
+			else
+			{
+				jQuery(".oat_winrect_container").css({ left: (currentOffset.left - containerOffset.left) + "px", top: (currentOffset.top - containerOffset.top) + "px" })
+			}
 		}
 
 		OAT.Dom.clear(div);
@@ -14619,6 +14644,7 @@ if (typeof exports != "undefined") {
 	var renderJSPivotInter = function (pivotParams, QueryViewerCollection, translations, state, queryself) {
 		var type = pivotParams.RealType
 		var container = pivotParams.container
+		var mFlexGrid = pivotParams.mFlexGrid
 		var page = pivotParams.page
 		var content = pivotParams.content
 		var metadata = pivotParams.metadata
@@ -14848,6 +14874,7 @@ if (typeof exports != "undefined") {
 		UcId = UcId.replace(/,/g, "").replace(/\./g, "")
 		renderJSPivotInter.UcId = UcId;
 		renderJSPivotInter.pivotDiv = container.id;
+		renderJSPivotInter.mFlexGrid = mFlexGrid;
 		renderJSPivotInter.query = queryName;
 		renderJSPivotInter.control = controlName;
 		renderJSPivotInter.pageSize = pageSize;
@@ -15467,7 +15494,8 @@ if (typeof exports != "undefined") {
 			this.gridData[UcId].autoResize = _mthis.autoResize;
 			this.gridData[UcId].selection = {Allow: _mthis.pivotParams.AllowSelection, EntireLine: _mthis.pivotParams.SelectLine, SelectedNode: []};
 			
-			this.gridData[UcId].Container = _mthis.pivotParams.container 
+			this.gridData[UcId].Container = _mthis.pivotParams.container;
+			this.gridData[UcId].mFlexGrid = _mthis.pivotParams.mFlexGrid;
 			
 			this.gridData[UcId].grid = new OAT.Grid(content, controlName, _mthis.query, columnsDataType, colms, QueryViewerCollection, this.gridData[UcId].rowsPerPage,
 				disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, _mthis.serverPaging, _mthis.HideDataFilds, _mthis.orderFildsHidden, _mthis.TableOrderFilds, _mthis.relativePath,
@@ -16920,7 +16948,7 @@ if (typeof exports != "undefined") {
 				pivot = new OAT.Pivot(_mthis, content, page, _mthis.header, _mthis.data, _mthis.columnNumbers, _mthis.rowNumbers, _mthis.filterNumbers, cols, _mthis.query, _mthis.conditionalFormats, UcId, _mthis.pageSize, defaultPicture, QueryViewerCollection, colms, pivotdiv,
 					formatValue, conditionalFormatsColumns, formatValueMeasures, _mthis.measures, autoResize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout,
 					ShowMeasuresAsRows, formulaInfo, fullRecord, serverPagination, pagingData, HideDataFilds, OrderFildsHidden, initMetadata, relativePath,
-					{ Allow: pivotParams.AllowSelection, EntireLine: pivotParams.SelectLine}, { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns } , pivotParams.Title, pivotParams.container);
+					{ Allow: pivotParams.AllowSelection, EntireLine: pivotParams.SelectLine}, { TotalForRows: pivotParams.TotalForRows, TotalForColumns: pivotParams.TotalForColumns } , pivotParams.Title, pivotParams.container, pivotParams.mFlexGrid);
 			// } catch (Error) {
 				// alert(Error)
 			// }
@@ -18430,7 +18458,7 @@ if (typeof exports != "undefined") {
 		columns, containerName, formatValue, conditionalFormatsColumns, formatValueMeasures,
 		measures, autoResize, disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout,
 		ShowMeasuresAsRows, formulaInfo, fullRecord, serverPagination, pageData, hideDataFilds,
-		orderFildsHidden, initMetadata, relativePath, selection, GrandTotalVisibility, pivotTitle, pivotContainer) {
+		orderFildsHidden, initMetadata, relativePath, selection, GrandTotalVisibility, pivotTitle, pivotContainer, mFlexGrid) {
 		var self = this;
 		this.autoPaging = false;
 		this.nextRowWhenAutopaging = 0;
@@ -18725,6 +18753,8 @@ if (typeof exports != "undefined") {
 		this.stateChanged = false;
 		this.rowsPerPage = pageSize;
 		this.pivotContainer = pivotContainer;
+		this.mFlexGrid = mFlexGrid;
+		this.previousScrollTop = jQuery(window).scrollTop();
 
 
 		this.headerRow = headerRow; /* store data */
@@ -21492,7 +21522,14 @@ if (typeof exports != "undefined") {
 				jQuery(".oat_winrect_container").css({ left: "-1500px", top: jQuery(eventDiv).offset().top + "px" })
 				jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
 			} else {
-				jQuery(".oat_winrect_container").css({ left: (jQuery(eventDiv).offset().left - jQuery(self.pivotContainer).offset().left) + "px", top: (jQuery(eventDiv).offset().top-jQuery(self.pivotContainer).offset().top) + "px" })
+				if (self.mFlexGrid)
+				{ 
+					jQuery(".oat_winrect_container").css({ position:"fixed", left: jQuery(eventDiv).offset().left + "px", top: (jQuery(eventDiv).offset().top - jQuery(window).scrollTop())+ "px" })
+				}
+				else
+				{
+					jQuery(".oat_winrect_container").css({ left: (jQuery(eventDiv).offset().left - jQuery(self.pivotContainer).offset().left) + "px", top: (jQuery(eventDiv).offset().top-jQuery(self.pivotContainer).offset().top) + "px" })
+				}
 			}
 
 			self.propPage.setAttribute('id', 'pop-up');
@@ -22872,9 +22909,17 @@ if (typeof exports != "undefined") {
                         var offsetContainer = jQuery(self.pivotContainer).offset();
 
 						if (offsetLeft + initialPopUpWidth + 15 < screenWidth) {
-							jQuery(".ExportPopup").css({ left: (jQuery(iconExport).offset().left - offsetContainer.left) + "px", top: (jQuery(iconExport).offset().top - offsetContainer.top) + "px" })
+							if (self.mFlexGrid){
+								jQuery(".ExportPopup").css({  position:"fixed", left: ( jQuery(iconExport).offset().left) + "px", top: (jQuery(iconExport).offset().top) + "px" })
+							} else {	
+								jQuery(".ExportPopup").css({ left: (jQuery(iconExport).offset().left - offsetContainer.left) + "px", top: (jQuery(iconExport).offset().top - offsetContainer.top) + "px" })
+							}
 						} else {
-							jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top - offsetContainer.top) + "px" })
+							if (self.mFlexGrid){
+								jQuery(".ExportPopup").css({ position:"fixed", left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top - jQuery(window).scrollTop()/*- offsetContainer.top*/) + "px" }) //24-04
+							} else {
+								jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top - offsetContainer.top) + "px" })
+							}
 						}
 
 					}
@@ -23201,7 +23246,7 @@ if (typeof exports != "undefined") {
 						var anchorRef = resp[1]
 						OAT.Dom.attach(th, "click", ref);
 						var callback = self.getOrderReference(self.rowConditions[j], anchorRef, ref, div);
-						self.gd.addSource(div, self.process, self.pivotContainer, callback);
+						self.gd.addSource(div, self.process, self.pivotContainer, self.mFlexGrid, callback);
 						self.gd.addTarget(th);
 					}
 					th.conditionIndex = self.rowConditions[j];
@@ -23320,7 +23365,7 @@ if (typeof exports != "undefined") {
 					var anchorRef = resp[1];
 					OAT.Dom.attach(th, "click", ref);
 					var callback = self.getOrderReference(self.rowConditions[j], anchorRef, ref, div);
-					self.gd.addSource(div, self.process, self.pivotContainer, callback);
+					self.gd.addSource(div, self.process, self.pivotContainer, self.mFlexGrid, callback);
 					self.gd.addTarget(th);
 					th.conditionIndex = self.rowConditions[j];
 
@@ -23408,7 +23453,7 @@ if (typeof exports != "undefined") {
 
 				OAT.Dom.attach(th, "click", ref);
 				var callback = self.getOrderReference(self.colConditions[i], anchorRef, ref, div);
-				self.gd.addSource(div, self.process, self.pivotContainer, callback);
+				self.gd.addSource(div, self.process, self.pivotContainer, self.mFlexGrid, callback);
 				self.gd.addTarget(th);
 			}
 			var divImg = OAT.Dom.create("div", { position: "absolute", right: "0px", bottom: "2px", width: "12px", height: "12px" });
@@ -23442,7 +23487,7 @@ if (typeof exports != "undefined") {
 			var anchorRef = resp[1]
 			OAT.Dom.attach(th, "click", ref);
 			var callback = self.getOrderReference(self.colConditions[i], anchorRef, ref, div);
-			self.gd.addSource(div, self.process, self.pivotContainer,  callback);
+			self.gd.addSource(div, self.process, self.pivotContainer, self.mFlexGrid, callback);
 			self.gd.addTarget(th);
 			th.conditionIndex = self.colConditions[i];
 			th.appendChild(div);
@@ -26969,12 +27014,22 @@ if (typeof exports != "undefined") {
 			//draw selected node
 			self.RedrawSelectedNode();
 			
+			self.previousScrollTop = jQuery(window).scrollTop();
 			setInterval(function () {
 				//verificar que sea pivot
 				if ((jQuery("#" + self.controlName + "_" + self.query).length > 0) && (jQuery("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table")) {
 					if ((jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + self.controlName + "_" + self.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
 						jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")
 					}
+				}
+				
+				if (self.mFlexGrid) {
+					var actualScrollTo = jQuery(window).scrollTop();
+					var diffScroll = Math.abs(self.previousScrollTop - actualScrollTo);
+					if (diffScroll > 3){
+						jQuery(".oat_winrect_container").css({ display: "none" });
+					}
+					self.previousScrollTop = actualScrollTo;
 				}
 			},	150)
 
