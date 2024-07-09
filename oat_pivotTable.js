@@ -10515,11 +10515,26 @@ var jsPDF = (function () {
 
 		}
 		
-		this.setPageDataForTable = function(resXML) {
+		this.setPageDataForTable = function(resXML, UcId, refreshData) { 
+		
+			if ((refreshData != undefined) && ((refreshData.pageSizeChange) || (refreshData.titleChange))) {
+				
+				if (refreshData.titleChange)
+				{
+					jQuery("#" + OAT_JS.grid.gridData[UcId].controlName + "_grid_top_div #span_txt_pivot")[0].innerHTML = refreshData.title;
+				} else
+				{
+					OAT_JS.grid.redraw(OAT_JS.grid.gridData[UcId].grid.oat_impl , UcId, resXML, true,  OAT_JS.grid.gridData[UcId].grid.DataFieldOrder != "", 1, true, true, refreshData.pageSize)
+				}
+
+			
+				
+			} else {
+		
 			switch(self.oat_component.lastCallToQueryViewer) {
 				case "getDataForTable":
 					if (self.oat_component.lastCallData.PageNumber == 0) { self.oat_component.lastCallData.PageNumber = 1, self.oat_component.lastCallData.RecalculateCantPages = false; }
-					OAT_JS.grid.redraw(self.oat_component.lastCallData.self, self.oat_component.lastCallData.UcId, resXML, self.oat_component.lastCallData.RecalculateCantPages, self.oat_component.lastCallData.DataFieldOrder != "", self.oat_component.lastCallData.PageNumber, self.oat_component.lastCallData.fromExternalRefresh)
+					OAT_JS.grid.redraw(self.oat_component.lastCallData.self, self.oat_component.lastCallData.UcId, resXML, self.oat_component.lastCallData.RecalculateCantPages, self.oat_component.lastCallData.DataFieldOrder != "", self.oat_component.lastCallData.PageNumber, self.oat_component.lastCallData.fromExternalRefresh, false)
 				break;
 				case "getAllDataRowsForExport":
 					var dataString = resXML;
@@ -10558,6 +10573,7 @@ var jsPDF = (function () {
 
 					OAT_JS.grid.gridData[UcId].grid.removeAllCollapseRows()
 				break;
+			}
 			}
 		}
 		
@@ -11380,7 +11396,7 @@ var jsPDF = (function () {
 					}
 					
 
-					actual_rowsPerPage = parseInt(jQuery("#" + self.controlName + "tablePagination_rowsPerPage")[0].value);
+					/*actual_rowsPerPage = parseInt(jQuery("#" + self.controlName + "tablePagination_rowsPerPage")[0].value);
 					if (!isNaN(actual_rowsPerPage)) {
 						if (self.rowsPerPage != actual_rowsPerPage) {
 							var stateChange = (self.rowsPerPage != "")
@@ -11392,7 +11408,7 @@ var jsPDF = (function () {
 						} else {
 							self.rowsPerPage = actual_rowsPerPage;
 						}
-					}
+					}*/
 					var wd2 = containerWidth;
 
 					jQuery("#" + self.controlName + "_tablePagination").css({
@@ -12377,7 +12393,7 @@ var jsPDF = (function () {
 						dataFieldId = _self.dataField
 					else
 					    dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[origen];
-					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Ascending", "", "")
+					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, false, dataFieldId, "Ascending", "", "")
 				
 				var idI = "i_" + this.getAttribute("id");
 				var inputAsc = jQuery("#"+idI)[0];
@@ -12424,7 +12440,7 @@ var jsPDF = (function () {
 						dataFieldId = _self.dataField
 					else
 					    dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[origen]; //_self.grid.columns[colNumber].getAttribute("dataField"); 
-					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, false, dataFieldId, "Descending", "", "");
+					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, false, dataFieldId, "Descending", "", "");
 				
 				var idI = "i_" + this.getAttribute("id");
 				var inputDsc = jQuery("#"+idI)[0];
@@ -12589,7 +12605,7 @@ var jsPDF = (function () {
 			var restoreview_sel_div = jQuery('<div></div>')[0];
 
 			OAT.Dom.attach(restoreview_sel_div, "click", function () {
-				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", "", "", true)
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, true, "", "", "", "", true)
 				refresh()
 			});
 
@@ -12713,7 +12729,7 @@ var jsPDF = (function () {
 
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];//_self.grid.columns[colNumber].getAttribute("dataField")
-				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: oper, values: value })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, true, "", "", dataFieldId, { op: oper, values: value })
 			
 
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
@@ -12723,7 +12739,7 @@ var jsPDF = (function () {
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];
 				//_self.grid.conditions[colNumber].blackList = [];
-				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "all", values: [] })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, true, "", "", dataFieldId, { op: "all", values: [] })
 			
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
 			OAT.distinctDivs(_self, div);
@@ -12732,7 +12748,7 @@ var jsPDF = (function () {
 		var noneRef = function () {
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];
-				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "none", values: [] })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, true, "", "", dataFieldId, { op: "none", values: [] })
 			
 
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
@@ -12742,7 +12758,7 @@ var jsPDF = (function () {
 		var reverseRef = function () {
 			
 				var dataFieldId = OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber];
-				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataFieldId, { op: "reverse", values: [] })
+				OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, true, "", "", dataFieldId, { op: "reverse", values: [] })
 			
 
 			OAT.distinctDivs(_self, div);
@@ -12893,7 +12909,7 @@ var jsPDF = (function () {
 				oper = "push";
 			}
 			var filteredValues = _self.grid.conditions[colNumber].blackList
-			OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, _self.grid.rowsPerPage, true, "", "", dataField, { op: oper, values: value })
+			OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, true, "", "", dataField, { op: oper, values: value })
 
 			OAT.onFilteredChangedEventHandle(_self, colNumber);
 		}
@@ -14283,7 +14299,7 @@ var jsPDF = (function () {
 
 	OAT.SaveStateWhenServerPaging = function (self, UcId) {
 		localStorage.setItem(OAT.getURL() + self.grid.controlName + self.grid.query, JSON.stringify({
-			pageSize: self.rowsPerPage,
+			pageSize: OAT_JS.grid.gridData[UcId].rowsPerPage,
 			dataFieldOrder: self.dataFieldOrder,
 			orderType: self.orderType,
 			filters: self.filterInfo,
@@ -14586,8 +14602,8 @@ if (typeof exports != "undefined") {
 }
 
 //TABLE
-	function setPageDataForTable(oat_element, resXML){
-		oat_element.setPageDataForTable(resXML)
+	function setPageDataForTable(oat_element, resXML, refreshData){
+		oat_element.setPageDataForTable(resXML, oat_element.UcId, refreshData)
 	}
 
 
@@ -15400,12 +15416,8 @@ if (typeof exports != "undefined") {
 				OAT_JS.grid.lastCallData = { "self": renderJSPivotInter, "UcId": OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, "RecalculateCantPages":recalculateCantPages, "DataFieldOrder":DataFieldOrder, "PageNumber": pageNumber, "fromExternalRefresh": fromExternalRefresh}
 				renderJSPivotInter.requestPageDataForTable(pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged, OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection, OAT_JS.grid.gridData[UcId].Container)
 				
-				/*qv.collection[OAT_JS.grid.gridData[UcId].IdForQueryViewerCollection].getPageDataForTable((function (resXML) {
-					if (pageNumber == 0) { pageNumber = 1, recalculateCantPages = false; }
-					OAT_JS.grid.redraw(renderJSPivotInter, UcId, resXML, recalculateCantPages, DataFieldOrder != "", pageNumber, fromExternalRefresh)
-				}).closure(renderJSPivotInter), [pageNumber, rowsPerPage, recalculateCantPages, OAT_JS.grid.gridData[UcId].dataFieldOrder, OAT_JS.grid.gridData[UcId].orderType, OAT_JS.grid.gridData[UcId].filterInfo, layoutChanged]);*/
 			} else {
-				OAT_JS.grid.redraw(renderJSPivotInter, UcId, OAT_JS.grid.pageInCache(UcId, pageNumber), false, false, pageNumber, true)
+				OAT_JS.grid.redraw(renderJSPivotInter, UcId, OAT_JS.grid.pageInCache(UcId, pageNumber), false, false, pageNumber, true, false) 
 			}
 		}
 		
@@ -15501,6 +15513,7 @@ if (typeof exports != "undefined") {
 				disableColumnSort, UcId, IdForQueryViewerCollection, rememberLayout, _mthis.serverPaging, _mthis.HideDataFilds, _mthis.orderFildsHidden, _mthis.TableOrderFilds, _mthis.relativePath,
 				this.gridData[UcId].selection, _mthis.pivotParams.Title, _mthis.translations );
 			this.gridData[UcId].grid.oat_component = this;
+			this.gridData[UcId].grid.oat_impl      = _mthis;
 			this.gridData[UcId].QueryViewerCollectionItem = QueryViewerCollection[IdForQueryViewerCollection];
 			this.gridData[UcId].Events = _mthis;
 			this.gridData[UcId].translations = _mthis.translations;
@@ -15718,7 +15731,7 @@ if (typeof exports != "undefined") {
 
 			return this.gridData[UcId].grid;
 		},
-		redraw: function (_mthis, UcId, xmlData, recalculateCantPages, moveToFirstPage, pageNumber, fromExternalRefresh) {
+		redraw: function (_mthis, UcId, xmlData, recalculateCantPages, moveToFirstPage, pageNumber, fromExternalRefresh, fromServerRefresh, pageSize) {
 			//add data to cache
 			if (!this.pageInCache(UcId, pageNumber)) {
 				this.gridData[UcId].gridCache.push({ page: pageNumber, pageData: xmlData })
@@ -15740,6 +15753,19 @@ if (typeof exports != "undefined") {
 			_mthis.getDataFromXML(xmlData, this.gridData[UcId].TableOrderFields);
 			if (_mthis.ServerPageCount >= 0) {
 				this.gridData[UcId].actualCantPages = _mthis.ServerPageCount;
+				if (fromServerRefresh) { 
+					this.gridData[UcId].rowsPerPage     = pageSize; 
+					_mthis.pageSize                     = pageSize;
+					this.gridData[UcId].grid.rowsPerPage= pageSize;
+				}
+			}
+			
+			if (fromServerRefresh) {
+				for(var i = 0; i < this.gridData[UcId].columnDataField.length; i++){
+					var dtF = this.gridData[UcId].columnDataField[i]
+					this.gridData[UcId].blackLists[dtF] = { state: "all", visibles: [], hiddens: [], defaultAction: "Include", hasNull: true };
+					this.gridData[UcId].filterInfo = []
+				}
 			}
 			
 			//redraw header when neded
@@ -15792,6 +15818,17 @@ if (typeof exports != "undefined") {
 							jQuery('#' + this.gridData[UcId].controlName + '_tablePagination_paginater').css('display', 'none');
 						} else {
 							jQuery('#' + this.gridData[UcId].controlName + '_tablePagination_paginater').css('display', '');
+						}
+						
+						if (fromServerRefresh) {
+							jQuery("#" + this.gridData[UcId].controlName + "_tablePagination select")[0].value = pageSize; 
+							
+							jQuery("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_firstPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_prevPage").addClass("disabled_pivot_button");
+							if (_mthis.ServerPageCount > 1) {
+								jQuery("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").removeClass("disabled_pivot_button")
+							} else {
+								jQuery("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").addClass("disabled_pivot_button");
+							}
 						}
 					}
 				}
