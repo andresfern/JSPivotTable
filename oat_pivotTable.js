@@ -25,14 +25,30 @@ var OAT = {};
 		allowDefaultDrag: 1
 	}
 
+	OAT.findInContainer = function (selector) {
+		if (selector) {
+			return jQuery(OAT.qvContainer).find(selector);
+		}
+		return jQuery(OAT.qvContainer);
+	}
+
 	OAT.$ = function (something) {
+		let elm = something;
+
+		if (!OAT.qvContainer) {
+			console.log(something, OAT.qvContainer);
+			debugger;
+		}
 		if (typeof (something) == "string") {
-			var elm = jQuery("#"+something)[0];
-		} else {
-			var elm = something;
+			// find in the container
+			let elm1 = jQuery(OAT.qvContainer).find("#" + something);
+			if (elm1.length === 0) {
+				elm1 = OAT.$("#" + something);
+			}
+			elm = elm1[0];
 		}
 		if (something instanceof Array) {
-			var elm = [];
+			elm = [];
 			for (var i = 0; i < something.length; i++) { elm.push(OAT.$(something[i])); }
 		}
 		if (!elm) return false;
@@ -2175,7 +2191,6 @@ var jsPDF = (function () {
 						case 'datauri':
 						case 'dataurl':
 							return 'data:application/pdf;base64,' + btoa(buildDocument());
-							break;
 						case 'dataurlnewwindow':
 							window.open('data:application/pdf;base64,' + btoa(buildDocument()));
 							break;
@@ -14447,7 +14462,9 @@ if (typeof exports != "undefined") {
 	
 }
 	
-	function renderJSPivot(pivotParams, QueryViewerCollection, translations, qViewer) {
+	function renderJSPivot(pivotParams, QueryViewerCollection, translations, qViewer, qvContainer) {
+		OAT.qvContainer = qvContainer;
+		
 		if (pivotParams.RealType != "Table") {
 			pivotParams.ServerPaging = false;
 		}
@@ -15311,14 +15328,14 @@ if (typeof exports != "undefined") {
 			}
 
 			if (QueryViewerCollection[renderJSPivotInter.UcId]._ControlRenderedTo) {
-				jQuery("#"+renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").remove(); //jQuery(".pivot_pag_div").remove()
+				OAT.findInContainer("#"+renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").remove(); //OAT.findInContainer(".pivot_pag_div").remove()
 			}
 
 			if (renderJSPivotInter.pageSize) {
 				
 					var options = {
 						currPage: renderJSPivotInter.ServerPageNumber,
-						ignoreRows: jQuery('tbody tr[visibQ=tf]', jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)),
+						ignoreRows: OAT.findInContainer('tbody tr[visibQ=tf]', OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)),
 						optionsForRows: OAT.AddItemToList([10, 15, 20], renderJSPivotInter.InitMetadata.RowsPerPage),
 						rowsPerPage: rowNum != 'undefined' ? rowNum : 10,
 						jstype: "table",
@@ -15329,47 +15346,47 @@ if (typeof exports != "undefined") {
 						translations: translations,
 						control: renderJSPivotInter
 					}
-					OAT.partialTablePagination(jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query),options);
-					var wd2 = jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].clientWidth - 1;
-					jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ width: wd2 + "px" });
-					if (jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css('display') === 'none') {
-						jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css({ marginBottom: "0px" });
+					OAT.partialTablePagination(OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query),options);
+					var wd2 = OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].clientWidth - 1;
+					OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ width: wd2 + "px" });
+					if (OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css('display') === 'none') {
+						OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css({ marginBottom: "0px" });
 					} else {
-						jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css("margin-bottom", "0px");
+						OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css("margin-bottom", "0px");
 					}
 
-					if ((jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
-						jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ marginBottom: "0px" })
+					if ((OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater").length > 0) && (OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination")[0].getBoundingClientRect().bottom < OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
+						OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ marginBottom: "0px" })
 					}
-					var wd = jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
-					jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
+					var wd = OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
+					OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
 
 					if ((renderJSPivotInter.serverPaging) && ((renderJSPivotInter.pageSize == 10) || (renderJSPivotInter.ServerRecordCount < 10))) {
 						if (renderJSPivotInter.ServerPageCount <= 1) { //hide pagiantion
-							jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ display: "none" });
+							OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ display: "none" });
 						}
 					}
 				
 
 			}
-			var wd = jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
+			var wd = OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
 			try {
-				if (jQuery("#MAINFORM")[0].className.indexOf("form-horizontal") > -1) {
+				if (OAT.findInContainer("#MAINFORM")[0].className.indexOf("form-horizontal") > -1) {
 					wd = wd + 4;
 				}
 			} catch (Error) {
 			}
-			jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
+			OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
 
 			//set interval for handler values infinite scroll
 			if (self.serverPaging) {
 				setInterval(function () {
-					for (var t = 0; t < jQuery(".oat_winrect_container .pivot_popup_fix").length; t++) {
-						if ((!jQuery(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display) ||
-							(jQuery(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display != "none")) {
+					for (var t = 0; t < OAT.findInContainer(".oat_winrect_container .pivot_popup_fix").length; t++) {
+						if ((!OAT.findInContainer(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display) ||
+							(OAT.findInContainer(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display != "none")) {
 
-							if (jQuery(".oat_winrect_container .pivot_popup_fix").length > 0) {
-								var element = jQuery(".oat_winrect_container .pivot_popup_fix")[t];
+							if (OAT.findInContainer(".oat_winrect_container .pivot_popup_fix").length > 0) {
+								var element = OAT.findInContainer(".oat_winrect_container .pivot_popup_fix")[t];
 								var scrollBottom = element.scrollHeight - element.clientHeight - element.scrollTop
 								if (scrollBottom < 25) {
 									var UcId = element.getAttribute("ucid")
@@ -15808,12 +15825,12 @@ if (typeof exports != "undefined") {
 			
 			this.gridData[UcId].grid.removeAllRows();
 			if (recalculateCantPages) {
-				if (jQuery("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_totalPages").length > 0) {
-					OAT.replaceTextNode(jQuery("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_totalPages")[0], " " + _mthis.ServerPageCount)
+				if (OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_totalPages").length > 0) {
+					OAT.replaceTextNode(OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_totalPages")[0], " " + _mthis.ServerPageCount)
 					if ((_mthis.ServerPageCount <= 1) /*&& (this.gridData[UcId].rowsPerPage == 10)*/) { //hide pagiantion
-						jQuery("#" + this.gridData[UcId].controlName + "_tablePagination ").css({ display: "none" });
+						OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination ").css({ display: "none" });
 					} else {
-						jQuery("#" + this.gridData[UcId].controlName + "_tablePagination ").css({ display: "" });
+						OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination ").css({ display: "" });
 						if (_mthis.ServerPageCount == 1) {
 							jQuery('#' + this.gridData[UcId].controlName + '_tablePagination_paginater').css('display', 'none');
 						} else {
@@ -15821,13 +15838,13 @@ if (typeof exports != "undefined") {
 						}
 						
 						if (fromServerRefresh) {
-							jQuery("#" + this.gridData[UcId].controlName + "_tablePagination select")[0].value = pageSize; 
+							OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination select")[0].value = pageSize; 
 							
-							jQuery("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_firstPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_prevPage").addClass("disabled_pivot_button");
+							OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_firstPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_prevPage").addClass("disabled_pivot_button");
 							if (_mthis.ServerPageCount > 1) {
-								jQuery("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").removeClass("disabled_pivot_button")
+								OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").removeClass("disabled_pivot_button")
 							} else {
-								jQuery("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").addClass("disabled_pivot_button");
+								OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").addClass("disabled_pivot_button");
 							}
 						}
 					}
@@ -15891,7 +15908,7 @@ if (typeof exports != "undefined") {
 			//set new current page
 			OAT_JS.grid.gridData[UcId].actualPageNumber = pageNumber
 			currPageNumber[this.gridData[UcId].controlName] = pageNumber
-			jQuery("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_currPage").val(pageNumber)
+			OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_currPage").val(pageNumber)
 			
 			this.gridData[UcId].rowsData = _mthis.data;
 			for (var i = 0; i < _mthis.data.length; i++) {
@@ -16534,7 +16551,7 @@ if (typeof exports != "undefined") {
 			}
 		},
 		changeValues: function (UcId, dataField, columnNumber, data, filterText) { //when filter by search filter, delete pairs and show new ones
-			var searchInput = jQuery("#" + UcId + dataField)[0];
+			var searchInput = OAT.findInContainer("#" + UcId + dataField)[0];
 
 			if (((searchInput.value) || (searchInput.value == "")) && (searchInput.value != filterText)) {
 				return;
@@ -16807,8 +16824,8 @@ if (typeof exports != "undefined") {
 			}
 
 			this.gridData[UcId].rowsPerPage = this.gridData[UcId].defaultValues.rowsPerPage
-			if (jQuery("#" + this.gridData[UcId].grid.controlName + "tablePagination_rowsPerPage").length > 0) {
-				jQuery("#" + this.gridData[UcId].grid.controlName + "tablePagination_rowsPerPage")[0].value = this.gridData[UcId].defaultValues.rowsPerPage
+			if (OAT.findInContainer("#" + this.gridData[UcId].grid.controlName + "tablePagination_rowsPerPage").length > 0) {
+				OAT.findInContainer("#" + this.gridData[UcId].grid.controlName + "tablePagination_rowsPerPage")[0].value = this.gridData[UcId].defaultValues.rowsPerPage
 			}
 
 		},
@@ -18770,13 +18787,13 @@ if (typeof exports != "undefined") {
 			this.PivotTitle = pivotTitle
 			this.TitleDiv = OAT.$(this.TitleDivId);
 			if (!this.TitleDiv){
-				 jQuery("#"+this.TitleDivId).remove()
+				 OAT.findInContainer("#"+this.TitleDivId).remove()
 				 this.TitleDiv = OAT.Dom.create("div", {});
 				 this.TitleDiv.id = this.TitleDivId
-				 jQuery("#" + containerName).prepend(this.TitleDiv); 
+				 OAT.findInContainer("#" + containerName).prepend(this.TitleDiv); 
 			}
 		} else {
-			jQuery("#"+this.TitleDivId).remove()
+			OAT.findInContainer("#"+this.TitleDivId).remove()
 		}
 		
 		this.defCArray = ["rgb(153,153,255)", "rgb(153,51,205)", "rgb(255,255,204)", "rgb(204,255,255)", "rgb(102,0,102)",
@@ -19153,7 +19170,7 @@ if (typeof exports != "undefined") {
 							self.initValueRead(self, 0, self.stateLoad);
 						}
 						
-						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+						OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
 						//qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
 	
 					/*} else {
@@ -19166,7 +19183,7 @@ if (typeof exports != "undefined") {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.preGoWhenServerPagination(true);
-						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+						OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
 
 					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
@@ -19178,7 +19195,7 @@ if (typeof exports != "undefined") {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.goWhenServerPagination(false, true);
-						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+						OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
 
 					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
@@ -19189,7 +19206,7 @@ if (typeof exports != "undefined") {
 					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.goWhenServerPagination(false, false);
-						jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+						OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
 					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
@@ -19223,7 +19240,7 @@ if (typeof exports != "undefined") {
 						}
 						self.cleanGridCache();
 					}
-					jQuery("#"+self.containerName).removeClass("gx-qv-loading")
+					OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
 					//qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
 					break;
 			  }
@@ -20351,10 +20368,10 @@ if (typeof exports != "undefined") {
 			xml = xml + '<BODY>';
 			xml = xml + '<TABLE border="2">'
 
-			for (var i = 0; i < jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
+			for (var i = 0; i < OAT.findInContainer("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
 				xml = xml + '<TR>';
 
-				var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
+				var tRow = OAT.findInContainer("#" + self.controlName + "_" + self.query + " tr")[i];
 				for (var j = 0; j < tRow.children.length; j++) {
 					var childText = OAT.removeIconFont(tRow.children[j].textContent).trim();
 					var hidden = tRow.children[j].getAttribute('hidden');
@@ -20443,10 +20460,10 @@ if (typeof exports != "undefined") {
 		this.ExportToExcel = function (fileName) {
 			var table = '<table border="2">'
 
-			for (var i = 0; i < jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
+			for (var i = 0; i < OAT.findInContainer("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
 				table = table + '<tr>';
 
-				var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
+				var tRow = OAT.findInContainer("#" + self.controlName + "_" + self.query + " tr")[i];
 				for (var j = 0; j < tRow.children.length; j++) {
 					var childText = OAT.removeIconFont(tRow.children[j].textContent.replace(/^\s+|\s+$/g, '')).trim();
 					var hidden = tRow.children[j].getAttribute('hidden');
@@ -21071,7 +21088,7 @@ if (typeof exports != "undefined") {
 				var actual_rowsPerPage = 0;
 				
 				//find max width of inner_filter_div
-				var pageFilter = jQuery("#" + UcId + "_" + self.query + "_pivot_page").find(".inner_filter_div")
+				var pageFilter = OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").find(".inner_filter_div")
 				var MaxWidthFilters = 0;
 				for (var pFIndx = 0; pFIndx < pageFilter.length; pFIndx++){
 					if (MaxWidthFilters < pageFilter[pFIndx].offsetWidth){
@@ -21080,29 +21097,29 @@ if (typeof exports != "undefined") {
 				}
 				MaxWidthFilters = (MaxWidthFilters > 0) ? MaxWidthFilters + 8 : MaxWidthFilters; 
 				
-				if (jQuery("#" + self.controlName + "_" + self.query + "tablePagination_rowsPerPage").length > 0) {
-					actual_rowsPerPage = parseInt(jQuery("#" + self.controlName + "_" + self.query + "tablePagination_rowsPerPage")[0].value);
+				if (OAT.findInContainer("#" + self.controlName + "_" + self.query + "tablePagination_rowsPerPage").length > 0) {
+					actual_rowsPerPage = parseInt(OAT.findInContainer("#" + self.controlName + "_" + self.query + "tablePagination_rowsPerPage")[0].value);
 					if (!isNaN(actual_rowsPerPage)) {
-						if (jQuery("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table") {
+						if (OAT.findInContainer("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table") {
 							if ((!autoResize)) {
-								var clientWdt = jQuery("#" + self.containerName)[0].clientWidth
+								var clientWdt = OAT.findInContainer("#" + self.containerName)[0].clientWidth
 								if (clientWdt < MaxWidthFilters) {
-									jQuery("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
+									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
 								} else {
-									jQuery("#" + self.controlName + "_" + self.query).css({ width: (clientWdt) + "px" });
+									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: (clientWdt) + "px" });
 								}
 							}
-							var wd = jQuery("#" + self.controlName + "_" + self.query)[0].offsetWidth;
+							var wd = OAT.findInContainer("#" + self.controlName + "_" + self.query)[0].offsetWidth;
 							
 							
 							if (wd >= MaxWidthFilters){
 								
-								var actualWidth = jQuery("#" + self.controlName + "_" + self.query + "_tablePagination")[0].clientWidth
+								var actualWidth = OAT.findInContainer("#" + self.controlName + "_" + self.query + "_tablePagination")[0].clientWidth
 								if ((actualWidth > MaxWidthFilters + 1) || (actualWidth < MaxWidthFilters - 1)) {
-									jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" });
-									jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" });
+									OAT.findInContainer("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" });
+									OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" });
 	
-									jQuery("#" + self.controlName + "_" + self.query + "_tablePagination").css({ width: wd + "px" });
+									OAT.findInContainer("#" + self.controlName + "_" + self.query + "_tablePagination").css({ width: wd + "px" });
 
 									antepreviusValuePivotWidth = previousValuePivotWidth
 									previousValuePivotWidth = wd
@@ -21110,12 +21127,12 @@ if (typeof exports != "undefined") {
 								
 								
 							} else {
-								jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: MaxWidthFilters + "px" });
-								jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: MaxWidthFilters + "px" });
+								OAT.findInContainer("#" + UcId + "_" + self.query + "_title_div").css({ width: MaxWidthFilters + "px" });
+								OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").css({ width: MaxWidthFilters + "px" });
 	
-								jQuery("#" + self.controlName + "_" + self.query + "_tablePagination").css({ width: MaxWidthFilters + "px" });
+								OAT.findInContainer("#" + self.controlName + "_" + self.query + "_tablePagination").css({ width: MaxWidthFilters + "px" });
 								
-								jQuery("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
+								OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
 								
 								antepreviusValuePivotWidth = previousValuePivotWidth
 								previousValuePivotWidth = MaxWidthFilters
@@ -21126,21 +21143,21 @@ if (typeof exports != "undefined") {
 						
 					}
 				} else {
-					if (jQuery("#" + self.controlName + "_" + self.query)[0] != undefined) {
-						if (jQuery("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table") {
+					if (OAT.findInContainer("#" + self.controlName + "_" + self.query)[0] != undefined) {
+						if (OAT.findInContainer("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table") {
 							
 							
 							
 							if (!autoResize) {
-								var clientWdt = jQuery("#" + self.containerName)[0].clientWidth
+								var clientWdt = OAT.findInContainer("#" + self.containerName)[0].clientWidth
 								if (clientWdt < MaxWidthFilters) {
-									jQuery("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
+									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
 								} else {
-									jQuery("#" + self.controlName + "_" + self.query).css({ width: (clientWdt) + "px" });
+									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: (clientWdt) + "px" });
 								}
 							}
 
-							var wd = jQuery("#" + self.controlName + "_" + self.query)[0].offsetWidth
+							var wd = OAT.findInContainer("#" + self.controlName + "_" + self.query)[0].offsetWidth
 							
 							if (wd < MaxWidthFilters){
 								
@@ -21148,13 +21165,13 @@ if (typeof exports != "undefined") {
 									((previousValuePivotWidth > MaxWidthFilters + 6) || (previousValuePivotWidth < MaxWidthFilters - 6)
 										|| (antepreviusValuePivotWidth > previousValuePivotWidth + 6) || (antepreviusValuePivotWidth < previousValuePivotWidth - 6))) {
 								
-									jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: MaxWidthFilters + "px" });
-									jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: MaxWidthFilters + "px" });
+									OAT.findInContainer("#" + UcId + "_" + self.query + "_title_div").css({ width: MaxWidthFilters + "px" });
+									OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").css({ width: MaxWidthFilters + "px" });
 									antepreviusValuePivotWidth = previousValuePivotWidth
 									previousValuePivotWidth = MaxWidthFilters
 									
 									
-									jQuery("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
+									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
 								}
 								
 							} else {
@@ -21163,8 +21180,8 @@ if (typeof exports != "undefined") {
 									((previousValuePivotWidth > wd + 6) || (previousValuePivotWidth < wd - 6)
 										|| (antepreviusValuePivotWidth > previousValuePivotWidth + 6) || (antepreviusValuePivotWidth < previousValuePivotWidth - 6))) {
 									
-									jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" });
-									jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" });
+									OAT.findInContainer("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" });
+									OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" });
 									antepreviusValuePivotWidth = previousValuePivotWidth
 									previousValuePivotWidth = wd
 								}
@@ -21249,8 +21266,8 @@ if (typeof exports != "undefined") {
 
 				//add items to page select if exists
 				try {
-					for (var iP = 0; iP < jQuery("#" + self.UcId + "_" + self.query + "_pivot_page").find("select").length; iP++) {
-						var s = jQuery("#" + self.UcId + "_" + self.query + "_pivot_page").find("select")[iP];
+					for (var iP = 0; iP < OAT.findInContainer("#" + self.UcId + "_" + self.query + "_pivot_page").find("select").length; iP++) {
+						var s = OAT.findInContainer("#" + self.UcId + "_" + self.query + "_pivot_page").find("select")[iP];
 						var filterDim = parseInt(s.getAttribute("id").replace("page_select_", ""))
 						var index = self.filterIndexes[filterDim]
 
@@ -21608,11 +21625,11 @@ if (typeof exports != "undefined") {
 						cond.sort = 1; self.stateChanged = true;
 						self.getDataForPivot(self.UcId, 1, self.rowsPerPage, true, cond.dataField, "", "", "");
 						var idI = "i_" + this.getAttribute("id");
-						var inputAsc = jQuery("#" + idI)[0];
+						var inputAsc = OAT.findInContainer("#" + idI)[0];
 						inputAsc.textContent = "radio_button_checked";
 						
 						var idJ = idI.replace("asc", "desc");
-						var inpdsc =  jQuery("#" + idJ)[0];
+						var inpdsc =  OAT.findInContainer("#" + idJ)[0];
 						inpdsc.textContent = "radio_button_unchecked";
 					
 						
@@ -21648,9 +21665,9 @@ if (typeof exports != "undefined") {
 						cond.sort = -1; self.stateChanged = true;
 						self.getDataForPivot(self.UcId, 1, self.rowsPerPage, true, cond.dataField, "", "", "")
 						var idI = "i_" + this.getAttribute("id");
-						var inputDsc = jQuery("#" + idI)[0];
+						var inputDsc = OAT.findInContainer("#" + idI)[0];
 						inputDsc.textContent = "radio_button_checked";
-						var inputAsc = jQuery("#" + idI.replace("desc", "asc"))[0];
+						var inputAsc = OAT.findInContainer("#" + idI.replace("desc", "asc"))[0];
 						inputAsc.textContent = "radio_button_unchecked";
 						
 					
