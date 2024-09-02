@@ -11396,16 +11396,13 @@ var jsPDF = (function () {
 				var actual_rowsPerPage = 0;
 				if (OAT.jQuery("#" + self.controlName + "tablePagination_rowsPerPage").length > 0) {
 
-					if (!OAT_JS.grid.gridData[self.UcId].autoResize){
-						var containerWidth = OAT.jQuery()[0].clientWidth
-
-						OAT.jQuery("#" + self.controlName).css({
-							width: containerWidth + "px"
-						});
-					} else {
-						containerWidth = OAT.jQuery("#" + self.controlName)[0].clientWidth
-					}
+					var containerWidth = (!OAT_JS.grid.gridData[self.UcId].autoResize)
+						? OAT.jQuery(".divIeContainer")[0].clientWidth // OAT.jQuery()[0].clientWidth
+						: OAT.jQuery("#" + self.controlName)[0].clientWidth;
 					
+					OAT.jQuery("#" + self.controlName).css({
+						width: containerWidth + "px"
+					});
 
 					/*actual_rowsPerPage = parseInt(OAT.jQuery("#" + self.controlName + "tablePagination_rowsPerPage")[0].value);
 					if (!isNaN(actual_rowsPerPage)) {
@@ -11420,13 +11417,13 @@ var jsPDF = (function () {
 							self.rowsPerPage = actual_rowsPerPage;
 						}
 					}*/
-					var wd2 = containerWidth;
+					// var wd2 = containerWidth;
 
 					OAT.jQuery("#" + self.controlName + "_tablePagination").css({
-						width: wd2 + "px"
+						width: containerWidth + "px"
 					});
 					OAT.jQuery("#" + self.controlName + "_grid_top_div").css({
-						width: wd2 + "px"
+						width: containerWidth + "px"
 					});
 
 					//ajustar ancho de footer y top div si el contenido sobrepasa al contenedor
@@ -11443,20 +11440,16 @@ var jsPDF = (function () {
 					
 				} else {
 
-					if (!OAT_JS.grid.gridData[self.UcId].autoResize){
-						var containerWidth = OAT.jQuery()[0].clientWidth
+					var containerWidth = (!OAT_JS.grid.gridData[self.UcId].autoResize)
+						? OAT.jQuery(".divIeContainer")[0].clientWidth // OAT.jQuery()[0].clientWidth
+						: OAT.jQuery("#" + self.controlName)[0].clientWidth;
 						
 						OAT.jQuery("#" + self.controlName).css({
 							width: containerWidth + "px"
 						});
-					} else {
-						containerWidth = OAT.jQuery("#" + self.controlName)[0].clientWidth
-					}
-
-					var wid_topBar = containerWidth;
 
 					OAT.jQuery("#" + self.controlName + "_grid_top_div").css({
-						width: wid_topBar + "px"
+						width: containerWidth + "px"
 					})
 					jQuery(".oatgrid").css({ marginBottom: "0px" })
 
