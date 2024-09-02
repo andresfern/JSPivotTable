@@ -37,7 +37,7 @@ var OAT = {};
 
 		if (typeof (something) == "string") {
 			// find in the container
-			let elm1 = jQuery(OAT.qvContainer).find("#" + something);
+			let elm1 = OAT.jQuery("#" + something);
 			if (elm1.length === 0) {
 				elm1 = OAT.$("#" + something);
 			}
@@ -10411,25 +10411,25 @@ var jsPDF = (function () {
 
 
 				var screenWidth = window.innerWidth;
-				var initialPopUpWidth = Math.max(jQuery(".ExportPopup")[0].clientWidth, 300)
+				var initialPopUpWidth = Math.max(OAT.jQuery(".ExportPopup")[0].clientWidth, 300)
 				var offsetLeft = jQuery(event.currentTarget).offset().left
 
 				var iconExport = event.currentTarget
 
-				jQuery(".ExportPopup").css({ left: -2500 + "px", top: 0 + "px" })
+				OAT.jQuery(".ExportPopup").css({ left: -2500 + "px", top: 0 + "px" })
 
 				//title
-				jQuery(".oat_winrect_title").find(".winrect_title_label").remove()
+				OAT.jQuery(".oat_winrect_title").find(".winrect_title_label").remove()
 
 				var spantitle = OAT.Dom.create("label");
 				if (self.isSD) {
-					jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
+					OAT.jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
 					spantitle.setAttribute("class", "winrect_title_label winrect_title_label_small");
 				} else {
 					spantitle.setAttribute("class", "winrect_title_label");
 				}
 				OAT.addTextNode(spantitle,  self.translations.GXPL_QViewerPopupTitle); //gx.getMessage("GXPL_QViewerPopupTitle"));
-				jQuery(".oat_winrect_title").append(spantitle)
+				OAT.jQuery(".oat_winrect_title").append(spantitle)
 
 				OAT.Dom.clear(self.exportPage);
 				//botton to allow show all filters in pop up
@@ -10437,11 +10437,11 @@ var jsPDF = (function () {
 				var div_upper = jQuery('<div></div>')[0];
 				div_upper.setAttribute("class", "upper_container");
 
-				jQuery('#divtoxml').remove();
-				jQuery('#divtoxls').remove();
-				jQuery('#divtoxlsx').remove();
-				jQuery('#divtoexport').remove();
-				jQuery('#divtohtml').remove();
+				OAT.jQuery('#divtoxml').remove();
+				OAT.jQuery('#divtoxls').remove();
+				OAT.jQuery('#divtoxlsx').remove();
+				OAT.jQuery('#divtoexport').remove();
+				OAT.jQuery('#divtohtml').remove();
 				someExport = self.appendExportToXmlOption(div_upper, someExport);
 				someExport = self.appendExportToHtmlOption(div_upper, someExport);
 				someExport = self.appendExportToPdfOption(div_upper, someExport);
@@ -10483,12 +10483,12 @@ var jsPDF = (function () {
 				setTimeout(function () {
 
 					var screenWidth = window.innerWidth;
-					var initialPopUpWidth = jQuery(".ExportPopup")[0].clientWidth
+					var initialPopUpWidth = OAT.jQuery(".ExportPopup")[0].clientWidth
 
 
 					if (initialPopUpWidth == 0) {
-						var last = jQuery(".ExportPopup").length;
-						initialPopUpWidth = jQuery(".ExportPopup")[last - 1].clientWidth
+						var last = OAT.jQuery(".ExportPopup").length;
+						initialPopUpWidth = OAT.jQuery(".ExportPopup")[last - 1].clientWidth
 					}
 
 					if (self.isSD) {//android
@@ -10498,23 +10498,23 @@ var jsPDF = (function () {
 
 						var padding = (screenWidth - initialPopUpWidth) / 2 + jQuery(window).scrollLeft()
 
-						jQuery(".ExportPopup").css({ left: padding + "px", top: jQuery(iconExport).offset().top + "px", width: initialPopUpWidth + "px" })
+						OAT.jQuery(".ExportPopup").css({ left: padding + "px", top: OAT.jQuery(iconExport).offset().top + "px", width: initialPopUpWidth + "px" })
 
 					} else {
 
-						var offsetLeft = jQuery(iconExport).offset().left
+						var offsetLeft = OAT.jQuery(iconExport).offset().left
 						
 						if (OAT_JS.grid.gridData[self.UcId].mFlexGrid) {  
 							if (offsetLeft + initialPopUpWidth + 15 < screenWidth) {
-								jQuery(".ExportPopup").css({ position:"fixed", left: jQuery(iconExport).offset().left + "px", top: ( jQuery(iconExport).offset().top - jQuery(window).scrollTop() ) + "px" })  
+								OAT.jQuery(".ExportPopup").css({ position:"fixed", left: OAT.jQuery(iconExport).offset().left + "px", top: ( OAT.jQuery(iconExport).offset().top - OAT.jQuery(window).scrollTop() ) + "px" })  
 							} else {
-								jQuery(".ExportPopup").css({ position:"fixed", left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top - jQuery(window).scrollTop()) + "px" })
+								OAT.jQuery(".ExportPopup").css({ position:"fixed", left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (OAT.jQuery(iconExport).offset().top - OAT.jQuery(window).scrollTop()) + "px" })
 							}
 						} else {
 							if (offsetLeft + initialPopUpWidth + 15 < screenWidth) {
-								jQuery(".ExportPopup").css({ left: (offsetLeft - jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().left) + "px", top: (jQuery(iconExport).offset().top-jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
+								OAT.jQuery(".ExportPopup").css({ left: (offsetLeft - OAT.jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().left) + "px", top: (OAT.jQuery(iconExport).offset().top-OAT.jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
 							} else {
-								jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top-jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
+								OAT.jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (OAT.jQuery(iconExport).offset().top - OAT.jQuery(OAT_JS.grid.gridData[self.UcId].Container).offset().top) + "px" })
 							}
 						}
 					}
@@ -10532,7 +10532,7 @@ var jsPDF = (function () {
 				
 				if (refreshData.titleChange)
 				{
-					jQuery("#" + OAT_JS.grid.gridData[UcId].controlName + "_grid_top_div #span_txt_pivot")[0].innerHTML = refreshData.title;
+					OAT.jQuery("#" + OAT_JS.grid.gridData[UcId].controlName + "_grid_top_div #span_txt_pivot")[0].innerHTML = refreshData.title;
 				} else
 				{
 					OAT_JS.grid.redraw(OAT_JS.grid.gridData[UcId].grid.oat_impl , UcId, resXML, true,  OAT_JS.grid.gridData[UcId].grid.DataFieldOrder != "", 1, true, true, refreshData.pageSize)
@@ -11387,7 +11387,7 @@ var jsPDF = (function () {
 				var actualScrollTo = jQuery(window).scrollTop();
 				var diffScroll = Math.abs(self.previousScrollTop - actualScrollTo);
 				if (diffScroll > 3){
-					jQuery(".oat_winrect_container").css({ display: "none" });
+					OAT.jQuery(".oat_winrect_container").css({ display: "none" });
 				}
 				self.previousScrollTop = actualScrollTo;
 			}
@@ -30711,7 +30711,7 @@ if (typeof exports != "undefined") {
 					defaults.rowsPerPage = 10;
 				}
 
-				var possibleTableRows = jQuery.makeArray(jQuery('tbody tr', table));
+				var possibleTableRows = jQuery.makeArray(OAT.jQuery('tbody tr', table));
 				var tableRows = jQuery.grep(possibleTableRows, function (value, index) {
 					return (jQuery.inArray(value, defaults.ignoreRows) == -1);
 				}, false)
@@ -30727,16 +30727,16 @@ if (typeof exports != "undefined") {
 				}
 
 				function resetCurrentPage(currPageNum, recalculateCantPages) {	//sets current page value
-					if (currPageNum < 1 || (currPageNum > jQuery("#" + settings.controlName + "_tablePagination_paginater #tablePagination_totalPages")[0].innerHTML.replace("&nbsp;", "")))
+					if (currPageNum < 1 || (currPageNum > OAT.jQuery("#" + settings.controlName + "_tablePagination_paginater #tablePagination_totalPages")[0].innerHTML.replace("&nbsp;", "")))
 						return;
 					currPageNumber[settings.controlName] = currPageNum;
-					jQuery(table)[tblLocation]().find(currPageId).val(currPageNumber[settings.controlName]);
+					OAT.jQuery(table)[tblLocation]().find(currPageId).val(currPageNumber[settings.controlName]);
 
-					(currPageNumber[settings.controlName] > 1) ? jQuery("#tablePagination_firstPage,#tablePagination_prevPage").removeClass("disabled_pivot_button") :
-						jQuery("#tablePagination_firstPage,#tablePagination_prevPage").addClass("disabled_pivot_button");
+					(currPageNumber[settings.controlName] > 1) ? OAT.jQuery("#tablePagination_firstPage,#tablePagination_prevPage").removeClass("disabled_pivot_button") :
+						OAT.jQuery("#tablePagination_firstPage,#tablePagination_prevPage").addClass("disabled_pivot_button");
 
-					(currPageNumber[settings.controlName] != totalPages) ? jQuery("#tablePagination_nextPage,#tablePagination_lastPage").removeClass("disabled_pivot_button") :
-						jQuery("#tablePagination_nextPage,#tablePagination_lastPage").addClass("disabled_pivot_button");
+					(currPageNumber[settings.controlName] != totalPages) ? OAT.jQuery("#tablePagination_nextPage,#tablePagination_lastPage").removeClass("disabled_pivot_button") :
+						OAT.jQuery("#tablePagination_nextPage,#tablePagination_lastPage").addClass("disabled_pivot_button");
 
 
 					if ((settings.control) && (settings.jstype == "table")) {
@@ -30746,8 +30746,8 @@ if (typeof exports != "undefined") {
 						setTimeout ( function(){
 							totalPages = settings.control.getActualCantPages(settings.controlUcId);
 							
-							(currPageNumber[settings.controlName] != totalPages) ? jQuery("#tablePagination_nextPage,#tablePagination_lastPage").removeClass("disabled_pivot_button") :
-								jQuery("#tablePagination_nextPage,#tablePagination_lastPage").addClass("disabled_pivot_button");
+							(currPageNumber[settings.controlName] != totalPages) ? OAT.jQuery("#tablePagination_nextPage,#tablePagination_lastPage").removeClass("disabled_pivot_button") :
+								OAT.jQuery("#tablePagination_nextPage,#tablePagination_lastPage").addClass("disabled_pivot_button");
 						} , 500)
 						
 						
@@ -30761,7 +30761,7 @@ if (typeof exports != "undefined") {
 					var isRowsPerPageMatched = false;
 					var optsPerPage = defaults.optionsForRows;
 					optsPerPage.sort(function (a, b) { return a - b; });
-					var perPageDropdown = jQuery(table)[tblLocation]().find(rowsPerPageId)[0];
+					var perPageDropdown = OAT.jQuery(table)[tblLocation]().find(rowsPerPageId)[0];
 					perPageDropdown.length = 0;
 					for (var i = 0; i < optsPerPage.length; i++) {
 						if (optsPerPage[i] == defaults.rowsPerPage) {
@@ -30776,9 +30776,9 @@ if (typeof exports != "undefined") {
 
 
 					if ((totalPages == 1) || (totalPages == 0)) {
-						jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', 'none');
+						OAT.jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', 'none');
 					} else {
-						jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', '');
+						OAT.jQuery('#' + settings.controlName + '_tablePagination_paginater').css('display', '');
 					}
 				}
 
@@ -30787,12 +30787,12 @@ if (typeof exports != "undefined") {
 					try {
 						var mul = 100;
 						if ( (OAT.isWebkit()) &&
-							(!(jQuery("#" + settings.controlName).closest(".gxwebcomponent").length > 0))) {
+							(!(OAT.jQuery("#" + settings.controlName).closest(".gxwebcomponent").length > 0))) {
 							mul = mul * 100;
 						}
 
 						if (currPageNumber[settings.controlName] > mul * 10) {
-							if (jQuery("#" + settings.controlName).closest(".gxwebcomponent").length > 0) {
+							if (OAT.jQuery("#" + settings.controlName).closest(".gxwebcomponent").length > 0) {
 								size = size + 2;
 							}
 
@@ -30884,7 +30884,7 @@ if (typeof exports != "undefined") {
 					}
 				}
 
-				if (jQuery(table)[tblLocation]().find(totalPagesId).length == 0) {
+				if (OAT.jQuery(table)[tblLocation]().find(totalPagesId).length == 0) {
 					if (defaults.topNav) {
 						jQuery(this).before(createPaginationElements());
 					} else {
@@ -30892,31 +30892,31 @@ if (typeof exports != "undefined") {
 					}
 				}
 				else {
-					jQuery(table)[tblLocation]().find(currPageId).val(currPageNumber[settings.controlName]);
+					OAT.jQuery(table)[tblLocation]().find(currPageId).val(currPageNumber[settings.controlName]);
 				}
 				resetPerPageValues();
 
-				jQuery(table)[tblLocation]().find(firstPageId).bind('click', function (e) {
+				OAT.jQuery(table)[tblLocation]().find(firstPageId).bind('click', function (e) {
 					resetCurrentPage(1, false)
 				});
 
-				jQuery(table)[tblLocation]().find(prevPageId).bind('click', function (e) {
+				OAT.jQuery(table)[tblLocation]().find(prevPageId).bind('click', function (e) {
 					resetCurrentPage(currPageNumber[settings.controlName] - 1, false)
 				});
 
-				jQuery(table)[tblLocation]().find(nextPageId).bind('click', function (e) {
+				OAT.jQuery(table)[tblLocation]().find(nextPageId).bind('click', function (e) {
 					resetCurrentPage(parseInt(currPageNumber[settings.controlName]) + 1, false)  //bind event 
 				});
 
-				jQuery(table)[tblLocation]().find(lastPageId).bind('click', function (e) {
+				OAT.jQuery(table)[tblLocation]().find(lastPageId).bind('click', function (e) {
 					resetCurrentPage(parseInt(jQuery("#" + settings.controlName + "_tablePagination_paginater #tablePagination_totalPages")[0].textContent.replace("&nbsp;", "")), false);
 				});
 
-				jQuery(table)[tblLocation]().find(currPageId).bind('change', function (e) {
+				OAT.jQuery(table)[tblLocation]().find(currPageId).bind('change', function (e) {
 					resetCurrentPage(parseInt(this.value, 10), false)
 				});
 
-				jQuery(table)[tblLocation]().find(rowsPerPageId).bind('change', function (e) {
+				OAT.jQuery(table)[tblLocation]().find(rowsPerPageId).bind('change', function (e) {
 					defaults.rowsPerPage = parseInt(this.value, 10);
 					totalPages = resetTotalPages();
 					resetCurrentPage(1, true);
