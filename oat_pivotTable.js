@@ -25,7 +25,7 @@ var OAT = {};
 		allowDefaultDrag: 1
 	}
 
-	OAT.findInContainer = function (selector) {
+	OAT.jQuery = function (selector) {
 		if (selector) {
 			return jQuery(OAT.qvContainer).find(selector);
 		}
@@ -35,10 +35,6 @@ var OAT = {};
 	OAT.$ = function (something) {
 		let elm = something;
 
-		if (!OAT.qvContainer) {
-			console.log(something, OAT.qvContainer);
-			debugger;
-		}
 		if (typeof (something) == "string") {
 			// find in the container
 			let elm1 = jQuery(OAT.qvContainer).find("#" + something);
@@ -8247,7 +8243,7 @@ var jsPDF = (function () {
 		var y = -1;
 
 		//calc max length of paper
-		var hgt = tablemargintop + jQuery("#" + self.controlName + "_" + self.query + " tr").length * 30 + 5;
+		var hgt = tablemargintop + OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length * 30 + 5;
 		if (hgt < 841) {
 			hgt = 841;
 		}
@@ -8257,19 +8253,19 @@ var jsPDF = (function () {
 
 		var title_row = true;
 		var row_num = 0
-		while ((title_row) && (row_num < jQuery("#" + self.controlName + "_" + self.query + " tr").length)) {
-			if (jQuery("#" + self.controlName + "_" + self.query + " tr")[row_num].getAttribute("title_row") != "true")
+		while ((title_row) && (row_num < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length)) {
+			if (OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[row_num].getAttribute("title_row") != "true")
 				title_row = false
 			else
 				row_num++
 		}
 
-		var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[row_num];
+		var tRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[row_num];
 
 		if (tRow == undefined) {
-			tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[0];
+			tRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[0];
 		}
-		//var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[jQuery("#" + self.controlName + "_" + self.query + " tr").length-1];
+		//var tRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length-1];
 		for (var j = 0; j < tRow.children.length; j++) {
 			if (tRow.children[j].getAttribute('colspan') != null) {
 				wdt = wdt + parseInt(tRow.children[j].getAttribute('colspan'));
@@ -8290,7 +8286,7 @@ var jsPDF = (function () {
 		for (var p = 0; p < tRow.childNodes.length; p++){
 			columnsSpan[p] = 0;
 		}
-		for (var i = 0; i < jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
+		for (var i = 0; i < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
 
 			var colspan = -1;
 			totalColSpan = -1;
@@ -8308,7 +8304,7 @@ var jsPDF = (function () {
 				}
 			} else {
 				for (var prevR = 0; prevR < i; prevR++) {	 //empiezo desde la de mas arriba
-					var tRowprev = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevR]; //obtengo la fila
+					var tRowprev = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevR]; //obtengo la fila
 
 					for (var prevC = 0; prevC < tRowprev.children.length; prevC++) {
 						var prevRowSpan = tRowprev.children[prevC].getAttribute('rowspan'); //obtengo el rowspan
@@ -8327,7 +8323,7 @@ var jsPDF = (function () {
 			colspan = desp - 1;
 			
 			
-			var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
+			var tRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
 			
 			if (self.colConditions.length == 0){
 				//actualizar rowSpan
@@ -8442,16 +8438,16 @@ var jsPDF = (function () {
 
 		doc.setFontSize(8);
 		var spanSobrantes = [];
-		if (jQuery("#" + self.controlName + "_" + self.query + " tr")[1 + self.colConditions.length] != undefined) {
-			for (var n = 0; n < jQuery("#" + self.controlName + "_" + self.query + " tr")[1 + self.colConditions.length].children.length; n++) { spanSobrantes[n] = 0 }
+		if (OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[1 + self.colConditions.length] != undefined) {
+			for (var n = 0; n < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[1 + self.colConditions.length].children.length; n++) { spanSobrantes[n] = 0 }
 		} else {
-			for (var n = 0; n < jQuery("#" + self.controlName + "_" + self.query + " tr")[self.colConditions.length].children.length; n++) { spanSobrantes[n] = 0 }
+			for (var n = 0; n < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[self.colConditions.length].children.length; n++) { spanSobrantes[n] = 0 }
 		}
 		columnsSpan = [];
 		for (var p = 0; p < columnsWidth.length; p++){
 			columnsSpan[p] = 0;
 		}
-		for (var i = 0; i < jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
+		for (var i = 0; i < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
 			//nroFilaHoja++; 
 
 			var colspan = -1;
@@ -8470,7 +8466,7 @@ var jsPDF = (function () {
 				}
 			} else {
 				for (var prevR = 0; prevR < i; prevR++) {	 //empiezo desde la de mas arriba
-					var tRowprev = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevR]; //obtengo la fila
+					var tRowprev = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevR]; //obtengo la fila
 
 					for (var prevC = 0; prevC < tRowprev.children.length; prevC++) {
 						var prevRowSpan = tRowprev.children[prevC].getAttribute('rowspan'); //obtengo el rowspan
@@ -8488,7 +8484,7 @@ var jsPDF = (function () {
 			}
 
 			colspan = desp - 1;
-			var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
+			var tRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
 			
 			
 			if (self.colConditions.length == 0){
@@ -10230,7 +10226,7 @@ var jsPDF = (function () {
 
 			var topDiv;
 
-			if ((jQuery("#" + self.controlName + "_grid_top_div").length == 0)
+			if ((OAT.jQuery("#" + self.controlName + "_grid_top_div").length == 0)
 				|| (self.QueryViewerCollection[self.IdForQueryViewerCollection]._ControlRenderedTo == undefined)) {
 				var divContainer = OAT.$(element);
 				self.ContainerName = divContainer.getAttribute("id")
@@ -10280,9 +10276,9 @@ var jsPDF = (function () {
 				var divContainer = OAT.$(element);
 				self.ContainerName = divContainer.getAttribute("id")
 
-				self.div = jQuery("#" + self.ContainerName).find(".divIeContainer")[0]
+				self.div = OAT.jQuery(".divIeContainer")[0]
 
-				topDiv = jQuery("#" + self.ContainerName).find(".oatgrid_top_div")[0]
+				topDiv = OAT.jQuery(".oatgrid_top_div")[0]
 				OAT.Dom.clear(topDiv);
 				if (GridTitle) {
 					OAT.addTextNode(topDiv, " " + GridTitle)
@@ -10290,14 +10286,14 @@ var jsPDF = (function () {
 					OAT.addTextNode(topDiv, "")
 				}
 
-				self.html = jQuery("#" + self.ContainerName).find("table")[0]
+				self.html = OAT.jQuery("table")[0]
 
-				var previousThead = jQuery("#" + self.ContainerName).find("thead")[0]
+				var previousThead = OAT.jQuery("thead")[0]
 				OAT.Dom.clear(previousThead);
 				self.header = new OAT.GridHeader(self, previousThead);
 
 				self.rows = [];
-				self.rowBlock = jQuery("#" + self.ContainerName).find("tbody")[0]
+				self.rowBlock = OAT.jQuery("tbody")[0]
 				OAT.Dom.clear(self.rowBlock);
 			}
 
@@ -10319,16 +10315,16 @@ var jsPDF = (function () {
 				var clean = false;
 				var closing = false;
 				var isInside = false
-				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
-					var obj = jQuery(".oat_winrect_container")[i];
+				for (var i = 0; i < OAT.jQuery(".oat_winrect_container").length; i++) {
+					var obj = OAT.jQuery(".oat_winrect_container")[i];
 					if (!(OAT.Dom.source == obj) && !OAT.Dom.isChild(OAT.Dom.source, obj)) {
 						clean = true;
 					} else {
 						clean = false; isInside = true; break;
 					}
 				}
-				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
-					if (jQuery(".oat_winrect_container")[i].style.display != "none") {
+				for (var i = 0; i < OAT.jQuery(".oat_winrect_container").length; i++) {
+					if (OAT.jQuery(".oat_winrect_container")[i].style.display != "none") {
 						closing = true;
 					}
 				}
@@ -10337,7 +10333,7 @@ var jsPDF = (function () {
 					self.oat_component.resetAllScrollValue(self.UcId);
 				}
 				if (clean) {
-					jQuery(".oat_winrect_container").css({ display: "none" });
+					OAT.jQuery(".oat_winrect_container").css({ display: "none" });
 				}
 			};
 
@@ -10703,7 +10699,7 @@ var jsPDF = (function () {
 			
 			str = str + '<table class="oatgrid"  style="width: 100%;">'
 			
-			str = str + OAT.removeIconFont(jQuery("#" + self.controlName)[0].innerHTML.replace(/visibility: collapse;/g, "").replace(/visibility:collapse;/g, ""))
+			str = str + OAT.removeIconFont(OAT.jQuery("#" + self.controlName)[0].innerHTML.replace(/visibility: collapse;/g, "").replace(/visibility:collapse;/g, ""))
 			
 			str = str + '</table>'
 			
@@ -11396,22 +11392,22 @@ var jsPDF = (function () {
 				self.previousScrollTop = actualScrollTo;
 			}
 			
-			if ((jQuery("#" + self.controlName).length > 0) && (jQuery("#" + self.controlName)[0].getAttribute("class") === "oatgrid")) {
+			if ((OAT.jQuery("#" + self.controlName).length > 0) && (OAT.jQuery("#" + self.controlName)[0].getAttribute("class") === "oatgrid")) {
 				var actual_rowsPerPage = 0;
-				if (jQuery("#" + self.controlName + "tablePagination_rowsPerPage").length > 0) {
+				if (OAT.jQuery("#" + self.controlName + "tablePagination_rowsPerPage").length > 0) {
 
 					if (!OAT_JS.grid.gridData[self.UcId].autoResize){
-						var containerWidth = jQuery("#" + self.ContainerName)[0].clientWidth
+						var containerWidth = OAT.jQuery()[0].clientWidth
 
-						jQuery("#" + self.controlName).css({
+						OAT.jQuery("#" + self.controlName).css({
 							width: containerWidth + "px"
 						});
 					} else {
-						containerWidth = jQuery("#" + self.controlName)[0].clientWidth
+						containerWidth = OAT.jQuery("#" + self.controlName)[0].clientWidth
 					}
 					
 
-					/*actual_rowsPerPage = parseInt(jQuery("#" + self.controlName + "tablePagination_rowsPerPage")[0].value);
+					/*actual_rowsPerPage = parseInt(OAT.jQuery("#" + self.controlName + "tablePagination_rowsPerPage")[0].value);
 					if (!isNaN(actual_rowsPerPage)) {
 						if (self.rowsPerPage != actual_rowsPerPage) {
 							var stateChange = (self.rowsPerPage != "")
@@ -11426,21 +11422,21 @@ var jsPDF = (function () {
 					}*/
 					var wd2 = containerWidth;
 
-					jQuery("#" + self.controlName + "_tablePagination").css({
+					OAT.jQuery("#" + self.controlName + "_tablePagination").css({
 						width: wd2 + "px"
 					});
-					jQuery("#" + self.controlName + "_grid_top_div").css({
+					OAT.jQuery("#" + self.controlName + "_grid_top_div").css({
 						width: wd2 + "px"
 					});
 
 					//ajustar ancho de footer y top div si el contenido sobrepasa al contenedor
-					var widthTable = jQuery("#" + self.controlName)[0].clientWidth
+					var widthTable = OAT.jQuery("#" + self.controlName)[0].clientWidth
 					
-					if ((widthTable > (containerWidth + 10)) || (jQuery("#" + self.controlName).closest(".gxwebcomponent").length > 0)) {
-						jQuery("#" + self.controlName + "_tablePagination").css({
+					if ((widthTable > (containerWidth + 10)) || (OAT.jQuery("#" + self.controlName).closest(".gxwebcomponent").length > 0)) {
+						OAT.jQuery("#" + self.controlName + "_tablePagination").css({
 							width: (widthTable+1) + "px"
 						});
-						jQuery("#" + self.controlName + "_grid_top_div").css({
+						OAT.jQuery("#" + self.controlName + "_grid_top_div").css({
 							width: (widthTable+1) + "px"
 						});
 					}
@@ -11448,52 +11444,52 @@ var jsPDF = (function () {
 				} else {
 
 					if (!OAT_JS.grid.gridData[self.UcId].autoResize){
-						var containerWidth = jQuery("#" + self.ContainerName)[0].clientWidth
+						var containerWidth = OAT.jQuery()[0].clientWidth
 						
-						jQuery("#" + self.controlName).css({
+						OAT.jQuery("#" + self.controlName).css({
 							width: containerWidth + "px"
 						});
 					} else {
-						containerWidth = jQuery("#" + self.controlName)[0].clientWidth
+						containerWidth = OAT.jQuery("#" + self.controlName)[0].clientWidth
 					}
 
 					var wid_topBar = containerWidth;
 
-					jQuery("#" + self.controlName + "_grid_top_div").css({
+					OAT.jQuery("#" + self.controlName + "_grid_top_div").css({
 						width: wid_topBar + "px"
 					})
 					jQuery(".oatgrid").css({ marginBottom: "0px" })
 
 					//ajustar ancho de footer y top div si el contenido sobrepasa al contenedor
-					var widthTable = jQuery("#" + self.controlName)[0].clientWidth
+					var widthTable = OAT.jQuery("#" + self.controlName)[0].clientWidth
 					
-					if ((widthTable > (containerWidth + 10)) || (jQuery("#" + self.controlName).closest(".gxwebcomponent").length > 0)) { 
-						jQuery("#" + self.controlName + "_grid_top_div").css({
+					if ((widthTable > (containerWidth + 10)) || (OAT.jQuery("#" + self.controlName).closest(".gxwebcomponent").length > 0)) { 
+						OAT.jQuery("#" + self.controlName + "_grid_top_div").css({
 							width: (widthTable+1) + "px"
 						});
 					}
 				}
 
-				jQuery(".divIeContainer").css({ opacity: "1" });
+				OAT.jQuery(".divIeContainer").css({ opacity: "1" });
 
 				//actualizar colores
 
-				if (jQuery("#" + self.controlName + " tr").length < 500) {
+				if (OAT.jQuery("tr").length < 500) {
 					var nP = 1;
-					for (var i = 1; i < jQuery("#" + self.controlName + " tr").length; i++) {
-						if (jQuery("#" + self.controlName + " tr")[i].style.display != "none") {
+					for (var i = 1; i < OAT.jQuery("tr").length; i++) {
+						if (OAT.jQuery("tr")[i].style.display != "none") {
 							if (nP % 2 === 1) {
-								jQuery("#" + self.controlName + " tr")[i].className = 'odd';
+								OAT.jQuery("tr")[i].className = 'odd';
 							} else {
-								jQuery("#" + self.controlName + " tr")[i].className = 'even';
+								OAT.jQuery("tr")[i].className = 'even';
 							}
 							nP++;
 						}
 					}
 				}
 
-				if ((jQuery("#" + self.controlName + "tablePagination_rowsPerPage").length > 0) && (self.QueryViewerCollection.length === 0)) {
-					jQuery(".pivot_pag_div").css({
+				if ((OAT.jQuery("#" + self.controlName + "tablePagination_rowsPerPage").length > 0) && (self.QueryViewerCollection.length === 0)) {
+					OAT.jQuery(".pivot_pag_div").css({
 						marginBottom: "0px"
 					})
 				}
@@ -15328,14 +15324,14 @@ if (typeof exports != "undefined") {
 			}
 
 			if (QueryViewerCollection[renderJSPivotInter.UcId]._ControlRenderedTo) {
-				OAT.findInContainer("#"+renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").remove(); //OAT.findInContainer(".pivot_pag_div").remove()
+				OAT.jQuery("#"+renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").remove(); //OAT.jQuery(".pivot_pag_div").remove()
 			}
 
 			if (renderJSPivotInter.pageSize) {
 				
 					var options = {
 						currPage: renderJSPivotInter.ServerPageNumber,
-						ignoreRows: OAT.findInContainer('tbody tr[visibQ=tf]', OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)),
+						ignoreRows: OAT.jQuery('tbody tr[visibQ=tf]', OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)),
 						optionsForRows: OAT.AddItemToList([10, 15, 20], renderJSPivotInter.InitMetadata.RowsPerPage),
 						rowsPerPage: rowNum != 'undefined' ? rowNum : 10,
 						jstype: "table",
@@ -15346,47 +15342,47 @@ if (typeof exports != "undefined") {
 						translations: translations,
 						control: renderJSPivotInter
 					}
-					OAT.partialTablePagination(OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query),options);
-					var wd2 = OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].clientWidth - 1;
-					OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ width: wd2 + "px" });
-					if (OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css('display') === 'none') {
-						OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css({ marginBottom: "0px" });
+					OAT.partialTablePagination(OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query),options);
+					var wd2 = OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].clientWidth - 1;
+					OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ width: wd2 + "px" });
+					if (OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css('display') === 'none') {
+						OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css({ marginBottom: "0px" });
 					} else {
-						OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css("margin-bottom", "0px");
+						OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query).css("margin-bottom", "0px");
 					}
 
-					if ((OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater").length > 0) && (OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination")[0].getBoundingClientRect().bottom < OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
-						OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ marginBottom: "0px" })
+					if ((OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater").length > 0) && (OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination")[0].getBoundingClientRect().bottom < OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
+						OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ marginBottom: "0px" })
 					}
-					var wd = OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
-					OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
+					var wd = OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
+					OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
 
 					if ((renderJSPivotInter.serverPaging) && ((renderJSPivotInter.pageSize == 10) || (renderJSPivotInter.ServerRecordCount < 10))) {
 						if (renderJSPivotInter.ServerPageCount <= 1) { //hide pagiantion
-							OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ display: "none" });
+							OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_tablePagination").css({ display: "none" });
 						}
 					}
 				
 
 			}
-			var wd = OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
+			var wd = OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query)[0].offsetWidth - 4;
 			try {
-				if (OAT.findInContainer("#MAINFORM")[0].className.indexOf("form-horizontal") > -1) {
+				if (OAT.jQuery("#MAINFORM")[0].className.indexOf("form-horizontal") > -1) {
 					wd = wd + 4;
 				}
 			} catch (Error) {
 			}
-			OAT.findInContainer("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
+			OAT.jQuery("#" + renderJSPivotInter.UcId + "_" + renderJSPivotInter.query + "_grid_top_div").css({ width: wd + "px" });
 
 			//set interval for handler values infinite scroll
 			if (self.serverPaging) {
 				setInterval(function () {
-					for (var t = 0; t < OAT.findInContainer(".oat_winrect_container .pivot_popup_fix").length; t++) {
-						if ((!OAT.findInContainer(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display) ||
-							(OAT.findInContainer(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display != "none")) {
+					for (var t = 0; t < OAT.jQuery(".oat_winrect_container .pivot_popup_fix").length; t++) {
+						if ((!OAT.jQuery(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display) ||
+							(OAT.jQuery(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display != "none")) {
 
-							if (OAT.findInContainer(".oat_winrect_container .pivot_popup_fix").length > 0) {
-								var element = OAT.findInContainer(".oat_winrect_container .pivot_popup_fix")[t];
+							if (OAT.jQuery(".oat_winrect_container .pivot_popup_fix").length > 0) {
+								var element = OAT.jQuery(".oat_winrect_container .pivot_popup_fix")[t];
 								var scrollBottom = element.scrollHeight - element.clientHeight - element.scrollTop
 								if (scrollBottom < 25) {
 									var UcId = element.getAttribute("ucid")
@@ -15825,12 +15821,12 @@ if (typeof exports != "undefined") {
 			
 			this.gridData[UcId].grid.removeAllRows();
 			if (recalculateCantPages) {
-				if (OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_totalPages").length > 0) {
-					OAT.replaceTextNode(OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_totalPages")[0], " " + _mthis.ServerPageCount)
+				if (OAT.jQuery("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_totalPages").length > 0) {
+					OAT.replaceTextNode(OAT.jQuery("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_totalPages")[0], " " + _mthis.ServerPageCount)
 					if ((_mthis.ServerPageCount <= 1) /*&& (this.gridData[UcId].rowsPerPage == 10)*/) { //hide pagiantion
-						OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination ").css({ display: "none" });
+						OAT.jQuery("#" + this.gridData[UcId].controlName + "_tablePagination ").css({ display: "none" });
 					} else {
-						OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination ").css({ display: "" });
+						OAT.jQuery("#" + this.gridData[UcId].controlName + "_tablePagination ").css({ display: "" });
 						if (_mthis.ServerPageCount == 1) {
 							jQuery('#' + this.gridData[UcId].controlName + '_tablePagination_paginater').css('display', 'none');
 						} else {
@@ -15838,13 +15834,13 @@ if (typeof exports != "undefined") {
 						}
 						
 						if (fromServerRefresh) {
-							OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination select")[0].value = pageSize; 
+							OAT.jQuery("#" + this.gridData[UcId].controlName + "_tablePagination select")[0].value = pageSize; 
 							
-							OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_firstPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_prevPage").addClass("disabled_pivot_button");
+							OAT.jQuery("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_firstPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_prevPage").addClass("disabled_pivot_button");
 							if (_mthis.ServerPageCount > 1) {
-								OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").removeClass("disabled_pivot_button")
+								OAT.jQuery("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").removeClass("disabled_pivot_button")
 							} else {
-								OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").addClass("disabled_pivot_button");
+								OAT.jQuery("#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_nextPage,#" + this.gridData[UcId].controlName + "_tablePagination #tablePagination_lastPage").addClass("disabled_pivot_button");
 							}
 						}
 					}
@@ -15908,7 +15904,7 @@ if (typeof exports != "undefined") {
 			//set new current page
 			OAT_JS.grid.gridData[UcId].actualPageNumber = pageNumber
 			currPageNumber[this.gridData[UcId].controlName] = pageNumber
-			OAT.findInContainer("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_currPage").val(pageNumber)
+			OAT.jQuery("#" + this.gridData[UcId].controlName + "_tablePagination " + "#tablePagination_currPage").val(pageNumber)
 			
 			this.gridData[UcId].rowsData = _mthis.data;
 			for (var i = 0; i < _mthis.data.length; i++) {
@@ -16551,7 +16547,7 @@ if (typeof exports != "undefined") {
 			}
 		},
 		changeValues: function (UcId, dataField, columnNumber, data, filterText) { //when filter by search filter, delete pairs and show new ones
-			var searchInput = OAT.findInContainer("#" + UcId + dataField)[0];
+			var searchInput = OAT.jQuery("#" + UcId + dataField)[0];
 
 			if (((searchInput.value) || (searchInput.value == "")) && (searchInput.value != filterText)) {
 				return;
@@ -16824,8 +16820,8 @@ if (typeof exports != "undefined") {
 			}
 
 			this.gridData[UcId].rowsPerPage = this.gridData[UcId].defaultValues.rowsPerPage
-			if (OAT.findInContainer("#" + this.gridData[UcId].grid.controlName + "tablePagination_rowsPerPage").length > 0) {
-				OAT.findInContainer("#" + this.gridData[UcId].grid.controlName + "tablePagination_rowsPerPage")[0].value = this.gridData[UcId].defaultValues.rowsPerPage
+			if (OAT.jQuery("#" + this.gridData[UcId].grid.controlName + "tablePagination_rowsPerPage").length > 0) {
+				OAT.jQuery("#" + this.gridData[UcId].grid.controlName + "tablePagination_rowsPerPage")[0].value = this.gridData[UcId].defaultValues.rowsPerPage
 			}
 
 		},
@@ -18787,13 +18783,13 @@ if (typeof exports != "undefined") {
 			this.PivotTitle = pivotTitle
 			this.TitleDiv = OAT.$(this.TitleDivId);
 			if (!this.TitleDiv){
-				 OAT.findInContainer("#"+this.TitleDivId).remove()
+				 OAT.jQuery("#"+this.TitleDivId).remove()
 				 this.TitleDiv = OAT.Dom.create("div", {});
 				 this.TitleDiv.id = this.TitleDivId
-				 OAT.findInContainer("#" + containerName).prepend(this.TitleDiv); 
+				 OAT.jQuery("#" + containerName).prepend(this.TitleDiv); 
 			}
 		} else {
-			OAT.findInContainer("#"+this.TitleDivId).remove()
+			OAT.jQuery("#"+this.TitleDivId).remove()
 		}
 		
 		this.defCArray = ["rgb(153,153,255)", "rgb(153,51,205)", "rgb(255,255,204)", "rgb(204,255,255)", "rgb(102,0,102)",
@@ -19170,7 +19166,7 @@ if (typeof exports != "undefined") {
 							self.initValueRead(self, 0, self.stateLoad);
 						}
 						
-						OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
+						OAT.jQuery("#"+self.containerName).removeClass("gx-qv-loading")
 						//qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
 	
 					/*} else {
@@ -19183,7 +19179,7 @@ if (typeof exports != "undefined") {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.preGoWhenServerPagination(true);
-						OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
+						OAT.jQuery("#"+self.containerName).removeClass("gx-qv-loading")
 
 					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
@@ -19195,7 +19191,7 @@ if (typeof exports != "undefined") {
 
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.goWhenServerPagination(false, true);
-						OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
+						OAT.jQuery("#"+self.containerName).removeClass("gx-qv-loading")
 
 					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
@@ -19206,7 +19202,7 @@ if (typeof exports != "undefined") {
 					//if (!qv.util.anyError(resXML) || self.QueryViewerCollection[self.IdForQueryViewerCollection].debugServices) {
 						self.pageData = OATGetNewDataFromXMLForPivot(resXML, self.pageData, self.ShowMeasuresAsRows);
 						self.goWhenServerPagination(false, false);
-						OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
+						OAT.jQuery("#"+self.containerName).removeClass("gx-qv-loading")
 					/*} else {
 						var errMsg = qv.util.getErrorFromText(resXML);
 						qv.util.renderError(self.QueryViewerCollection[self.IdForQueryViewerCollection], errMsg);
@@ -19240,7 +19236,7 @@ if (typeof exports != "undefined") {
 						}
 						self.cleanGridCache();
 					}
-					OAT.findInContainer("#"+self.containerName).removeClass("gx-qv-loading")
+					OAT.jQuery("#"+self.containerName).removeClass("gx-qv-loading")
 					//qv.util.hideActivityIndicator(self.QueryViewerCollection[self.IdForQueryViewerCollection]);
 					break;
 			  }
@@ -20368,10 +20364,10 @@ if (typeof exports != "undefined") {
 			xml = xml + '<BODY>';
 			xml = xml + '<TABLE border="2">'
 
-			for (var i = 0; i < OAT.findInContainer("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
+			for (var i = 0; i < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
 				xml = xml + '<TR>';
 
-				var tRow = OAT.findInContainer("#" + self.controlName + "_" + self.query + " tr")[i];
+				var tRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
 				for (var j = 0; j < tRow.children.length; j++) {
 					var childText = OAT.removeIconFont(tRow.children[j].textContent).trim();
 					var hidden = tRow.children[j].getAttribute('hidden');
@@ -20460,10 +20456,10 @@ if (typeof exports != "undefined") {
 		this.ExportToExcel = function (fileName) {
 			var table = '<table border="2">'
 
-			for (var i = 0; i < OAT.findInContainer("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
+			for (var i = 0; i < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//for every row
 				table = table + '<tr>';
 
-				var tRow = OAT.findInContainer("#" + self.controlName + "_" + self.query + " tr")[i];
+				var tRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
 				for (var j = 0; j < tRow.children.length; j++) {
 					var childText = OAT.removeIconFont(tRow.children[j].textContent.replace(/^\s+|\s+$/g, '')).trim();
 					var hidden = tRow.children[j].getAttribute('hidden');
@@ -21088,7 +21084,7 @@ if (typeof exports != "undefined") {
 				var actual_rowsPerPage = 0;
 				
 				//find max width of inner_filter_div
-				var pageFilter = OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").find(".inner_filter_div")
+				var pageFilter = OAT.jQuery("#" + UcId + "_" + self.query + "_pivot_page").find(".inner_filter_div")
 				var MaxWidthFilters = 0;
 				for (var pFIndx = 0; pFIndx < pageFilter.length; pFIndx++){
 					if (MaxWidthFilters < pageFilter[pFIndx].offsetWidth){
@@ -21097,29 +21093,29 @@ if (typeof exports != "undefined") {
 				}
 				MaxWidthFilters = (MaxWidthFilters > 0) ? MaxWidthFilters + 8 : MaxWidthFilters; 
 				
-				if (OAT.findInContainer("#" + self.controlName + "_" + self.query + "tablePagination_rowsPerPage").length > 0) {
-					actual_rowsPerPage = parseInt(OAT.findInContainer("#" + self.controlName + "_" + self.query + "tablePagination_rowsPerPage")[0].value);
+				if (OAT.jQuery("#" + self.controlName + "_" + self.query + "tablePagination_rowsPerPage").length > 0) {
+					actual_rowsPerPage = parseInt(OAT.jQuery("#" + self.controlName + "_" + self.query + "tablePagination_rowsPerPage")[0].value);
 					if (!isNaN(actual_rowsPerPage)) {
-						if (OAT.findInContainer("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table") {
+						if (OAT.jQuery("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table") {
 							if ((!autoResize)) {
-								var clientWdt = OAT.findInContainer("#" + self.containerName)[0].clientWidth
+								var clientWdt = OAT.jQuery("#" + self.containerName)[0].clientWidth
 								if (clientWdt < MaxWidthFilters) {
-									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
+									OAT.jQuery("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
 								} else {
-									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: (clientWdt) + "px" });
+									OAT.jQuery("#" + self.controlName + "_" + self.query).css({ width: (clientWdt) + "px" });
 								}
 							}
-							var wd = OAT.findInContainer("#" + self.controlName + "_" + self.query)[0].offsetWidth;
+							var wd = OAT.jQuery("#" + self.controlName + "_" + self.query)[0].offsetWidth;
 							
 							
 							if (wd >= MaxWidthFilters){
 								
-								var actualWidth = OAT.findInContainer("#" + self.controlName + "_" + self.query + "_tablePagination")[0].clientWidth
+								var actualWidth = OAT.jQuery("#" + self.controlName + "_" + self.query + "_tablePagination")[0].clientWidth
 								if ((actualWidth > MaxWidthFilters + 1) || (actualWidth < MaxWidthFilters - 1)) {
-									OAT.findInContainer("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" });
-									OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" });
+									OAT.jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" });
+									OAT.jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" });
 	
-									OAT.findInContainer("#" + self.controlName + "_" + self.query + "_tablePagination").css({ width: wd + "px" });
+									OAT.jQuery("#" + self.controlName + "_" + self.query + "_tablePagination").css({ width: wd + "px" });
 
 									antepreviusValuePivotWidth = previousValuePivotWidth
 									previousValuePivotWidth = wd
@@ -21127,12 +21123,12 @@ if (typeof exports != "undefined") {
 								
 								
 							} else {
-								OAT.findInContainer("#" + UcId + "_" + self.query + "_title_div").css({ width: MaxWidthFilters + "px" });
-								OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").css({ width: MaxWidthFilters + "px" });
+								OAT.jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: MaxWidthFilters + "px" });
+								OAT.jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: MaxWidthFilters + "px" });
 	
-								OAT.findInContainer("#" + self.controlName + "_" + self.query + "_tablePagination").css({ width: MaxWidthFilters + "px" });
+								OAT.jQuery("#" + self.controlName + "_" + self.query + "_tablePagination").css({ width: MaxWidthFilters + "px" });
 								
-								OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
+								OAT.jQuery("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
 								
 								antepreviusValuePivotWidth = previousValuePivotWidth
 								previousValuePivotWidth = MaxWidthFilters
@@ -21143,21 +21139,21 @@ if (typeof exports != "undefined") {
 						
 					}
 				} else {
-					if (OAT.findInContainer("#" + self.controlName + "_" + self.query)[0] != undefined) {
-						if (OAT.findInContainer("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table") {
+					if (OAT.jQuery("#" + self.controlName + "_" + self.query)[0] != undefined) {
+						if (OAT.jQuery("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table") {
 							
 							
 							
 							if (!autoResize) {
-								var clientWdt = OAT.findInContainer("#" + self.containerName)[0].clientWidth
+								var clientWdt = OAT.jQuery("#" + self.containerName)[0].clientWidth
 								if (clientWdt < MaxWidthFilters) {
-									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
+									OAT.jQuery("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
 								} else {
-									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: (clientWdt) + "px" });
+									OAT.jQuery("#" + self.controlName + "_" + self.query).css({ width: (clientWdt) + "px" });
 								}
 							}
 
-							var wd = OAT.findInContainer("#" + self.controlName + "_" + self.query)[0].offsetWidth
+							var wd = OAT.jQuery("#" + self.controlName + "_" + self.query)[0].offsetWidth
 							
 							if (wd < MaxWidthFilters){
 								
@@ -21165,13 +21161,13 @@ if (typeof exports != "undefined") {
 									((previousValuePivotWidth > MaxWidthFilters + 6) || (previousValuePivotWidth < MaxWidthFilters - 6)
 										|| (antepreviusValuePivotWidth > previousValuePivotWidth + 6) || (antepreviusValuePivotWidth < previousValuePivotWidth - 6))) {
 								
-									OAT.findInContainer("#" + UcId + "_" + self.query + "_title_div").css({ width: MaxWidthFilters + "px" });
-									OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").css({ width: MaxWidthFilters + "px" });
+									OAT.jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: MaxWidthFilters + "px" });
+									OAT.jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: MaxWidthFilters + "px" });
 									antepreviusValuePivotWidth = previousValuePivotWidth
 									previousValuePivotWidth = MaxWidthFilters
 									
 									
-									OAT.findInContainer("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
+									OAT.jQuery("#" + self.controlName + "_" + self.query).css({ width: MaxWidthFilters + "px" });
 								}
 								
 							} else {
@@ -21180,8 +21176,8 @@ if (typeof exports != "undefined") {
 									((previousValuePivotWidth > wd + 6) || (previousValuePivotWidth < wd - 6)
 										|| (antepreviusValuePivotWidth > previousValuePivotWidth + 6) || (antepreviusValuePivotWidth < previousValuePivotWidth - 6))) {
 									
-									OAT.findInContainer("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" });
-									OAT.findInContainer("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" });
+									OAT.jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" });
+									OAT.jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" });
 									antepreviusValuePivotWidth = previousValuePivotWidth
 									previousValuePivotWidth = wd
 								}
@@ -21266,8 +21262,8 @@ if (typeof exports != "undefined") {
 
 				//add items to page select if exists
 				try {
-					for (var iP = 0; iP < OAT.findInContainer("#" + self.UcId + "_" + self.query + "_pivot_page").find("select").length; iP++) {
-						var s = OAT.findInContainer("#" + self.UcId + "_" + self.query + "_pivot_page").find("select")[iP];
+					for (var iP = 0; iP < OAT.jQuery("#" + self.UcId + "_" + self.query + "_pivot_page").find("select").length; iP++) {
+						var s = OAT.jQuery("#" + self.UcId + "_" + self.query + "_pivot_page").find("select")[iP];
 						var filterDim = parseInt(s.getAttribute("id").replace("page_select_", ""))
 						var index = self.filterIndexes[filterDim]
 
@@ -21625,11 +21621,11 @@ if (typeof exports != "undefined") {
 						cond.sort = 1; self.stateChanged = true;
 						self.getDataForPivot(self.UcId, 1, self.rowsPerPage, true, cond.dataField, "", "", "");
 						var idI = "i_" + this.getAttribute("id");
-						var inputAsc = OAT.findInContainer("#" + idI)[0];
+						var inputAsc = OAT.jQuery("#" + idI)[0];
 						inputAsc.textContent = "radio_button_checked";
 						
 						var idJ = idI.replace("asc", "desc");
-						var inpdsc =  OAT.findInContainer("#" + idJ)[0];
+						var inpdsc =  OAT.jQuery("#" + idJ)[0];
 						inpdsc.textContent = "radio_button_unchecked";
 					
 						
@@ -21665,9 +21661,9 @@ if (typeof exports != "undefined") {
 						cond.sort = -1; self.stateChanged = true;
 						self.getDataForPivot(self.UcId, 1, self.rowsPerPage, true, cond.dataField, "", "", "")
 						var idI = "i_" + this.getAttribute("id");
-						var inputDsc = OAT.findInContainer("#" + idI)[0];
+						var inputDsc = OAT.jQuery("#" + idI)[0];
 						inputDsc.textContent = "radio_button_checked";
-						var inputAsc = OAT.findInContainer("#" + idI.replace("desc", "asc"))[0];
+						var inputAsc = OAT.jQuery("#" + idI.replace("desc", "asc"))[0];
 						inputAsc.textContent = "radio_button_unchecked";
 						
 					
@@ -22784,26 +22780,26 @@ if (typeof exports != "undefined") {
 
 
 				var screenWidth = window.innerWidth;
-				var initialPopUpWidth = Math.max(jQuery(".ExportPopup")[0].clientWidth, 300)
+				var initialPopUpWidth = Math.max(OAT.jQuery(".ExportPopup")[0].clientWidth, 300)
 				var offsetLeft = jQuery(event.currentTarget).offset().left
 
 				var iconExport = event.currentTarget
 
 				/* title */
-				jQuery(".oat_winrect_title").find(".winrect_title_label").remove()
+				OAT.jQuery(".oat_winrect_title").find(".winrect_title_label").remove()
 
 				var spantitle = OAT.Dom.create("label");
 				if (self.isSD) {
-					jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
+					OAT.jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
 					spantitle.setAttribute("class", "winrect_title_label winrect_title_label_small");
 				} else {
 					spantitle.setAttribute("class", "winrect_title_label");
 				}
 				OAT.addTextNode(spantitle, self.translations.GXPL_QViewerPopupTitle/*gx.getMessage("GXPL_QViewerPopupTitle")*/);
-				jQuery(".oat_winrect_title").append(spantitle)
+				OAT.jQuery(".oat_winrect_title").append(spantitle)
 
 
-				jQuery(".ExportPopup").css({ left: -2500 + "px", top: 0 + "px" })
+				OAT.jQuery(".ExportPopup").css({ left: -2500 + "px", top: 0 + "px" })
 
 
 				OAT.Dom.clear(self.exportPage);
@@ -22812,11 +22808,11 @@ if (typeof exports != "undefined") {
 				div_upper.setAttribute("class", "upper_container");
 
 				//botton to allow show all filters in pop up
-				jQuery('#divtoxml').remove();
-				jQuery('#divtoxls').remove();
-				jQuery('#divtoxlsx').remove();
-				jQuery('#divtoexport').remove();
-				jQuery('#divtohtml').remove();
+				OAT.jQuery('#divtoxml').remove();
+				OAT.jQuery('#divtoxls').remove();
+				OAT.jQuery('#divtoxlsx').remove();
+				OAT.jQuery('#divtoexport').remove();
+				OAT.jQuery('#divtohtml').remove();
 				var someExport = false;
 				self.appendExportToXmlOption(div_upper, someExport);
 				self.appendExportToHtmlOption(div_upper, someExport);
@@ -23061,7 +23057,7 @@ if (typeof exports != "undefined") {
 			
 			str = str + '<table class="pivot_table" style="width: 100%;">'
 			
-			str = str + OAT.removeIconFont(jQuery("#" + self.controlName + "_" + self.query)[0].innerHTML.replace(/display: none;/g, "").replace(/sort-asc/g, "").replace(/sort-desc/g, ""));
+			str = str + OAT.removeIconFont(OAT.jQuery("#" + self.controlName + "_" + self.query)[0].innerHTML.replace(/display: none;/g, "").replace(/sort-asc/g, "").replace(/sort-desc/g, ""));
 			
 			str = str + '</table>'
 			
@@ -23481,7 +23477,7 @@ if (typeof exports != "undefined") {
 			//}
 			// MOVE FILTERS TO TOOLBAR
 			if ((measures.length > 0) && (tr.cells[1] != undefined) && (tr.cells[1].textContent == "")) {
-				var toolbarTable = jQuery("#" + self.controlName + "_" + self.query + "_toolbar")[0];
+				var toolbarTable = OAT.jQuery("#" + self.controlName + "_" + self.query + "_toolbar")[0];
 				if (toolbarTable.rows[0])
 					toolbarTable.rows[0].appendChild(tr.cells[0]);
 			}
@@ -23550,7 +23546,7 @@ if (typeof exports != "undefined") {
 
 			/////////////////////////////////////////////////// MOVE FILTERS TO TOOLBAR
 			if (th.textContent == self.headerRow[self.colConditions[i]]) {
-				var toolbarTable = jQuery("#" + self.controlName + "_" + self.query + "_toolbar")[0];
+				var toolbarTable = OAT.jQuery("#" + self.controlName + "_" + self.query + "_toolbar")[0];
 				th.hidden = false;
 				if (toolbarTable.rows[0])
 					toolbarTable.rows[0].appendChild(th);
@@ -27030,7 +27026,7 @@ if (typeof exports != "undefined") {
 					control: self
 				}
 
-				OAT.partialTablePagination(jQuery("#" + self.controlName + "_" + self.query), options);
+				OAT.partialTablePagination(OAT.jQuery("#" + self.controlName + "_" + self.query), options);
 
 				jQuery("#" + this.controlName + "_" + self.query).css("margin-bottom", "0px");
 
@@ -27071,8 +27067,8 @@ if (typeof exports != "undefined") {
 			self.previousScrollTop = jQuery(window).scrollTop();
 			setInterval(function () {
 				//verificar que sea pivot
-				if ((jQuery("#" + self.controlName + "_" + self.query).length > 0) && (jQuery("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table")) {
-					if ((jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + self.controlName + "_" + self.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
+				if ((OAT.jQuery("#" + self.controlName + "_" + self.query).length > 0) && (OAT.jQuery("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table")) {
+					if ((OAT.jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater").length > 0) && (OAT.jQuery("#" + self.controlName + "_" + self.query + "_tablePagination")[0].getBoundingClientRect().bottom < OAT.jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
 						jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")
 					}
 				}
@@ -28700,8 +28696,8 @@ if (typeof exports != "undefined") {
 
 			var dataField = (SelectedType == "DIMENSION") ? self.columns[SelectedMorDNumber].getAttribute("dataField") : measures[SelectedMorDNumber].getAttribute("dataField");
 			var selectedCellOffset, selectedRowOffset;
-			for (var i = 0; i < jQuery("#" + self.controlName + "_" + self.query + " tr").length && (!found); i++) {//search selected cell in every row
-				var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
+			for (var i = 0; i < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length && (!found); i++) {//search selected cell in every row
+				var tRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
 				for (var j = 0; j < tRow.children.length && (!found); j++) {
 					var value = jQuery(tRow.children[j]).data('itemValue');
 					var type = jQuery(tRow.children[j]).data('typeMorD');
@@ -28714,13 +28710,13 @@ if (typeof exports != "undefined") {
 
 							if (OAT.IsNodeSelected(tRow.children[j])) {
 								if (!refresh) {
-									OAT.ClearSelectedNodes(jQuery("#" + self.controlName + "_" + self.query));
+									OAT.ClearSelectedNodes(OAT.jQuery("#" + self.controlName + "_" + self.query));
 									self.selection.SelectedNode = [];
 								}
 							} else {
 
 								if (!refresh) {
-									OAT.SetSelectedNodeBackgroundColor(tRow.children[j], self.selection.Color, jQuery("#" + self.controlName + "_" + self.query))
+									OAT.SetSelectedNodeBackgroundColor(tRow.children[j], self.selection.Color, OAT.jQuery("#" + self.controlName + "_" + self.query))
 								} else {
 									OAT.SetNodeBackgroundColor(tRow.children[j], self.selection.Color)
 								}
@@ -28741,8 +28737,8 @@ if (typeof exports != "undefined") {
 									
 									var firstRow = (self.colConditions.length > 0) ? self.colConditions.length + 1 : 0;
 									
-									for (var prevRow = firstRow+1; prevRow < jQuery("#" + self.controlName + "_" + self.query + " tr").length; prevRow++) {
-										var row = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
+									for (var prevRow = firstRow+1; prevRow < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length; prevRow++) {
+										var row = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
 										OAT.SelectAllRow(row, self.selection.Color)
 									}
 
@@ -28764,13 +28760,13 @@ if (typeof exports != "undefined") {
 								found = true;
 								if (OAT.IsNodeSelected(tRow.children[j])) {
 									if (!refresh) {
-										OAT.ClearSelectedNodes(jQuery("#" + self.controlName + "_" + self.query));
+										OAT.ClearSelectedNodes(OAT.jQuery("#" + self.controlName + "_" + self.query));
 										self.selection.SelectedNode = [];
 									}
 								} else {
 
 									if (!refresh) {
-										OAT.SetSelectedNodeBackgroundColor(tRow.children[j], self.selection.Color, jQuery("#" + self.controlName + "_" + self.query))
+										OAT.SetSelectedNodeBackgroundColor(tRow.children[j], self.selection.Color, OAT.jQuery("#" + self.controlName + "_" + self.query))
 									} else {
 										OAT.SetNodeBackgroundColor(tRow.children[j], self.selection.Color)
 									}
@@ -28810,7 +28806,7 @@ if (typeof exports != "undefined") {
 												var lastRow = -1;
 												var firstRow = (self.colConditions.length > 0) ? self.colConditions.length + 1 : 0;
 												for (var prevRow = i - 1; (prevRow > firstRow) && !exit; prevRow--) {
-													var row = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
+													var row = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
 													var iterRowOffset = row.children[0].offsetLeft
 
 													if (jQuery(row.children[0]).hasClass("h2subtitle")) {
@@ -28827,7 +28823,7 @@ if (typeof exports != "undefined") {
 												
 												
 												for (var prevRow = lastRow; prevRow >= 0; prevRow--) {
-													var topRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
+													var topRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
 
 													if (!jQuery(topRow.children[0]).hasClass("h2subtitle")) {
 														for (var iterTopRow = 0; iterTopRow < topRow.children.length; iterTopRow++) {
@@ -28861,13 +28857,13 @@ if (typeof exports != "undefined") {
 										found = true;
 										if (OAT.IsNodeSelected(tRow.children[j])) {
 											if (!refresh) {
-												OAT.ClearSelectedNodes(jQuery("#" + self.controlName + "_" + self.query));
+												OAT.ClearSelectedNodes(OAT.jQuery("#" + self.controlName + "_" + self.query));
 												self.selection.SelectedNode = [];
 											}
 										} else {
 
 											if (!refresh) {
-												OAT.SetSelectedNodeBackgroundColor(tRow.children[j], self.selection.Color, jQuery("#" + self.controlName + "_" + self.query))
+												OAT.SetSelectedNodeBackgroundColor(tRow.children[j], self.selection.Color, OAT.jQuery("#" + self.controlName + "_" + self.query))
 											} else {
 												OAT.SetNodeBackgroundColor(tRow.children[j], self.selection.Color)
 											}
@@ -28887,7 +28883,7 @@ if (typeof exports != "undefined") {
 
 												//search previous rows
 												for (var prevRow = i - 1; prevRow >= 0; prevRow--) {
-													var topRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
+													var topRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
 													for (var iterTopRow = 0; iterTopRow < topRow.children.length; iterTopRow++) {
 														var rowSpan = parseInt(jQuery(topRow.children[iterTopRow]).attr("rowspan"));
 														if (prevRow + rowSpan > i) {
@@ -28900,13 +28896,13 @@ if (typeof exports != "undefined") {
 												var selectedItemRowSpam = parseInt(jQuery(tRow.children[j]).attr("rowspan"));
 												if (selectedItemRowSpam >= 1) {
 													for (var postRow = i + 1; postRow < i + selectedItemRowSpam; postRow++) {
-														var bellowRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[postRow];
+														var bellowRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[postRow];
 														OAT.SelectAllRow(bellowRow, self.selection.Color)
 													}
 
 													//search for subtotals of selected item
 													var postRow = i + selectedItemRowSpam;
-													var bellowRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[postRow];
+													var bellowRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[postRow];
 													if ((bellowRow != undefined) && jQuery(bellowRow.children[0]).hasClass("h2subtitle") && !jQuery(bellowRow.children[0]).hasClass("grandtotaltitle")) {
 														selectedCellOffset = tRow.children[j].offsetLeft
 
@@ -28923,10 +28919,10 @@ if (typeof exports != "undefined") {
 
 													selectedCellOffset = tRow.children[j].offsetLeft
 
-													for (var prevRow = 1; prevRow < jQuery("#" + self.controlName + "_" + self.query + " tr").length; prevRow++) {
+													for (var prevRow = 1; prevRow < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length; prevRow++) {
 														if (prevRow != i) {
 															var exit = false
-															var row = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
+															var row = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
 															for (var iterRow = 0; iterRow < row.children.length && !exit; iterRow++) {
 																var offsetIter = row.children[iterRow].offsetLeft + row.children[iterRow].offsetWidth
 																if (offsetIter > selectedCellOffset + 1){
@@ -28956,15 +28952,15 @@ if (typeof exports != "undefined") {
 									found = true;
 									if (OAT.IsNodeSelected(tRow.children[j])) {
 										if (!refresh) {
-											OAT.ClearSelectedNodes(jQuery("#" + self.controlName + "_" + self.query));
+											OAT.ClearSelectedNodes(OAT.jQuery("#" + self.controlName + "_" + self.query));
 											self.selection.SelectedNode = [];
 										}
 									} else {
 
-										OAT.ClearSelectedNodes(jQuery("#" + self.controlName + "_" + self.query));
+										OAT.ClearSelectedNodes(OAT.jQuery("#" + self.controlName + "_" + self.query));
 
 										if (!refresh) {
-											OAT.SetSelectedNodeBackgroundColor(tRow.children[j], self.selection.Color, jQuery("#" + self.controlName + "_" + self.query))
+											OAT.SetSelectedNodeBackgroundColor(tRow.children[j], self.selection.Color, OAT.jQuery("#" + self.controlName + "_" + self.query))
 										} else {
 											OAT.SetNodeBackgroundColor(tRow.children[j], self.selection.Color)
 										}
@@ -28989,7 +28985,7 @@ if (typeof exports != "undefined") {
 											var lastRow = -1;
 											var firstRow = (self.colConditions.length > 0) ? self.colConditions.length + 1 : 0;
 											for (var prevRow = i - 1; (prevRow > firstRow) && !exit; prevRow--) {
-												var row = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
+												var row = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
 												var iterRowOffset = row.children[0].offsetLeft
 
 												if (jQuery(row.children[0]).hasClass("h2subtitle")) {
@@ -29005,7 +29001,7 @@ if (typeof exports != "undefined") {
 											}
 
 											for (var prevRow = lastRow; prevRow >= 0; prevRow--) {
-												var topRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
+												var topRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
 
 												if (!jQuery(topRow.children[0]).hasClass("h2subtitle")) {
 													for (var iterTopRow = 0; iterTopRow < topRow.children.length; iterTopRow++) {
@@ -29029,7 +29025,7 @@ if (typeof exports != "undefined") {
 										
 										if (self.checkConditions(conditions, item)) {
 
-											OAT.SetNodeBackgroundColor(tRow.children[j], self.selection.Color, jQuery("#" + self.controlName + "_" + self.query))
+											OAT.SetNodeBackgroundColor(tRow.children[j], self.selection.Color, OAT.jQuery("#" + self.controlName + "_" + self.query))
 
 											if (self.selection.SelectedNode.length <= selectedItemNumber) {
 												self.selection.SelectedNode.push({
@@ -29048,7 +29044,7 @@ if (typeof exports != "undefined") {
 												OAT.SelectAllRow(tRow, self.selection.Color, j)
 
 												for (var pos = i - 1; pos > 0; pos--) {
-													var iterRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[pos];
+													var iterRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[pos];
 													for (var cell = 0; cell < iterRow.children.length; cell++) {
 														var rowSpan = parseInt(jQuery(iterRow.children[cell]).attr("rowspan"));
 														if (pos + rowSpan > i) {
@@ -29059,11 +29055,11 @@ if (typeof exports != "undefined") {
 												var itemRowSpan = parseInt(jQuery(tRow.children[j]).attr("rowspan"));
 												if (itemRowSpan >= 1) {
 													for (var pos = i + 1; pos < i + itemRowSpan; pos++) {
-														OAT.SelectAllRow(jQuery("#" + self.controlName + "_" + self.query + " tr")[pos], self.selection.Color)
+														OAT.SelectAllRow(OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[pos], self.selection.Color)
 													}
 
 													var pos = i + itemRowSpan;
-													var iterRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[pos];
+													var iterRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[pos];
 													if ((iterRow != undefined) && jQuery(iterRow.children[0]).hasClass("h2subtitle") && !jQuery(iterRow.children[0]).hasClass("grandtotaltitle")) {
 														selectedCellOffset = tRow.children[j].offsetLeft
 														rowOffset = iterRow.children[0].offsetLeft
@@ -29076,10 +29072,10 @@ if (typeof exports != "undefined") {
 												if ((self.colConditions.length > 0) && (SelectedType == "MEASURE")) {
 
 													selectedCellOffset = tRow.children[j].offsetLeft
-													for (var prevRow = 1; prevRow < jQuery("#" + self.controlName + "_" + self.query + " tr").length; prevRow++) {
+													for (var prevRow = 1; prevRow < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length; prevRow++) {
 														if (prevRow != i) {
 															var exit = false
-															var row = jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
+															var row = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[prevRow];
 															for (var iterRow = 0; iterRow < row.children.length && !exit; iterRow++) {
 																var offsetIter = row.children[iterRow].offsetLeft + row.children[iterRow].offsetWidth
 																if (offsetIter > selectedCellOffset) {
@@ -29169,8 +29165,8 @@ if (typeof exports != "undefined") {
 						self.SelectNodes(self.selection.SelectedNode[s].value, self.selection.SelectedNode[s].type, SelectedMorDNumber, self.selection.SelectedNode[s].rowData[0], true);
 					} else {
 
-						for (var i = 0; i < jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//search selected cell in every row
-							var tRow = jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
+						for (var i = 0; i < OAT.jQuery("#" + self.controlName + "_" + self.query + " tr").length; i++) {//search selected cell in every row
+							var tRow = OAT.jQuery("#" + self.controlName + "_" + self.query + " tr")[i];
 							for (var j = 0; j < tRow.children.length; j++) {
 								var value = jQuery(tRow.children[j]).data('itemValue');
 								var type = jQuery(tRow.children[j]).data('typeMorD');
@@ -29281,7 +29277,7 @@ if (typeof exports != "undefined") {
 		
 		this.selectValue = function (selection) {
 
-			OAT.ClearSelectedNodes(jQuery("#" + self.controlName + "_" + self.query));
+			OAT.ClearSelectedNodes(OAT.jQuery("#" + self.controlName + "_" + self.query));
 			self.selection.SelectedNode = [];
 			
 			var s = -2;			
@@ -29325,7 +29321,7 @@ if (typeof exports != "undefined") {
 		
 		
 		this.deselectValue = function(){
-			OAT.ClearSelectedNodes(jQuery("#" + self.controlName + "_" + self.query));
+			OAT.ClearSelectedNodes(OAT.jQuery("#" + self.controlName + "_" + self.query));
 			self.selection.SelectedNode = [];
 		}
 		
