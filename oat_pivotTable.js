@@ -166,7 +166,8 @@ var OAT = {};
 						}
 						
 						if (type == "real") {
-							newValue = parseFloat(value).toFixed(2);
+							var newValue = value;
+						/* 	newValue = parseFloat(value).toFixed(2); */
 							valueSplit = newValue.split(".");
 						}
 					
