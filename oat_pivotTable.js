@@ -11633,7 +11633,7 @@ var jsPDF = (function () {
 					if (OAT_JS.grid.gridData[self.grid.UcId].differentValuesPaginationInfo[dataField].previousPage == 0)
 					{
 						OAT_JS.grid.initValueRead(self.grid.UcId, 0, dataField)
-						jQuery(".oat_winrect_container").css({ left:  "-10000000px", top: "-10000000px" })
+						OAT.jQuery(".oat_winrect_container").css({ left:  "-10000000px", top: "-10000000px" })
 						var clickEvent = jQuery.extend(true, {}, event);
 						var wait = function(){
 							if (OAT_JS.grid.gridData[self.grid.UcId].differentValuesPaginationInfo[dataField].previousPage == 0) {
@@ -12303,7 +12303,7 @@ var jsPDF = (function () {
 
 
 		var refresh = function () {
-			jQuery(".oat_winrect_container").css({ display: "none" });
+			OAT.jQuery(".oat_winrect_container").css({ display: "none" });
 		}
 
 		var colNumber = _self.number;
@@ -12323,15 +12323,15 @@ var jsPDF = (function () {
         var containerOffset = jQuery(OAT_JS.grid.gridData[_self.grid.UcId].Container).offset();
 
 		if (_self.grid.isSD) { //android
-			jQuery(".oat_winrect_container").css({ left: "-1500px", top: (currentOffset.top-containerOffset.top) + "px" })
+			OAT.jQuery(".oat_winrect_container").css({ left: "-1500px", top: (currentOffset.top-containerOffset.top) + "px" })
 		} else {
 			if (OAT_JS.grid.gridData[_self.grid.UcId].mFlexGrid)
 			{
-				jQuery(".oat_winrect_container").css({ position:"fixed", left: jQuery(event.currentTarget).offset().left + "px", top: (jQuery(event.currentTarget).offset().top - jQuery(window).scrollTop() )+ "px" })  //02-05
+				OAT.jQuery(".oat_winrect_container").css({ position:"fixed", left: jQuery(event.currentTarget).offset().left + "px", top: (jQuery(event.currentTarget).offset().top - jQuery(window).scrollTop() )+ "px" })  //02-05
 			}
 			else
 			{
-				jQuery(".oat_winrect_container").css({ left: (currentOffset.left - containerOffset.left) + "px", top: (currentOffset.top - containerOffset.top) + "px" })
+				OAT.jQuery(".oat_winrect_container").css({ left: (currentOffset.left - containerOffset.left) + "px", top: (currentOffset.top - containerOffset.top) + "px" })
 			}
 		}
 
@@ -12340,11 +12340,11 @@ var jsPDF = (function () {
 		/* contents */
 
 		//add title
-		jQuery(".oat_winrect_title").find(".winrect_title_label").remove()
+		OAT.jQuery(".oat_winrect_title").find(".winrect_title_label").remove()
 
 		var spantitle = OAT.Dom.create("label");
 		if (_self.grid.isSD) { //android
-			jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
+			OAT.jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
 			spantitle.setAttribute("class", "winrect_title_label winrect_title_label_small");
 		} else {
 			spantitle.setAttribute("class", "winrect_title_label");
@@ -12361,7 +12361,7 @@ var jsPDF = (function () {
 		OAT.addTextNode(spantitle, dimension_Title);
 		
 		//OAT.addTextNode(spantitle, _self.grid.columns[colNumber].getAttribute("displayName"));
-		jQuery(".oat_winrect_title").append(spantitle)
+		OAT.jQuery(".oat_winrect_title").append(spantitle)
 
 		
 		var cached = Math.floor(Math.random() * 10000)
@@ -12400,9 +12400,9 @@ var jsPDF = (function () {
 					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, false, dataFieldId, "Ascending", "", "")
 				
 				var idI = "i_" + this.getAttribute("id");
-				var inputAsc = jQuery("#"+idI)[0];
+				var inputAsc = OAT.jQuery("#"+idI)[0];
 				inputAsc.textContent = "radio_button_checked";
-				var inputDsc = jQuery("#"+idI.replace("asc", "desc"))[0];
+				var inputDsc = OAT.jQuery("#"+idI.replace("asc", "desc"))[0];
 				inputDsc.textContent = "radio_button_unchecked";
 				
 			});
@@ -12447,9 +12447,9 @@ var jsPDF = (function () {
 					OAT_JS.grid.gridData[_self.grid.UcId].Events.getDataForTable(_self.grid.UcId, 1, OAT_JS.grid.gridData[_self.grid.UcId].rowsPerPage, false, dataFieldId, "Descending", "", "");
 				
 				var idI = "i_" + this.getAttribute("id");
-				var inputDsc = jQuery("#"+idI)[0];
+				var inputDsc = OAT.jQuery("#"+idI)[0];
 				inputDsc.textContent = "radio_button_checked";
-				var inputAsc = jQuery("#"+idI.replace("desc", "asc"))[0];
+				var inputAsc = OAT.jQuery("#"+idI.replace("desc", "asc"))[0];
 				inputAsc.textContent = "radio_button_unchecked";
 				
 			});
@@ -12512,8 +12512,8 @@ var jsPDF = (function () {
 				
 
 				var dataFieldsPos = [];
-				for (var idF = 0; idF < jQuery("#" + _self.grid.controlName).find("thead td").length; idF++) {
-					dataFieldsPos.push(jQuery("#" + _self.grid.controlName).find("thead td")[idF].getAttribute("dataField"))
+				for (var idF = 0; idF < OAT.jQuery("#" + _self.grid.controlName).find("thead td").length; idF++) {
+					dataFieldsPos.push(OAT.jQuery("#" + _self.grid.controlName).find("thead td")[idF].getAttribute("dataField"))
 				}
 				OAT_JS.grid.setDataFieldPosition(_self.grid.UcId, dataFieldsPos);
 				refresh();
@@ -12586,8 +12586,8 @@ var jsPDF = (function () {
 					}
 				
 				var dataFieldsPos = [];
-				for (var idF = 0; idF < jQuery("#" + _self.grid.controlName).find("thead td").length; idF++) {
-					dataFieldsPos.push(jQuery("#" + _self.grid.controlName).find("thead td")[idF].getAttribute("dataField"))
+				for (var idF = 0; idF < OAT.jQuery("#" + _self.grid.controlName).find("thead td").length; idF++) {
+					dataFieldsPos.push(OAT.jQuery("#" + _self.grid.controlName).find("thead td")[idF].getAttribute("dataField"))
 				}
 				OAT_JS.grid.setDataFieldPosition(_self.grid.UcId, dataFieldsPos);
 				refresh();
@@ -12641,12 +12641,12 @@ var jsPDF = (function () {
 			setTimeout(function () {
 
 				var screenWidth = window.innerWidth;
-				var initialPopUpWidth = jQuery(".oat_winrect_container")[0].clientWidth
+				var initialPopUpWidth = OAT.jQuery(".oat_winrect_container")[0].clientWidth
 
 
 				if (initialPopUpWidth == 0) {
-					var last = jQuery(".oat_winrect_container").length;
-					initialPopUpWidth = jQuery(".oat_winrect_container")[last - 1].clientWidth
+					var last = OAT.jQuery(".oat_winrect_container").length;
+					initialPopUpWidth = OAT.jQuery(".oat_winrect_container")[last - 1].clientWidth
 				}
 
 
@@ -12656,7 +12656,7 @@ var jsPDF = (function () {
 
 				var padding = (screenWidth - initialPopUpWidth) / 2 + jQuery(window).scrollLeft()
 
-				jQuery(".oat_winrect_container").css({ left: padding + "px", width: initialPopUpWidth + "px" })
+				OAT.jQuery(".oat_winrect_container").css({ left: padding + "px", width: initialPopUpWidth + "px" })
 
 
 			}, 50)
@@ -12930,7 +12930,7 @@ var jsPDF = (function () {
 		pict_value = pict_value.replace(/ /g, "\u00A0") + '\u00A0\u00A0\u00A0\u00A0\u00A0'
 		var pair = getPairWithIcon(pict_value, "pivot_distinct_" + 0, checked);
 		pair[0].setAttribute('value', value);
-		var fixHeigthDiv = jQuery("#values_" + _self.grid.UcId + "_" + dataField)[0]//colNumber)[0]
+		var fixHeigthDiv = OAT.jQuery("#values_" + _self.grid.UcId + "_" + dataField)[0]//colNumber)[0]
 		fixHeigthDiv.appendChild(pair[0]);
 
 		var checked_value = checked;
@@ -12966,19 +12966,19 @@ var jsPDF = (function () {
 			unCheckedClass = "uncheck_item_img_small"
 		}
 
-		jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).find("." + checkedClass).remove()
-		jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).find("." + unCheckedClass).remove()
+		OAT.jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).find("." + checkedClass).remove()
+		OAT.jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).find("." + unCheckedClass).remove()
 
-		jQuery(".last_div_popup ." + checkedClass).remove()
-		jQuery(".last_div_popup ." + unCheckedClass).remove()
+		OAT.jQuery(".last_div_popup ." + checkedClass).remove()
+		OAT.jQuery(".last_div_popup ." + unCheckedClass).remove()
 
 		//set class of pairs container
 		if (withScroll) {
-			jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).removeClass("pivot_popup_auto");
-			jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).addClass("pivot_popup_fix");
+			OAT.jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).removeClass("pivot_popup_auto");
+			OAT.jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).addClass("pivot_popup_fix");
 		} else {
-			jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).removeClass("pivot_popup_fix");
-			jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).addClass("pivot_popup_auto");
+			OAT.jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).removeClass("pivot_popup_fix");
+			OAT.jQuery("#values_" + _self.grid.UcId + "_" + OAT_JS.grid.gridData[_self.grid.UcId].columnDataField[colNumber]).addClass("pivot_popup_auto");
 		}
 	}
 	/* statefull Rutines */
@@ -13215,7 +13215,7 @@ var jsPDF = (function () {
 	OAT.SelectNodes = function(self, value, isRefresh, colNumber, rowNumber, selectedItemNumber, conditions) {
 		if (rowNumber >= 0) {
 
-			var row = jQuery("#" + self.grid.controlName + " tbody").find("tr")[rowNumber];
+			var row = OAT.jQuery("#" + self.grid.controlName + " tbody").find("tr")[rowNumber];
 
 			if (OAT.IsNodeSelected(jQuery(row).find("td")[colNumber])) {
 				OAT.ClearSelectedNodes(jQuery(self.grid.html));
@@ -13258,7 +13258,7 @@ var jsPDF = (function () {
 					conditions : conditions
 				}
 
-			for (var i = 0; i < jQuery("#" + self.grid.controlName + " tbody").find("tr").length; i++) {
+			for (var i = 0; i < OAT.jQuery("#" + self.grid.controlName + " tbody").find("tr").length; i++) {
 
 				var dataType = self.grid.columnsDataType[ self.grid.TableDataFilds.indexOf(OAT_JS.grid.gridData[self.grid.UcId].columnDataField[colNumber])];
 
@@ -13274,7 +13274,7 @@ var jsPDF = (function () {
 				if (sameValue) {
 					//check all conditions
 					if (OAT.checkConditions(self, OAT_JS.grid.gridData[self.grid.UcId].rowsData[i], conditions)) {
-						var row = jQuery("#" + self.grid.controlName + " tbody").find("tr")[i];
+						var row = OAT.jQuery("#" + self.grid.controlName + " tbody").find("tr")[i];
 
 						OAT.SetNodeBackgroundColor(jQuery(row).find("td")[colNumber], self.grid.selection.Color, jQuery(self.grid.html))
 						//save selected node
@@ -13494,7 +13494,7 @@ var jsPDF = (function () {
 		//count hidden columns
 		var hiddenColumns = [];
 		for (var i = 0; i < 1; i++) {
-			var tRow = jQuery("#" + _self.grid.controlName + " tr")[i];
+			var tRow = OAT.jQuery("#" + _self.grid.controlName + " tr")[i];
 			for (var j = 0; j < tRow.children.length; j++) {
 				if (tRow.children[j].style.display == "none") {
 					hiddenColumns.push(j);
@@ -13504,14 +13504,14 @@ var jsPDF = (function () {
 
 
 		//calc max length of paper
-		var hgt = 20 + jQuery("#" + _self.grid.controlName + " tr").length * 30 + 5;
+		var hgt = 20 + OAT.jQuery("#" + _self.grid.controlName + " tr").length * 30 + 5;
 		if (hgt < 841) {
 			hgt = 841;
 		}
 
 		//calc max width of paper
 		var wdt = 0;
-		var tRow = jQuery("#" + _self.grid.controlName + " tr")[0].children.length - hiddenColumns.length;
+		var tRow = OAT.jQuery("#" + _self.grid.controlName + " tr")[0].children.length - hiddenColumns.length;
 		wdt = 20 + tRow * (30 + 65) + 5;
 		if (wdt < 595) {
 			wdt = 595;
@@ -13520,9 +13520,9 @@ var jsPDF = (function () {
 		//calculate columns width
 		var columnsWidth = [];
 
-		for (var i = 0; i < jQuery("#" + _self.grid.controlName + " tr").length; i++) {
+		for (var i = 0; i < OAT.jQuery("#" + _self.grid.controlName + " tr").length; i++) {
 
-			var tRow = jQuery("#" + _self.grid.controlName + " tr")[i];
+			var tRow = OAT.jQuery("#" + _self.grid.controlName + " tr")[i];
 			var columnInPdf = 0;
 			for (var j = 0; j < tRow.children.length; j++) {//for every cell in the row
 				var childText = tRow.children[j].textContent;
@@ -13596,14 +13596,14 @@ var jsPDF = (function () {
 		}
 		doc.setFontSize(8);
 
-		doc.line(18, 13, 20 + getXOffset(jQuery("#" + _self.grid.controlName + " tr")[0].children.length - hiddenColumns.length, columnsWidth), 13);
+		doc.line(18, 13, 20 + getXOffset(OAT.jQuery("#" + _self.grid.controlName + " tr")[0].children.length - hiddenColumns.length, columnsWidth), 13);
 
 		var y = -1;
 		var nroPag = 1
-		var verticalHeight = Math.min((jQuery("#" + _self.grid.controlName + " tr").length) - (nroPag - 1) * 26, 26)
-		for (var i = 0; i < jQuery("#" + _self.grid.controlName + " tr").length; i++) {
+		var verticalHeight = Math.min((OAT.jQuery("#" + _self.grid.controlName + " tr").length) - (nroPag - 1) * 26, 26)
+		for (var i = 0; i < OAT.jQuery("#" + _self.grid.controlName + " tr").length; i++) {
 			y++;
-			var tRow = jQuery("#" + _self.grid.controlName + " tr")[i];
+			var tRow = OAT.jQuery("#" + _self.grid.controlName + " tr")[i];
 
 			var columnInPdf = 0;
 
@@ -13719,11 +13719,11 @@ var jsPDF = (function () {
 			if (y >= 25) {
 				doc.setDrawColor(0, 0, 0)
 				nroPag++
-				verticalHeight = Math.min((jQuery("#" + _self.grid.controlName + " tr").length - 1) - (nroPag - 1) * 26 + 1, 26)
+				verticalHeight = Math.min((OAT.jQuery("#" + _self.grid.controlName + " tr").length - 1) - (nroPag - 1) * 26 + 1, 26)
 				y = -1
 				doc.addPage()
 				//top horizontal line
-				doc.line(18, 13, 20 + getXOffset(jQuery("#" + _self.grid.controlName + " tr")[0].children.length - hiddenColumns.length, columnsWidth), 13);
+				doc.line(18, 13, 20 + getXOffset(OAT.jQuery("#" + _self.grid.controlName + " tr")[0].children.length - hiddenColumns.length, columnsWidth), 13);
 			}
 		}
 		
@@ -13740,10 +13740,10 @@ var jsPDF = (function () {
 		
 		var table = '<table><tbody>'
 
-		for (var i = 0; i < jQuery("#" + _self.grid.controlName + " tr").length; i++) {//for every row
+		for (var i = 0; i < OAT.jQuery("#" + _self.grid.controlName + " tr").length; i++) {//for every row
 			table = table + '<tr>';
 
-			var tRow = jQuery("#" + _self.grid.controlName + " tr")[i];
+			var tRow = OAT.jQuery("#" + _self.grid.controlName + " tr")[i];
 			for (var j = 0; j < tRow.children.length; j++) {//for every cell in the row
 				var childText;
 				if (i === 0) {
@@ -13841,7 +13841,7 @@ var jsPDF = (function () {
 
 		var dataTable = [];
 
-		var rowsToAdd = jQuery("#" + _self.grid.controlName + " tr").length;
+		var rowsToAdd = OAT.jQuery("#" + _self.grid.controlName + " tr").length;
 		if ((serverPagination != undefined) && (serverPagination)) {
 			rowsToAdd = 1;
 		}
@@ -13851,7 +13851,7 @@ var jsPDF = (function () {
 		for (var i = 0; i < rowsToAdd; i++) {//for every row
 			var dataRow = [];
 
-			var tRow = jQuery("#" + _self.grid.controlName + " tr")[i];
+			var tRow = OAT.jQuery("#" + _self.grid.controlName + " tr")[i];
 			for (var j = 0; j < tRow.children.length; j++) {//for every cell in the row
 				var childText = tRow.children[j].textContent;
 				var hidden = tRow.children[j].getAttribute('hidden');
@@ -14104,7 +14104,7 @@ var jsPDF = (function () {
 	OAT.ExportToXML = function (self, fileName) {
 		var hiddenColumns = [], data;
 		for (var i = 0; i < 1; i++) {
-			var tRow = jQuery("#" + self.grid.controlName + " tr")[i];
+			var tRow = OAT.jQuery("#" + self.grid.controlName + " tr")[i];
 			for (var j = 0; j < tRow.children.length; j++) {
 				if (tRow.children[j].style.display == "none") {
 					hiddenColumns.push(j);
@@ -14241,10 +14241,10 @@ var jsPDF = (function () {
 		xml = xml + '</HEAD>';
 		xml = xml + '<BODY>';
 
-		for (var i = 0; i < jQuery("#" + self.grid.controlName + " tr").length; i++) {//for every row
+		for (var i = 0; i < OAT.jQuery("#" + self.grid.controlName + " tr").length; i++) {//for every row
 			xml = xml + '<TR>';
 
-			var tRow = jQuery("#" + self.grid.controlName + " tr")[i];
+			var tRow = OAT.jQuery("#" + self.grid.controlName + " tr")[i];
 			for (var j = 0; j < tRow.children.length; j++) {//for every cell in the row
 				var childText = OAT.removeIconFont(tRow.children[j].textContent).trim();
 				var hidden = tRow.children[j].getAttribute('hidden');
@@ -14460,7 +14460,7 @@ if (typeof exports != "undefined") {
 		if (pivotParams.RealType == "Table") {
 			pivotParams.ServerPagingPivot = false;
 			if (QueryViewerCollection.AutoRefreshGroup == "") {//if (qv.collection[pivotParams.UcId].AutoRefreshGroup == "") {
-				jQuery(".oat_winrect_container").remove()
+				OAT.jQuery(".oat_winrect_container").remove()
 			}
 		}
 		OAT.Dom.attach(pivotParams.container, "mousemove", OAT.Drag.move);
@@ -20903,7 +20903,7 @@ if (typeof exports != "undefined") {
 		this.initWhenServerPagination = function () {
 			self.propPage = OAT.Dom.create("div", {});
 			if ((self.QueryViewerCollection[self.IdForQueryViewerCollection].AutoRefreshGroup == "")) {
-				jQuery(".oat_winrect_container").remove();
+				OAT.jQuery(".oat_winrect_container").remove();
 			}
 			self.UserFilterValues = []; self.UserExpandValues = [];
 			for (var i = 0; i < self.headerRow.length; i++) {
@@ -21225,12 +21225,12 @@ if (typeof exports != "undefined") {
 
 			//set interval for handler values infinite scroll
 			setInterval(function () {
-				for (var t = 0; t < jQuery(".oat_winrect_container .pivot_popup_fix").length; t++) {
-					if ((!jQuery(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display) ||
-						(jQuery(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display != "none")) {
+				for (var t = 0; t < OAT.jQuery(".oat_winrect_container .pivot_popup_fix").length; t++) {
+					if ((!OAT.jQuery(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display) ||
+						(OAT.jQuery(".oat_winrect_container .pivot_popup_fix").closest(".oat_winrect_container")[t].style.display != "none")) {
 
-						if (jQuery(".oat_winrect_container .pivot_popup_fix").length > 0) {
-							var element = jQuery(".oat_winrect_container .pivot_popup_fix")[t];
+						if (OAT.jQuery(".oat_winrect_container .pivot_popup_fix").length > 0) {
+							var element = OAT.jQuery(".oat_winrect_container .pivot_popup_fix")[t];
 							var scrollBottom = element.scrollHeight - element.clientHeight - element.scrollTop
 							if (scrollBottom < 25) {
 								var UcId = element.getAttribute("ucid")
@@ -21523,7 +21523,7 @@ if (typeof exports != "undefined") {
 				
 					if (self.conditions[dimensionNumber].previousPage == undefined) {
 						self.initValueRead(self, dimensionNumber, self.stateLoad, self.conditions[dimensionNumber].dataField);
-						jQuery(".oat_winrect_container").css({ left:  "-10000000px", top: "-10000000px" })
+						OAT.jQuery(".oat_winrect_container").css({ left:  "-10000000px", top: "-10000000px" })
 						var clickEvent = jQuery.extend(true, {}, event);
 						var wait = function(){
 							if (self.conditions[dimensionNumber].previousPage == undefined) {
@@ -21544,7 +21544,7 @@ if (typeof exports != "undefined") {
 		this.ShowPopUp = function (cond, dimensionNumber, event) {
 
 			var refresh = function () {
-				jQuery(".oat_winrect_container").css({ display: "none" });
+				OAT.jQuery(".oat_winrect_container").css({ display: "none" });
 			}
 			var eventDiv;
 			var coords;
@@ -21562,16 +21562,16 @@ if (typeof exports != "undefined") {
 
 
 			if (self.isSD) { //android
-				jQuery(".oat_winrect_container").css({ left: "-1500px", top: jQuery(eventDiv).offset().top + "px" })
-				jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
+				OAT.jQuery(".oat_winrect_container").css({ left: "-1500px", top: jQuery(eventDiv).offset().top + "px" })
+				OAT.jQuery(".oat_winrect_container").addClass("oat_winrect_container_small")
 			} else {
 				if (self.mFlexGrid)
 				{ 
-					jQuery(".oat_winrect_container").css({ position:"fixed", left: jQuery(eventDiv).offset().left + "px", top: (jQuery(eventDiv).offset().top - jQuery(window).scrollTop())+ "px" })
+					OAT.jQuery(".oat_winrect_container").css({ position:"fixed", left: jQuery(eventDiv).offset().left + "px", top: (jQuery(eventDiv).offset().top - jQuery(window).scrollTop())+ "px" })
 				}
 				else
 				{
-					jQuery(".oat_winrect_container").css({ left: (jQuery(eventDiv).offset().left - jQuery(self.pivotContainer).offset().left) + "px", top: (jQuery(eventDiv).offset().top-jQuery(self.pivotContainer).offset().top) + "px" })
+					OAT.jQuery(".oat_winrect_container").css({ left: (jQuery(eventDiv).offset().left - jQuery(self.pivotContainer).offset().left) + "px", top: (jQuery(eventDiv).offset().top-jQuery(self.pivotContainer).offset().top) + "px" })
 				}
 			}
 
@@ -21582,7 +21582,7 @@ if (typeof exports != "undefined") {
 			/* contents */
 
 
-			jQuery(".oat_winrect_title").find(".winrect_title_label").remove()
+			OAT.jQuery(".oat_winrect_title").find(".winrect_title_label").remove()
 
 			var spantitle = OAT.Dom.create("label");
 			if (self.isSD) {
@@ -21591,7 +21591,7 @@ if (typeof exports != "undefined") {
 				spantitle.setAttribute("class", "winrect_title_label");
 			}
 			OAT.addTextNode(spantitle, self.columns[dimensionNumber].getAttribute("displayName"));
-			jQuery(".oat_winrect_title").append(spantitle)
+			OAT.jQuery(".oat_winrect_title").append(spantitle)
 
 
 			if (!disableColumnSort) {
@@ -21846,12 +21846,12 @@ if (typeof exports != "undefined") {
 				setTimeout(function () {
 
 					var screenWidth = window.innerWidth;
-					var initialPopUpWidth = jQuery(".oat_winrect_container")[0].clientWidth
+					var initialPopUpWidth = OAT.jQuery(".oat_winrect_container")[0].clientWidth
 
 
 					if (initialPopUpWidth == 0) {
-						var last = jQuery(".oat_winrect_container").length;
-						initialPopUpWidth = jQuery(".oat_winrect_container")[last - 1].clientWidth
+						var last = OAT.jQuery(".oat_winrect_container").length;
+						initialPopUpWidth = OAT.jQuery(".oat_winrect_container")[last - 1].clientWidth
 					}
 
 
@@ -21861,7 +21861,7 @@ if (typeof exports != "undefined") {
 
 					var padding = (screenWidth - initialPopUpWidth) / 2 + jQuery(window).scrollLeft()
 
-					jQuery(".oat_winrect_container").css({ left: padding + "px", width: initialPopUpWidth + "px" })
+					OAT.jQuery(".oat_winrect_container").css({ left: padding + "px", width: initialPopUpWidth + "px" })
 
 
 				}, 50)
@@ -22229,24 +22229,24 @@ if (typeof exports != "undefined") {
 			try {
 				var divDis = jQuery('<div class="disable_popup" ></div>');
 
-				if (jQuery("#" + self.containerName).length > 0) {
-					var ht = Math.min(jQuery("#" + UcId + "_" + self.query + "_pivot_page")[0].clientHeight
-						+ jQuery("#" + UcId + "_" + self.query + "_pivot_content")[0].clientHeight,
-						jQuery("#" + self.containerName)[0].clientHeight
+				if (OAT.jQuery("#" + self.containerName).length > 0) {
+					var ht = Math.min(OAT.jQuery("#" + UcId + "_" + self.query + "_pivot_page")[0].clientHeight
+						+ OAT.jQuery("#" + UcId + "_" + self.query + "_pivot_content")[0].clientHeight,
+						OAT.jQuery("#" + self.containerName)[0].clientHeight
 					)
-					var wd = Math.min(jQuery("#" + UcId + "_" + self.query)[0].clientWidth,
-						jQuery("#" + self.containerName)[0].clientWidth
+					var wd = Math.min(OAT.jQuery("#" + UcId + "_" + self.query)[0].clientWidth,
+						OAT.jQuery("#" + self.containerName)[0].clientWidth
 					)
-					if (jQuery("#" + self.containerName).closest(".gxwebcomponent").length > 0) { //for gxQuery
-						if (jQuery("#" + UcId + "_" + self.query + "_tablePagination").length > 0) {
-							ht = ht + jQuery("#" + UcId + "_" + self.query + "_tablePagination")[0].clientHeight
+					if (OAT.jQuery("#" + self.containerName).closest(".gxwebcomponent").length > 0) { //for gxQuery
+						if (OAT.jQuery("#" + UcId + "_" + self.query + "_tablePagination").length > 0) {
+							ht = ht + OAT.jQuery("#" + UcId + "_" + self.query + "_tablePagination")[0].clientHeight
 						}
 						jQuery(divDis).css({
 							'width': wd,
 							'height': ht,
 							'position': 'absolute',
-							'top': jQuery("#" + self.containerName)[0].offsetTop,//jQuery("#" + self.containerName)[0].offsetTop,
-							'left': jQuery("#" + self.containerName)[0].offsetLeft,
+							'top': OAT.jQuery("#" + self.containerName)[0].offsetTop,//OAT.jQuery("#" + self.containerName)[0].offsetTop,
+							'left': OAT.jQuery("#" + self.containerName)[0].offsetLeft,
 							'background-color': 'rgba(0,0,0,0.1)',
 							'cursor': 'wait',
 							'z-index': 99
@@ -22256,53 +22256,53 @@ if (typeof exports != "undefined") {
 							'width': wd,
 							'height': ht,
 							'position': 'absolute',
-							'top': jQuery("#" + self.containerName)[0].offsetTop,//jQuery("#" + self.containerName).offset().top,//0 	
-							'left': jQuery("#" + UcId + "_" + self.query).offset().left,
+							'top': OAT.jQuery("#" + self.containerName)[0].offsetTop,//OAT.jQuery("#" + self.containerName).offset().top,//0 	
+							'left': OAT.jQuery("#" + UcId + "_" + self.query).offset().left,
 							'background-color': 'rgba(0,0,0,0.1)',
 							'cursor': 'wait',
 							'z-index': 999
 						});
 					}
 
-					jQuery("#" + self.containerName).append(divDis)
+					OAT.jQuery("#" + self.containerName).append(divDis)
 
 				} else {
-					var ht = Math.min(jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol").find(".pivot_filter_div")[0].clientHeight
-						+ jQuery("#" + UcId + "_" + self.query).closest(".conteiner_table_div")[0].clientHeight,
-						jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol")[0].clientHeight
+					var ht = Math.min(OAT.jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol").find(".pivot_filter_div")[0].clientHeight
+						+ OAT.jQuery("#" + UcId + "_" + self.query).closest(".conteiner_table_div")[0].clientHeight,
+						OAT.jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol")[0].clientHeight
 					)
 
-					var wd = Math.min(jQuery("#" + UcId + "_" + self.query)[0].clientWidth,
-						jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol")[0].clientWidth
+					var wd = Math.min(OAT.jQuery("#" + UcId + "_" + self.query)[0].clientWidth,
+						OAT.jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol")[0].clientWidth
 					)
 
-					if (jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol").find(".pivot_pag_div").length > 0) {
-						ht = ht + jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol").find(".pivot_pag_div")[0].clientHeight
+					if (OAT.jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol").find(".pivot_pag_div").length > 0) {
+						ht = ht + OAT.jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol").find(".pivot_pag_div")[0].clientHeight
 					}
 
 					jQuery(divDis).css({
 						'width': wd,
 						'height': ht,
 						'position': 'absolute',
-						'top': jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol")[0].offsetTop,
-						'left': jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol")[0].offsetLeft,
+						'top': OAT.jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol")[0].offsetTop,
+						'left': OAT.jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol")[0].offsetLeft,
 						'background-color': 'rgba(0,0,0,0.1)',
 						'cursor': 'wait',
 						'z-index': 99
 					});
 
-					jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol").append(divDis)
+					OAT.jQuery("#" + UcId + "_" + self.query).closest(".gx_usercontrol").append(divDis)
 				}
-				jQuery(".oat_winrect_container").block({ message: null })
+				OAT.jQuery(".oat_winrect_container").block({ message: null })
 			} catch (ERROR) { }
 		}
 
 		this.EneablePivot = function () {
-			jQuery(".disable_popup").remove()
-			while (jQuery(".disable_popup").length > 0) {
-				jQuery(".disable_popup").remove()
+			OAT.jQuery(".disable_popup").remove()
+			while (OAT.jQuery(".disable_popup").length > 0) {
+				OAT.jQuery(".disable_popup").remove()
 			}
-			jQuery(".oat_winrect_container").unblock()
+			OAT.jQuery(".oat_winrect_container").unblock()
 		}
 
 		this.addExpandCollapseFunctionality = function (th, item, rowConditionNumber, expanded, rowDimension) {
@@ -22701,16 +22701,16 @@ if (typeof exports != "undefined") {
 				var source = OAT.Event.source(b);
 				var clean = false;
 				var closing = false;
-				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
-					var obj = jQuery(".oat_winrect_container")[i];
+				for (var i = 0; i < OAT.jQuery(".oat_winrect_container").length; i++) {
+					var obj = OAT.jQuery(".oat_winrect_container")[i];
 					if (!(source == obj) && !OAT.Dom.isChild(source, obj)) {
 						clean = true;
 					} else {
 						clean = false; break;
 					}
 				}
-				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
-					if (jQuery(".oat_winrect_container")[i].style.display != "none") {
+				for (var i = 0; i < OAT.jQuery(".oat_winrect_container").length; i++) {
+					if (OAT.jQuery(".oat_winrect_container")[i].style.display != "none") {
 						closing = true;
 					}
 				}
@@ -22720,7 +22720,7 @@ if (typeof exports != "undefined") {
 					self.resetAllScrollValue(self.UcId);
 				}
 				if (clean) {
-					jQuery(".oat_winrect_container").css({ display: "none" });
+					OAT.jQuery(".oat_winrect_container").css({ display: "none" });
 				}
 			};
 
@@ -22728,16 +22728,16 @@ if (typeof exports != "undefined") {
 				var source = OAT.Event.source(b);
 				var clean = false;
 				var closing = false;
-				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
-					var obj = jQuery(".oat_winrect_container")[i];
+				for (var i = 0; i < OAT.jQuery(".oat_winrect_container").length; i++) {
+					var obj = OAT.jQuery(".oat_winrect_container")[i];
 					if (!(source == obj) && !OAT.Dom.isChild(source, obj)) {
 						clean = true;
 					} else {
 						clean = false; break;
 					}
 				}
-				for (var i = 0; i < jQuery(".oat_winrect_container").length; i++) {
-					if (jQuery(".oat_winrect_container")[i].style.display != "none") {
+				for (var i = 0; i < OAT.jQuery(".oat_winrect_container").length; i++) {
+					if (OAT.jQuery(".oat_winrect_container")[i].style.display != "none") {
 						closing = true;
 					}
 				}
@@ -22747,7 +22747,7 @@ if (typeof exports != "undefined") {
 					self.resetAllScrollValue(self.UcId);
 				}
 				if (clean) {
-					jQuery(".oat_winrect_container").css({ display: "none" });
+					OAT.jQuery(".oat_winrect_container").css({ display: "none" });
 				}
 			};
 
@@ -22929,12 +22929,12 @@ if (typeof exports != "undefined") {
 				setTimeout(function () {
 
 					var screenWidth = window.innerWidth;
-					var initialPopUpWidth = jQuery(".ExportPopup")[0].clientWidth
+					var initialPopUpWidth = OAT.jQuery(".ExportPopup")[0].clientWidth
 
 
 					if (initialPopUpWidth == 0) {
-						var last = jQuery(".ExportPopup").length;
-						initialPopUpWidth = jQuery(".ExportPopup")[last - 1].clientWidth
+						var last = OAT.jQuery(".ExportPopup").length;
+						initialPopUpWidth = OAT.jQuery(".ExportPopup")[last - 1].clientWidth
 					}
 
 					if (self.isSD) {//android		
@@ -27008,7 +27008,7 @@ if (typeof exports != "undefined") {
 				//if pivot has less than 10 rows => no need to paging
 				var options = {
 					currPage: self.pageData.ServerPageNumber,
-					ignoreRows: jQuery('tbody tr[title_row=true]', jQuery("#" + this.controlName + "_" + self.query)),
+					ignoreRows: OAT.jQuery('tbody tr[title_row=true]', OAT.jQuery("#" + this.controlName + "_" + self.query)),
 					optionsForRows: OAT.AddItemToList( [10, 15, 20], initMetadata.RowsPerPage ),
 					rowsPerPage: self.rowsPerPage,
 					topNav: false,
@@ -27021,18 +27021,18 @@ if (typeof exports != "undefined") {
 
 				OAT.partialTablePagination(OAT.jQuery("#" + self.controlName + "_" + self.query), options);
 
-				jQuery("#" + this.controlName + "_" + self.query).css("margin-bottom", "0px");
+				OAT.jQuery("#" + this.controlName + "_" + self.query).css("margin-bottom", "0px");
 
 			}
 
-			if ((jQuery("#" + this.controlName + "_" + self.query).length > 0) && (!autoResize)) {
-				var clientWdt = jQuery("#" + this.containerName)[0].clientWidth
-				jQuery("#" + this.controlName + "_" + self.query).css({ width: (clientWdt - 4) + "px" })
+			if ((OAT.jQuery("#" + this.controlName + "_" + self.query).length > 0) && (!autoResize)) {
+				var clientWdt = OAT.jQuery("#" + this.containerName)[0].clientWidth
+				OAT.jQuery("#" + this.controlName + "_" + self.query).css({ width: (clientWdt - 4) + "px" })
 			}
 
 			try {
-				var wd = jQuery("#" + this.controlName + "_" + self.query)[0].offsetWidth - 4;
-				if (jQuery("#MAINFORM")[0].className.indexOf("form-horizontal") > -1) {
+				var wd = OAT.jQuery("#" + this.controlName + "_" + self.query)[0].offsetWidth - 4;
+				if (OAT.jQuery("#MAINFORM")[0].className.indexOf("form-horizontal") > -1) {
 					wd = wd + 4;
 				}
 			} catch (Error) {
@@ -27041,14 +27041,14 @@ if (typeof exports != "undefined") {
 
 
 			try {
-				var wd2 = jQuery("#" + this.controlName + "_" + self.query)[0].offsetWidth - 1;
-				jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" }); 
-				jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" }); 
-				jQuery("#" + this.controlName + "_" + self.query + "_tablePagination").css({ width: wd2 + "px" });
+				var wd2 = OAT.jQuery("#" + this.controlName + "_" + self.query)[0].offsetWidth - 1;
+				OAT.jQuery("#" + UcId + "_" + self.query + "_title_div").css({ width: wd + "px" }); 
+				OAT.jQuery("#" + UcId + "_" + self.query + "_pivot_page").css({ width: wd + "px" }); 
+				OAT.jQuery("#" + this.controlName + "_" + self.query + "_tablePagination").css({ width: wd2 + "px" });
 
-				if ((jQuery("#" + this.controlName + "_" + self.query + "_tablePagination_paginater").length > 0) && (jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")[0].getBoundingClientRect().bottom < jQuery("#" + this.controlName + "_" + self.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
+				if ((OAT.jQuery("#" + this.controlName + "_" + self.query + "_tablePagination_paginater").length > 0) && (OAT.jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")[0].getBoundingClientRect().bottom < OAT.jQuery("#" + this.controlName + "_" + self.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
 
-					jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")
+					OAT.jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")
 
 				}
 			} catch (Error) {
@@ -27062,7 +27062,7 @@ if (typeof exports != "undefined") {
 				//verificar que sea pivot
 				if ((OAT.jQuery("#" + self.controlName + "_" + self.query).length > 0) && (OAT.jQuery("#" + self.controlName + "_" + self.query)[0].getAttribute("class") === "pivot_table")) {
 					if ((OAT.jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater").length > 0) && (OAT.jQuery("#" + self.controlName + "_" + self.query + "_tablePagination")[0].getBoundingClientRect().bottom < OAT.jQuery("#" + self.controlName + "_" + self.query + "_tablePagination_paginater")[0].getBoundingClientRect().bottom)) {
-						jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")
+						OAT.jQuery("#" + this.controlName + "_" + self.query + "_tablePagination")
 					}
 				}
 				
@@ -27070,7 +27070,7 @@ if (typeof exports != "undefined") {
 					var actualScrollTo = jQuery(window).scrollTop();
 					var diffScroll = Math.abs(self.previousScrollTop - actualScrollTo);
 					if (diffScroll > 3){
-						jQuery(".oat_winrect_container").css({ display: "none" });
+						OAT.jQuery(".oat_winrect_container").css({ display: "none" });
 					}
 					self.previousScrollTop = actualScrollTo;
 				}
@@ -27753,7 +27753,7 @@ if (typeof exports != "undefined") {
 		}
 
 		this.changeValues = function (UcId, dataField, columnNumber, data, filterText) { //when filter by search filter, delete pairs and show new ones
-			var searchInput = jQuery("#" + self.UcId + columnNumber)[0];
+			var searchInput = OAT.jQuery("#" + self.UcId + columnNumber)[0];
 
 			var sInput = searchInput.value;
 			if (searchInput.value) {
@@ -27946,7 +27946,7 @@ if (typeof exports != "undefined") {
 				pict_value = pict_value.replace(/ /g, "\u00A0") + '\u00A0\u00A0\u00A0\u00A0\u00A0'
 				var pair = getPair(pict_value, "pivot_distinct_" + 0, checked);
 				pair[0].setAttribute('value', value);
-				var fixHeigthDiv = jQuery("#values_" + self.UcId + "_" + colNumber)[0]
+				var fixHeigthDiv = OAT.jQuery("#values_" + self.UcId + "_" + colNumber)[0]
 				fixHeigthDiv.appendChild(pair[0]);
 
 				if (fixHeigthDiv.children.length > 9) {
@@ -27981,19 +27981,19 @@ if (typeof exports != "undefined") {
 				unCheckedClass = "uncheck_item_img_small"
 			}
 
-			jQuery("#values_" + self.UcId + "_" + colNumber).find("." + checkedClass).remove()
-			jQuery("#values_" + self.UcId + "_" + colNumber).find("." + unCheckedClass).remove()
+			OAT.jQuery("#values_" + self.UcId + "_" + colNumber).find("." + checkedClass).remove()
+			OAT.jQuery("#values_" + self.UcId + "_" + colNumber).find("." + unCheckedClass).remove()
 
-			jQuery(".last_div_popup ." + checkedClass).remove()
-			jQuery(".last_div_popup ." + unCheckedClass).remove()
+			OAT.jQuery(".last_div_popup ." + checkedClass).remove()
+			OAT.jQuery(".last_div_popup ." + unCheckedClass).remove()
 
 			//set class of pairs container
 			if (withScroll) {
-				jQuery("#values_" + self.UcId + "_" + colNumber).removeClass("pivot_popup_auto");
-				jQuery("#values_" + self.UcId + "_" + colNumber).addClass("pivot_popup_fix");
+				OAT.jQuery("#values_" + self.UcId + "_" + colNumber).removeClass("pivot_popup_auto");
+				OAT.jQuery("#values_" + self.UcId + "_" + colNumber).addClass("pivot_popup_fix");
 			} else {
-				jQuery("#values_" + self.UcId + "_" + colNumber).removeClass("pivot_popup_fix");
-				jQuery("#values_" + self.UcId + "_" + colNumber).addClass("pivot_popup_auto");
+				OAT.jQuery("#values_" + self.UcId + "_" + colNumber).removeClass("pivot_popup_fix");
+				OAT.jQuery("#values_" + self.UcId + "_" + colNumber).addClass("pivot_popup_auto");
 			}
 		}
 
