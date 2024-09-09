@@ -22928,13 +22928,16 @@ if (typeof exports != "undefined") {
 
 				setTimeout(function () {
 
+                    let exportPopupDiv = OAT.jQuery(".ExportPopup");
+                    let exportIconOffset = jQuery(iconExport).offset();
+                    
 					var screenWidth = window.innerWidth;
-					var initialPopUpWidth = OAT.jQuery(".ExportPopup")[0].clientWidth
+					var initialPopUpWidth = exportPopupDiv[0].clientWidth
 
 
 					if (initialPopUpWidth == 0) {
-						var last = OAT.jQuery(".ExportPopup").length;
-						initialPopUpWidth = OAT.jQuery(".ExportPopup")[last - 1].clientWidth
+						var last = exportPopupDiv.length;
+						initialPopUpWidth = exportPopupDiv[last - 1].clientWidth
 					}
 
 					if (self.isSD) {//android		
@@ -22944,24 +22947,24 @@ if (typeof exports != "undefined") {
 
 						var padding = (screenWidth - initialPopUpWidth) / 2 + jQuery(window).scrollLeft()
 
-						jQuery(".ExportPopup").css({ left: padding + "px", top: jQuery(iconExport).offset().top + "px", width: initialPopUpWidth + "px" })
+						exportPopupDiv.css({ left: padding + "px", top: exportIconOffset.top + "px", width: initialPopUpWidth + "px" })
 
 					} else {
 
-						var offsetLeft = jQuery(iconExport).offset().left;
+						var offsetLeft = exportIconOffset.left;
                         var offsetContainer = jQuery(self.pivotContainer).offset();
 
 						if (offsetLeft + initialPopUpWidth + 15 < screenWidth) {
 							if (self.mFlexGrid){
-								jQuery(".ExportPopup").css({  position:"fixed", left: ( jQuery(iconExport).offset().left) + "px", top: (jQuery(iconExport).offset().top) + "px" })
+								exportPopupDiv.css({  position:"fixed", left: ( exportIconOffset.left) + "px", top: (exportIconOffset.top) + "px" })
 							} else {	
-								jQuery(".ExportPopup").css({ left: (jQuery(iconExport).offset().left - offsetContainer.left) + "px", top: (jQuery(iconExport).offset().top - offsetContainer.top) + "px" })
+								exportPopupDiv.css({ left: (exportIconOffset.left - offsetContainer.left) + "px", top: (exportIconOffset.top - offsetContainer.top) + "px" })
 							}
 						} else {
 							if (self.mFlexGrid){
-								jQuery(".ExportPopup").css({ position:"fixed", left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top - jQuery(window).scrollTop()/*- offsetContainer.top*/) + "px" }) //24-04
+								exportPopupDiv.css({ position:"fixed", left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (exportIconOffset.top - jQuery(window).scrollTop()/*- offsetContainer.top*/) + "px" }) //24-04
 							} else {
-								jQuery(".ExportPopup").css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (jQuery(iconExport).offset().top - offsetContainer.top) + "px" })
+								exportPopupDiv.css({ left: (offsetLeft - initialPopUpWidth + 16) + "px", top: (exportIconOffset.top - offsetContainer.top) + "px" })
 							}
 						}
 
