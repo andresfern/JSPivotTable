@@ -30905,7 +30905,7 @@ if (typeof exports != "undefined") {
 				});
 
 				OAT.jQuery(table)[tblLocation]().find(lastPageId).bind('click', function (e) {
-					resetCurrentPage(parseInt(jQuery("#" + settings.controlName + "_tablePagination_paginater #tablePagination_totalPages")[0].textContent.replace("&nbsp;", "")), false);
+					resetCurrentPage(parseInt(OAT.jQuery("#" + settings.controlName + "_tablePagination_paginater #tablePagination_totalPages")[0].textContent.replace("&nbsp;", "")), false);
 				});
 
 				OAT.jQuery(table)[tblLocation]().find(currPageId).bind('change', function (e) {
