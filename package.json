@@ -1,6 +1,6 @@
 {
   "name": "jspivottable",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "description": "componente tabla y pivot de uc queryviewer",
   "main": "oat_pivotTable.js",
   "types": "oat_pivotTable.d.ts",
